@@ -1,0 +1,22 @@
+---
+title: "Test Page"
+author: "James Diao"
+date: Sys.Date()
+output: md_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## James Diao
+
+```{r cars}
+summary(cars)
+```
+
+## Including Plots
+
+```{r pressure}
+plot(pressure)
+```
