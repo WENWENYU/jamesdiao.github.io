@@ -15,12 +15,12 @@ Welcome! My name is James, and I'm an aspiring physician-scientist interested in
   </td>
   <td class="center">
     <a href="/archives/2017/08/22/36-questions">
-        <img src="/img/QnA.jpg" alt="36 Questions" title="36 Questions" style="width:200px;height:200px;">
+        <img src="/img/questions.png" alt="36 Questions" title="36 Questions" style="width:200px;height:200px;">
     </a>
   </td>
   <td class="right">
     <a href="/archives/2017/08/22/logic-problems">
-        <img src="/img/thinking.png" alt="Logic Problems" title="Logic Problems" style="width:200px;height:200px;">
+        <img src="/img/puzzles.jpg" alt="Logic Problems" title="Logic Problems" style="width:200px;height:200px;">
     </a>
   </td>
 </tr>
