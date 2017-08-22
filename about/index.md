@@ -6,7 +6,7 @@ title: About Me
 About Me
 ========
 
-![Boston_Headshot](/img/Boston_Headshot.jpg)
+<img src="Boston_Headshot.jpg" alt="Boston_Headshot" style="width: 200px;"/>
 
 Hi! My name is James Diao. I'm currently a senior at Yale University
 studying Biochemistry and Statistics. I was interested in documenting my
