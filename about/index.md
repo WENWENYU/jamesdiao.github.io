@@ -8,7 +8,7 @@ About Me
 
 <div class="row marketing">
   <div class="col-sm-4">
-  ![Boston_Headshot](/img/Boston_Headshot.jpg){:style="float: height="250px" width="250px"}
+  <img src="/img/Boston_Headshot.jpg" alt = "Boston_Headshot" style="width:250px;height:250px;">
   </div>
   <div class="col-sm-8">
   <p> Hi! My name is James Diao. I'm currently a senior at Yale University
