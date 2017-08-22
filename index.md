@@ -9,13 +9,13 @@ Welcome! My name is James, and I'm an aspiring physician-scientist interested in
 <table class="wide">
 <tr>
   <td class="left">
-    <a href="/archives/2017/08/21/yale-course-notes">
-        <img src="/img/yale.jpg" alt="Yale Course Notes" title="Yale Course Notes" style="width:200px;height:200px;">
+    <a href="/archives/2017/08/22/36-questions">
+        <img src="/img/questions.png" alt="36 Questions" title="36 Questions" style="width:200px;height:200px;">
     </a>
   </td>
   <td class="center">
-    <a href="/archives/2017/08/22/36-questions">
-        <img src="/img/questions.png" alt="36 Questions" title="36 Questions" style="width:200px;height:200px;">
+    <a href="/archives/2017/08/21/yale-course-notes">
+        <img src="/img/yale.jpg" alt="Yale Course Notes" title="Yale Course Notes" style="width:200px;height:200px;">
     </a>
   </td>
   <td class="right">
