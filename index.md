@@ -3,31 +3,31 @@ layout: default
 title: Home Page
 ---
 
-Welcome! My name is James, and I'm an aspiring physician-scientist interested in applying computational and statistical approaches to medicine. Read more about me <a href="/about">here</a>.
-<br>
+Welcome! My name is James, and I'm an aspiring physician-scientist interested in applying computational and statistical approaches to medicine. Read more about me <a href="/about">here</a>.  
+<br><br>
 
 <table class="wide">
 <tr>
   <td class="left">
-    <a href="/archives/2017/08/22/36-questions">
-        <img src="/img/QnA.jpg" alt="36 Questions" title="36 Questions" style="width:200px;height:200px;">
-    </a>
-  </td>
-  <td class="center">
     <a href="/archives/2017/08/21/yale-course-notes">
         <img src="/img/yale.jpg" alt="Yale Course Notes" title="Yale Course Notes" style="width:200px;height:200px;">
     </a>
   </td>
+  <td class="center">
+    <a href="/archives/2017/08/22/36-questions">
+        <img src="/img/QnA.jpg" alt="36 Questions" title="36 Questions" style="width:200px;height:200px;">
+    </a>
+  </td>
   <td class="right">
-    <a href="/archives/2017/08/22/book-list">
-        <img src="/img/books.jpg" alt="Book List" title="Book List" style="width:200px;height:200px;">
+    <a href="/archives/2017/08/22/logic-problems">
+        <img src="/img/thinking.png" alt="Logic Problems" title="Logic Problems" style="width:200px;height:200px;">
     </a>
   </td>
 </tr>
 <tr>
   <td class="left">
-    <a href="/archives/2017/08/22/logic-problems">
-        <img src="/img/thinking.png" alt="Logic Problems" title="Logic Problems" style="width:200px;height:200px;">
+    <a href="/archives/2017/08/22/book-list">
+        <img src="/img/books.jpg" alt="Book List" title="Book List" style="width:200px;height:200px;">
     </a>
   </td>
   <td class="center">
