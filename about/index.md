@@ -6,7 +6,7 @@ title: About Me
 About Me
 ========
 
-![Boston_Headshot](Boston_Headshot.jpg){:height="200px" width="200px"}.
+[![Boston_Headshot](/img/Boston_Headshot.jpg){:height="200px" width="200px"}](/archives)
 
 Hi! My name is James Diao. I'm currently a senior at Yale University
 studying Biochemistry and Statistics. I was interested in documenting my
