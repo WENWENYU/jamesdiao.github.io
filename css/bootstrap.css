@@ -27,8 +27,6 @@ summary {
 
 nav ul li, footer ul li {
     display: inline;
-    margin-left: auto;
-    margin-right: auto;
 }
 
 audio,
