@@ -19,13 +19,13 @@ title: Home Page
 </tr>
 <tr>
   <td class="left">
-    <a href="pages/publpics/samplemixups_fig7.html">
-        <img src="/img/ercc.jpg" alt="exRNA Bioinformatics" title="exRNA Bioinformatics" style="width:300px;height:300px;">
+    <a href="/archives/2017/08/22/gerstein-lab">
+        <img src="/img/ercc.jpg" alt="ERCC RNA-Seq Visualization Tool" title="ERCC RNA-Seq Visualization Tool" style="width:300px;height:300px;">
     </a>
   </td>
   <td class="right">
-    <a href="pages/publpics/isletc6_fig4.html">
-        <img src="/img/acmg.jpg" alt="Clinical Genetics" title="Clinical Genetics" style="width:300px;height:300px;">
+    <a href="/archives/2017/08/22/zak-lab">
+        <img src="/img/acmg.jpg" alt="Penetrance of ACMG-59 Cardiac Phenotypes" title="Penetrance of ACMG-59 Cardiac Phenotypes" style="width:300px;height:300px;">
     </a>
   </td>
 </tr>
