@@ -3,6 +3,7 @@ layout: default
 title: Home Page
 ---
 
+Welcome! My name is James, and I'm an aspiring physician-scientist interested in applying computational and statistical approaches to medicine. Read more about me ![here](/about). 
 
 <table class="wide">
 <tr>
