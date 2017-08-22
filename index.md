@@ -9,8 +9,8 @@ Welcome! My name is James, and I'm an aspiring physician-scientist interested in
 <table class="wide">
 <tr>
   <td class="left">
-    <a href="/archives/2017/08/22/36-questions">
-        <img src="/img/questions.png" alt="36 Questions" title="36 Questions" style="width:200px;height:200px;">
+    <a href="/archives/2017/08/22/book-list">
+        <img src="/img/books.jpg" alt="Book List" title="Book List" style="width:200px;height:200px;">
     </a>
   </td>
   <td class="center">
@@ -26,8 +26,8 @@ Welcome! My name is James, and I'm an aspiring physician-scientist interested in
 </tr>
 <tr>
   <td class="left">
-    <a href="/archives/2017/08/22/book-list">
-        <img src="/img/books.jpg" alt="Book List" title="Book List" style="width:200px;height:200px;">
+    <a href="/archives/2017/08/22/36-questions">
+        <img src="/img/questions.png" alt="36 Questions" title="36 Questions" style="width:200px;height:200px;">
     </a>
   </td>
   <td class="center">
