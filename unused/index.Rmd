@@ -1,5 +1,5 @@
 ---
-title: "Test Page"
+title: "Personal Page"
 author: "James Diao"
 date: Sys.Date()
 output: md_document
@@ -9,14 +9,6 @@ output: md_document
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-## James Diao
+## Personal Page v1.3
 
-```{r cars}
-summary(cars)
-```
-
-## Including Plots
-
-```{r pressure}
-plot(pressure)
-```
+Not much to say here. Just prototyping. 

@@ -4,11 +4,11 @@ layout: feed
 <?xml version="1.0" encoding="utf-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom">
 
-	<title>James Diao's Blog</title>
-	<link href="http://jamesdiao.github.io/blog/atom.xml" rel="self"/>
-	<link href="http://jamesdiao.github.io/blog"/>
-	<updated>{{ site.time | date_to_xmlschema }}</updated>
-	<id>http://jamesdiao.github.io/blog</id>
+	<title>James Diao's Repository</title>
+	<link href="http://jamesdiao.github.io/archives/atom.xml" rel="self"/>
+	<link href="http://jamesdiao.github.io/archives"/>
+	<updated>{{ site.time | archives }}</updated>
+	<id>http://jamesdiao.github.io/archives</id>
 	<author>
 		<name>James Diao</name>
 		<email>diao.james@gmail.com</email>
