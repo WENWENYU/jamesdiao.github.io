@@ -3,7 +3,7 @@ layout: default
 title: Main Page
 ---
 
-Personal Page v1.6
+Personal Page v1.7
 ==================
 
 Just trying to get a prototype working.  
