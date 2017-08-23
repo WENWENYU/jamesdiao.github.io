@@ -19,7 +19,7 @@ Welcome! My name is James, and I'm an aspiring physician-scientist interested in
     </a>
   </td>
   <td class="right">
-    <a href="/archives/2017/08/22/logic-problems">
+    <a href="/archives/2017/08/22/logic-puzzles">
         <img src="/img/puzzles.jpg" alt="Logic Problems" title="Logic Problems" style="width:230px;height:230px;">
     </a>
   </td>

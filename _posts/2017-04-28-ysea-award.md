@@ -8,6 +8,7 @@ Today, I was surprised to receive an award from the Yale Science and Engineering
 
 ![Recipients in the class of 2018:](https://news.yale.edu/2017/05/03/deans-vanderlick-and-cooley-among-those-honored-ysea) 
 
+<table class="table table-striped table-hover">
 | Name              | Major               |
 |-------------------|---------------------|
 | Julia Borowski    | Chemistry           |
@@ -19,5 +20,4 @@ Today, I was surprised to receive an award from the Yale Science and Engineering
 | Ilana Kaufman     | Physics             |
 | James Diao        | MB&B/(S&DS)         |
 | Alexander Epstein | MCDB/(Chemistry)    |
-
-
+</table>
