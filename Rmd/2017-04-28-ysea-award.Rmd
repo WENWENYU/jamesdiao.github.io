@@ -1,0 +1,29 @@
+---
+title: "2017-04-28-ysea-award"
+author: "James Diao"
+date: "8/23/2017"
+output: md_document
+---
+
+```{r setup, include=FALSE}
+library(knitr)
+library(dplyr)
+knitr::opts_chunk$set(echo = TRUE)
+```
+\---  
+layout: post  
+title: "YSEA Award"  
+date: 2017-04-28  
+\---  
+
+```{r}
+kable(
+  data.frame(
+    Name = c('Julia Borowski','Martin Lim','Adam Lowet','Scott Stankey','Sara Meyers',
+    'Lionel Jin','Ilana Kaufman','James Diao','Alexander Epstein'),
+    Major = c('Chemistry','Chemistry/Economics','CogSci/MCDB','Math','MCDB',
+              'MCDB/(CS)','Physics','MB&B/(S&DS)','MCDB/(Chemistry)')
+  )
+)
+```
+
