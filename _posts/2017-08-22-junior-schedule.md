@@ -6,7 +6,6 @@ date: 2017-08-22
 
 <style>
 
-  
 th {
 	font: bold 12px "Trebuchet MS", Verdana, Arial, Helvetica,
 	sans-serif;
@@ -37,6 +36,10 @@ td {
 td.alt {
 	background: #F5FAFA;
 	color: #B4AA9D;
+}
+
+body {
+    font-size:11px;
 }
 
 </style>
