@@ -4,6 +4,8 @@ title: "Junior Schedule"
 date: 2017-08-22
 ---
 
+These are the courses I've taken up to junior year. In a few weeks, I'll be able to add the last two rows of my college experience(!). 
+
 <table class="table table-striped">
 <tbody>
 <tr class="odd">
@@ -31,7 +33,7 @@ date: 2017-08-22
 <td align="left">MB&amp;B 300 Biochemistry I</td>
 <td align="left">PHYS 180 University Physics I</td>
 <td align="left">PHYS 165L Physics Lab I</td>
-<td align="left">S&amp;DS 238 Probability and Statistics</td>
+<td align="left">S&amp;DS 238 Probability &amp; Statistics</td>
 </tr>
 <tr class="even">
 <td align="left"></td>

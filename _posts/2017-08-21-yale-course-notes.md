@@ -4,6 +4,8 @@ title: "Yale Course Notes"
 date: 2017-08-21
 ---
 
+\[POST IN PROGRESS\]
+
 My notes over the years for various subjects:  
 1. [CHEM 124: Freshman Organic Chemistry I](/PDF/CHEM124.pdf)  
 2. [CHEM 125: Freshman Organic Chemistry II](/PDF/CHEM125.pdf)  
