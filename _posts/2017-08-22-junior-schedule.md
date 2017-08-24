@@ -4,7 +4,7 @@ title: "Junior Schedule"
 date: 2017-08-22
 ---
 
-These are the courses I've taken up to junior year. In a few weeks, I'll be able to add the last two rows of my college experience(!). 
+These are the courses I've taken up to junior year. In a few weeks, I'll be able to add the last two rows of my college experience(\!). 
 
 <table class="table table-striped">
 <tbody>

@@ -32,7 +32,7 @@ Zak begins by describing his own PhD work, which revolved around AI and computat
 Even the New England Journal of Medicine published a paper ([Medicine and the Computer](http://www.nejm.org/doi/full/10.1056/NEJM197012032832305)) predicting massive changes:  
 > Abstract: Rapid advances in the information sciences, coupled with the political commitment to broad extensions of health care, promise to bring about basic changes in the structure of medical practice. Computing science will probably exert its major effects by augmenting and, in some cases, largely replacing the intellectual functions of the physician.  
 
-None of these things have come to fruition, of course, and Zak predicts that there WILL be another AI winter, at least in biomedicine. People will fund things they don't understand, and business plans will go up in smoke when the technology is not mature enough to deliver. The biggest question is: how should we handle it? 
+None of these things have come to fruition, of course, and Zak predicts that there WILL be another AI winter, at least in biomedicine. People will fund things they don't understand, and business plans will go up in smoke when the technology is not mature enough to deliver. The biggest question is: how should we handle it\? 
 
 
 ###Part II: Money and Incentives
@@ -72,7 +72,7 @@ Discussion was scattered here, so I'm going to present the next part as a list.
 
 Maha led the discussion here. She presented a rare optimism about AI in medicine, describing a kind of mutual support. On the one hand, AI can help physicians get rid of repetitive and draining tasks. Most cases are common and easy cases, and doctors don't want to see the screen if everything is normal. Computers can help with this. Doctors will still be needed as general decision-makers, even if they are outperformed on some specifics, like image analysis. On the other hand, physicians are also critical for helping AI earn usage and acceptance.  
 
-Zak is more skeptical of physician domain knowledge. He brings up a story: if you ask doctors about the proper drug dosages, they'??ll debate forever. If you just set the default and give them options, they almost never deviate from the default. This is an example of what he calls "health system dynamics," where data is strongly biased by system effects. On the flip side, he also acknowledges that we may need physicians to parse and understand these effects. 
+Zak is more skeptical of physician domain knowledge. He brings up a story: if you ask doctors about the proper drug dosages, they'll debate forever. If you just set the default and give them options, they almost never deviate from the default. This is an example of what he calls "health system dynamics," where data is strongly biased by system effects. On the flip side, he also acknowledges that we may need physicians to parse and understand these effects. 
 
 One large problem is that industry and VC often frame startups in terms of replacing physicians. Besides cutting doctors out of the picture, this is also, in Zak's opinion, too ambitious for the current state of technology. Overambitious business plans lead to failures which will only hasten the AI winter. 
 
