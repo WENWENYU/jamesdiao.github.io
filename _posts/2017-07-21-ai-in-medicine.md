@@ -8,7 +8,7 @@ Summary of the "AI in Medicine" conference talk at the Department of Biomedical 
 
 ![Medical Robot](/img/robodoc.jpg)
 
-###Background, Definitions, and People:  
+### Background, Definitions, and People:  
 
 1. DBMI: Department of Biomedical Informatics, Harvard Medical School  
 2. [AI](https://en.wikipedia.org/wiki/Artificial_intelligence): Artificial Intelligence  
@@ -23,7 +23,7 @@ Summary of the "AI in Medicine" conference talk at the Department of Biomedical 
 11. Gabe: Gabriel Brat, MD, MPH, Instructor in Surgery, HMS, co-founded Tissue Analytics, a smartphone imaging platform for wound documentation.  
 
 
-###Part I: Beware the hype
+### Part I: Beware the hype
 
 Zak begins by describing his own PhD work, which revolved around AI and computational solutions to medical problems. There was a big hype cycle at that time (around 30 years ago), when his advisors told him things like:  
 1. Doctors will soon be obsolete  
@@ -35,7 +35,7 @@ Even the New England Journal of Medicine published a paper ([Medicine and the Co
 None of these things have come to fruition, of course, and Zak predicts that there WILL be another AI winter, at least in biomedicine. People will fund things they don't understand, and business plans will go up in smoke when the technology is not mature enough to deliver. The biggest question is: how should we handle it\? 
 
 
-###Part II: Money and Incentives
+### Part II: Money and Incentives
 
 The potential of health care AI is well-known. AI has achieved incredible successes in other fields, but not yet in health care. In fact, the health sector receives heavy investment precisely for that reason: because it is seen as untransformed, i.e. low-hanging fruit. For example, reducing medical errors alone would tap into the \$20-30 billion USD lost every year. 
 
@@ -49,12 +49,12 @@ Zak left us with four questions to consider:
 4. Will AI lead to better outcomes for patients?  
 
 
-###Part III: Current State of AI in Medicine
+### Part III: Current State of AI in Medicine
 
 One prominent failure was IBM's Watson, which was [dropped by MD Anderson Cancer Center in early 2017](https://www.technologyreview.com/s/607965/a-reality-check-for-ibms-ai-ambitions/). However, recent news has been much more optimistic. Google has developed a system to detect diabetic retinopathy using retinal images, which it has already begun to deploy in India. Maha argued that this technology will not replace ophthalmologists, since a sliver of their work and incomes depend on diagnosis. In fact, most of their money comes from operating. Maha then claims that AI would actually free doctors from the less lucrative parts of their work (e.g. image analysis). Another prominent success is Stanford's landmark paper that classifies skin cancers. Maha extends the same line of argument, claiming that this leads to more referrals for biopsies. She also warns against doctors' incentives to push the decision point towards more sensitive and less specific settings, which increases biopsies. 
 
 
-###Part IV: Implementation Problems
+### Part IV: Implementation Problems
 
 It seems that there are two main ways AI is being implemented. 
 The first path is: Data => AI => EHR, essentially helping doctors making decisions. EHR companies love this, because it keeps them in the loop and gives them control over patient data.  
@@ -68,7 +68,7 @@ Discussion was scattered here, so I'm going to present the next part as a list.
 > Maha: This can be resolved by a patient-centered view: allow the patient to choose AI vs. MD. 
 
 
-###Part V: Role of Physicians
+### Part V: Role of Physicians
 
 Maha led the discussion here. She presented a rare optimism about AI in medicine, describing a kind of mutual support. On the one hand, AI can help physicians get rid of repetitive and draining tasks. Most cases are common and easy cases, and doctors don't want to see the screen if everything is normal. Computers can help with this. Doctors will still be needed as general decision-makers, even if they are outperformed on some specifics, like image analysis. On the other hand, physicians are also critical for helping AI earn usage and acceptance.  
 
@@ -77,7 +77,7 @@ Zak is more skeptical of physician domain knowledge. He brings up a story: if yo
 One large problem is that industry and VC often frame startups in terms of replacing physicians. Besides cutting doctors out of the picture, this is also, in Zak's opinion, too ambitious for the current state of technology. Overambitious business plans lead to failures which will only hasten the AI winter. 
 
 
-###Concluding Thoughts
+### Concluding Thoughts
 I was impressed by the complexity of the implementation and incentive structures in health care. I was also surprised to find optimism on AI's projected effect on physicians. Or, another way to think of it, pessimism about AI's ability to live up to its hype. Learning the history of boom-bust cycles and AI winters is also very important, although I think that the sheer scale of success in other fields does bode well for health care. It may be a long and circuitous road, but this talk left me some faith that AI in medicine will get there. 
 
 
