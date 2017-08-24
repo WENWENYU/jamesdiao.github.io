@@ -6,21 +6,21 @@ date: 2017-07-21
 
 Summary of the "AI in Medicine" conference talk at the Department of Biomedical Informatics, Harvard Medical School. 
 
-![Medical Robot](/img/robodoc.jpg)
+![Medical Robot](/img/robodoc.jpg){:height="200px" width="200px"}
 
 ### Background, Definitions, and People:  
 
-1. DBMI: Department of Biomedical Informatics, Harvard Medical School  
-2. [AI](https://en.wikipedia.org/wiki/Artificial_intelligence): Artificial Intelligence  
-3. [AI Winter](https://en.wikipedia.org/wiki/AI_winter): when research and investment interest in AI wanes. Notable periods: mid-70s, late-80s.  
-4. [ROC](https://en.wikipedia.org/wiki/Receiver_operating_characteristic): Receiver Operative Characteristic, a curve that plots the true positive rate (sensitivity) against the false positive rate (1-specificity). It illustrates the diagnostic ability of a binary classifier as its discrimination threshold is varied.  
-5. [EHR](https://en.wikipedia.org/wiki/Electronic_health_record): Electronic Health Record  
-6. [EPIC](https://en.wikipedia.org/wiki/Epic_Systems): a private implementation of EHR holding >50\% of US patient records. Closed platform makes it hard and costly for outsiders to interface with clinical or billing software.  
-7. [VC](https://en.wikipedia.org/wiki/Venture_capital): Venture Capital. Provides financing to small/early-stage firms with high growth potential. The life sciences sector (biotech + medical devices) received around \$10 billion dollars in 2015, accounting for 18\% of all VC funding.  
+1. [AI](https://en.wikipedia.org/wiki/Artificial_intelligence): Artificial Intelligence  
+2. [AI Winter](https://en.wikipedia.org/wiki/AI_winter): When research and investment interest in AI wanes.  
+3. [ROC](https://en.wikipedia.org/wiki/Receiver_operating_characteristic): Receiver Operative Characteristic, a curve that shows the diagnostic ability of a binary classifier as its threshold is varied.  
+4. [EHR](https://en.wikipedia.org/wiki/Electronic_health_record): Electronic Health Record  
+5. [EPIC](https://en.wikipedia.org/wiki/Epic_Systems): a private implementation of EHR holding >50% of US patient records. Closed platform makes it hard and costly for outsiders to interface with clinical or billing software.  
+6. [VC](https://en.wikipedia.org/wiki/Venture_capital): Venture Capital. Provides financing to small/early-stage firms with high growth potential. The life sciences sector received around $10 billion dollars in 2015, accounting for 18% of all VC funding.  
+7. DBMI: Department of Biomedical Informatics, Harvard Medical School  
 8. Zak: Isaac S. Kohane, MD/PhD, Chair of DBMI (and my PI)  
 9. Maha: Maha Farhat, MD/MSc, Assistant Professor at DBMI  
-10. Andy: Andrew Beam, PhD, Instructor at DBMI, specializes in deep learning.  
-11. Gabe: Gabriel Brat, MD, MPH, Instructor in Surgery, HMS, co-founded Tissue Analytics, a smartphone imaging platform for wound documentation.  
+10. Gabe: Gabriel Brat, MD, MPH, Instructor in Surgery, HMS, co-founded Tissue Analytics, a smartphone imaging platform for wound documentation.  
+11. Andy: Andrew Beam, PhD, Instructor at DBMI, specializes in deep learning.  
 
 
 ### Part I: Beware the hype
@@ -28,22 +28,24 @@ Summary of the "AI in Medicine" conference talk at the Department of Biomedical 
 Zak begins by describing his own PhD work, which revolved around AI and computational solutions to medical problems. There was a big hype cycle at that time (around 30 years ago), when his advisors told him things like:  
 1. Doctors will soon be obsolete  
 2. Computers will solve medical problems  
-3. We'll get much better care.   
-Even the New England Journal of Medicine published a paper ([Medicine and the Computer](http://www.nejm.org/doi/full/10.1056/NEJM197012032832305)) predicting massive changes:  
-> Abstract: Rapid advances in the information sciences, coupled with the political commitment to broad extensions of health care, promise to bring about basic changes in the structure of medical practice. Computing science will probably exert its major effects by augmenting and, in some cases, largely replacing the intellectual functions of the physician.  
+3. We'll get much better care.  
 
-None of these things have come to fruition, of course, and Zak predicts that there WILL be another AI winter, at least in biomedicine. People will fund things they don't understand, and business plans will go up in smoke when the technology is not mature enough to deliver. The biggest question is: how should we handle it\? 
+Similarly, even the New England Journal of Medicine published the paper ([Medicine and the Computer](http://www.nejm.org/doi/full/10.1056/NEJM197012032832305)) predicting massive changes. The abstract reads: 
+> Rapid advances in the information sciences, coupled with the political commitment to broad extensions of health care, promise to bring about **basic changes in the structure of medical practice.** Computing science will probably exert its major effects by augmenting and, in some cases, **largely replacing the intellectual functions of the physician.**  
+
+None of these things have come to fruition, of course, and Zak predicts that there WILL be another AI winter, at least in biomedicine. People will fund things they don't understand, and business plans will go up in smoke when the technology is not mature enough to deliver. The biggest question is: how should we handle it? 
 
 
 ### Part II: Money and Incentives
 
-The potential of health care AI is well-known. AI has achieved incredible successes in other fields, but not yet in health care. In fact, the health sector receives heavy investment precisely for that reason: because it is seen as untransformed, i.e. low-hanging fruit. For example, reducing medical errors alone would tap into the \$20-30 billion USD lost every year. 
+The potential of health care AI is well-known. AI has achieved incredible successes in other fields, but not yet in health care. In fact, the health sector receives heavy investment precisely for that reason: because it is seen as untransformed, i.e. low-hanging fruit. For example, reducing medical errors alone would tap into the $20-30 billion USD lost every year. 
 
 However, the problems with health care AI are huge, largely due to the complex and nonsensical incentive structure. The hospital business model does NOT directly benefit from better quality care. Moreover, patients are barely considered compared to the 3 P's of funding: payers, providers, and pharmaceuticals. 
 
 Zak left us with four questions to consider:  
 1. What role will AI information have in billing warfare?  
-> For context, the "billing war" is fought between hospitals and insurance companies over what can be billed for, and how much. If hospitals have control over AI, they can suggest settings that increase medicalization and procedures. If insurance companies have it, they can set more restrictions on when patients can receive certain treatments.  
+> For context, the "billing war" is fought between hospitals and insurance companies over what can be billed for, and how much. If hospitals have control over AI, they can suggest settings that increase medicalization and procedures. If insurance companies have it, they can set more restrictions on when patients can receive certain treatments.
+
 2. Does AI mean game over for medical imaging? How will the money be distributed?  
 3. Will AI bypass existing health care processes?  
 4. Will AI lead to better outcomes for patients?  
@@ -51,7 +53,16 @@ Zak left us with four questions to consider:
 
 ### Part III: Current State of AI in Medicine
 
-One prominent failure was IBM's Watson, which was [dropped by MD Anderson Cancer Center in early 2017](https://www.technologyreview.com/s/607965/a-reality-check-for-ibms-ai-ambitions/). However, recent news has been much more optimistic. Google has developed a system to detect diabetic retinopathy using retinal images, which it has already begun to deploy in India. Maha argued that this technology will not replace ophthalmologists, since a sliver of their work and incomes depend on diagnosis. In fact, most of their money comes from operating. Maha then claims that AI would actually free doctors from the less lucrative parts of their work (e.g. image analysis). Another prominent success is Stanford's landmark paper that classifies skin cancers. Maha extends the same line of argument, claiming that this leads to more referrals for biopsies. She also warns against doctors' incentives to push the decision point towards more sensitive and less specific settings, which increases biopsies. 
+One prominent failure was IBM's Watson, which was [dropped by MD Anderson Cancer Center in early 2017](https://www.technologyreview.com/s/607965/a-reality-check-for-ibms-ai-ambitions/). Dozens of explanations have been offered for this event, but everyone would agree that this was quite the reality check for the field.  
+![IBM Watson Failure](/img/mda-watson.jpg){:height="500px" width="250px"}  
+
+However, recent news has been much more optimistic. [Google has developed a system to detect diabetic retinopathy using retinal images](http://jamanetwork.com/journals/jama/fullarticle/2588763), which it has already begun to deploy in India. 
+![Google Retinopathy](/img/drlearnt.jpg){:height="500px" width="250px"}  
+
+Maha argued that this technology will not replace ophthalmologists, since a sliver of their work and incomes depend on diagnosis. In fact, most of their money comes from operating. Maha then claims that AI would actually free doctors from the less lucrative parts of their work (e.g. image analysis). Another prominent success is [Stanford's landmark paper that classifies skin cancers](http://www.nature.com/nature/journal/v542/n7639/full/nature21056.html).  
+![Stanford Skin Cancers](/img/lesionslearnt.jpg){:height="300px" width="300px"}  
+
+Maha extends the same line of argument, claiming that this leads to more referrals for biopsies. She also warns against doctors' incentives to push the ROC decision point towards more sensitive and less specific settings, which increases biopsies. 
 
 
 ### Part IV: Implementation Problems
@@ -65,7 +76,7 @@ Discussion was scattered here, so I'm going to present the next part as a list.
 2. Gabe: AI might be used for utilization review criteria (to assess doctors). FDA approval is not needed, and this can still influence care.  
 3. Andy: There is a risk that insurance companies can force results by adjusting weights imperceptibly e.g. with adversarial networks (doesn't sound like an important concern to me).  
 4. Zak: Insurance companies are incentivized to set profit-driven assessment score cutoffs. Moreover, this would push the point of responsibility from physicians to systemic (insurance/hospital) decisions.  
-> Maha: This can be resolved by a patient-centered view: allow the patient to choose AI vs. MD. 
+> Maha's reply: This can be resolved by a patient-centered view. Options can be presented, and the patient could have the latitude to choose AI vs. MD. 
 
 
 ### Part V: Role of Physicians
