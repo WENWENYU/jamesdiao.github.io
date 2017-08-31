@@ -10,7 +10,7 @@ Here's a list of some of my favorite papers. I'll add more (and reviews!) when I
 
 ### Hall of Fame 
 1. Ioannidis 2005. Why Most Published Research Findings Are False. PLOS Medicine. [Link](http://journals.plos.org/plosmedicine/article?id=10.1371/journal.pmed.0020124).  
-2. Esteva et al. 2017. Dermatologist-level classification of skin cancer with deep neural networks. Nature. [Link](http://www.nature.com/nature/journal/v542/n7639/full/nature21056.html). [Abstract and Analysis](/_subposts/2017-08-24-esteva2017.md).  
+2. Esteva et al. 2017. Dermatologist-level classification of skin cancer with deep neural networks. Nature. [Link](http://www.nature.com/nature/journal/v542/n7639/full/nature21056.html).    
 3. Lek et al. 2016. Analysis of protien-coding genetic variation in 60,706 humans. Nature. [Broken Link].  
 
 
