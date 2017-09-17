@@ -17,7 +17,7 @@ Here's a list of some of my favorite papers. I'll add more (and reviews!) when I
 ### Machine Learning and AI 
 
 #### Image Analysis
-1. Esteva et al. 2017. Dermatologist-level classification of skin cancer with deep neural networks. Nature. [Link](http://www.nature.com/nature/journal/v542/n7639/full/nature21056.html). [Abstract and Analysis](/_subposts/2017-08-24-esteva2017.md).  
+1. Esteva et al. 2017. Dermatologist-level classification of skin cancer with deep neural networks. Nature. [Link](http://www.nature.com/nature/journal/v542/n7639/full/nature21056.html).  
 2. Gulshan et al. 2016. Development and validation of a deep learning algorithm for detection of diabetic retinopathy in retinal fundus photographs. JAMA. [Link](http://jamanetwork.com/journals/jama/fullarticle/211038).  
 3. Rajpurkar et al. 2017. Cardiologist-Level arrhythmia detection with convolutional neural networks. arXiv. [Link](http://arxiv.org/pdf/1707.01836.pdf).  
 

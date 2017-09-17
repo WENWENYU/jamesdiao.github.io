@@ -26,12 +26,14 @@ A few of my more memorable clinical experiences. Just blurbs for now- will hopef
 1. A patient comes in to talk about smoking cessation. His/her uncle recently died of lung cancer, and (s)he is still unable to quit. 
 2. A patient comes in to ask about how to reduce his/her weight. Listening to his/her day-to-day, I begin to understand the obstacles that make healthy choices incredibly difficult for low-income populations. 
 
+<!---
+
 #### Recreational Therapy, Children Psychiatric Inpatient Service, New Haven, CT
-1. 
+1. The kids have this unbelievable energy.
 
 #### Staff Support, MD Anderson Cancer Center, Houston, TX
 1. 
 
-
+-->
 
 
