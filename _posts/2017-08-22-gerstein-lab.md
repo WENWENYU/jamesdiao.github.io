@@ -8,3 +8,4 @@ date: 2017-08-22
 
 A summary of my work in bioinformatics with the Gerstein Lab. 
 
+<embed src="/PDF/YURA_Poster_8_29_2015.pdf" width="700" height="430" type='application/pdf'>
