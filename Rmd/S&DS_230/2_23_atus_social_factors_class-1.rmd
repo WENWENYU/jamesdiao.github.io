@@ -1,0 +1,200 @@
+---
+title: 'American Time Use Survey: Social/Leisure'
+author: "STAT 230"
+date: "2/23/2017"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+Load in the dataset:
+
+```{r}
+# x <- read.csv("atus_social.csv", as.is = TRUE)
+x <- read.csv("https://www.dropbox.com/s/c7gidc2stjh3a2k/atus_social.csv?raw=1",
+              as.is = TRUE)
+head(x)
+```
+
+Some models we looked at:
+
+```{r}
+m1 <- lm(social_time ~ age, data=x)
+summary(m1)
+
+m2 <- lm(social_time ~ age + I(age^2), data=x)
+summary(m2)
+```
+
+
+## Males vs. Females
+
+```{r}
+m3 <- lm(social_time ~ age + I(age^2) + sex, data=x)
+summary(m3)
+```
+
+Predict the social time for a 20-year old male and for a 20-year old female.
+
+```{r}
+dat <- data.frame(age = c(20, 20), 
+                  sex = c("M", "F"))
+dat
+predict(m3, dat)
+```
+
+Predict the social time for a 50-year old male and for a 50-year old female.
+
+```{r}
+dat <- data.frame(age = c(50, 50), 
+                  sex = c("M", "F"))
+dat
+predict(m3, dat)
+diff(predict(m3, dat))
+```
+
+Fitted equation:
+
+$$\widehat{\text{social_time}} = 363 - 8.20 age + 0.119 age^2 + 43.0 sex_{Male}$$
+
+$sex_{Male}$ is a vector of 0's and 1's. 0's where a row corresponds to a female and 1's where a row corresponds to a male. 
+
+```{r}
+head(model.matrix(m3))
+```
+
+Fitted equation for females:
+
+$$\widehat{\text{social_time}} = 363 - 8.20 age + 0.119 age^2$$
+
+Fitted equation for males:
+
+$$\widehat{\text{social_time}} = 363 - 8.20 age + 0.119 age^2 + 43.0$$
+
+$$\widehat{\text{social_time}} = 406 - 8.20 age + 0.119 age^2$$
+
+```{r}
+dat <- data.frame(age = 0:85,
+                  sex = rep("M", 86))
+p3 <- predict(m3, dat)
+
+plot(social_time ~ age, data=x, pch=16, col=rgb(0, 0, 0, 0.1))
+lines(dat$age, p3, col="blue", lwd=2)
+```
+
+
+Quick detour discussion on `rep()`:
+
+```{r}
+rep(1:3, each=2)
+rep(1:3, times=2)
+```
+
+
+```{r}
+dat <- data.frame(age = rep(0:85, times = 2),
+                  sex = rep(c("M", "F"), each = 86))
+p3 <- predict(m3, dat)
+
+plot(social_time ~ age, data=x, pch=16, col=rgb(0, 0, 0, 0.1))
+lines(dat$age[dat$sex == "M"], p3[dat$sex == "M"], col="blue", lwd=2)
+lines(dat$age[dat$sex == "F"], p3[dat$sex == "F"], col="red", lwd=2)
+```
+
+
+```{r}
+summary(m3)
+```
+
+Suppose we were to recode our model such that it fitted a coefficient for $sex_{Female}$, how would things change?
+
+```{r}
+class(x$sex)
+levels(factor(x$sex))
+```
+
+The first level is "F" because of alphabetical order. In linear regression, the first level is taken to be the **baseline level**. We can force R to choose "M" to be the first level.
+
+```{r}
+x$sex <- factor(x$sex, levels=c("M", "F"))
+
+m4 <- lm(social_time ~ age + I(age^2) + sex, data=x)
+summary(m4)
+```
+
+
+The p-value for `sexF`. This is testing the hypotheses:
+
+$$H_0: \beta_{sexF} = 0  \text{  vs.  }H_a:\beta_{sexF} \ne 0$$
+
+If we fail to reject $H_0$, concluding that there is no evidence suggesting $\beta_{sexF}$ is nonzero, then that is like saying there is no difference in social time between the two sexes.
+
+## Incorporating Diary Date
+
+```{r}
+head(x$diary_date)
+class(x$diary_date)
+```
+
+
+A package called lubridate.
+
+```{r}
+#install.packages("lubridate")
+library(lubridate)
+x$diary_date <- ymd(x$diary_date)
+head(x$diary_date)
+class(x$diary_date)
+
+x$wday <- wday(x$diary_date)
+table(x$wday)
+
+
+x$wday <- factor(wday(x$diary_date, label=TRUE), ordered=FALSE)
+table(x$wday)
+class(x$wday)
+```
+
+```{r}
+m4 <- lm(social_time ~ age + I(age^2) + sex + wday, data=x)
+summary(m4)
+head(model.matrix(m4))
+```
+
+
+Let's consider modeling just a weekday vs. weekend effect, rather than breaking out exact days of the week.
+
+```{r}
+x$wknd <- x$wday %in% c("Sat", "Sun")
+table(x$wknd, x$wday)
+```
+
+```{r}
+m5 <- lm(social_time ~ age + I(age^2) + sex + wknd, data=x)
+summary(m5)
+head(model.matrix(m5))
+```
+
+
+Fitted equation:
+
+$$\widehat{\text{social_time}} = 359 - 8.1 age + 0.119 age^2 - 42.6sex_{F} + 90.0 wknd$$
+
+
+Males on a weekday:
+
+$$\widehat{\text{social_time}} = 359 - 8.1 age + 0.119 age^2$$
+
+Males on a weekend:
+
+$$\widehat{\text{social_time}} = 449 - 8.1 age + 0.119 age^2$$
+
+Females on a weekday:
+
+$$\widehat{\text{social_time}} = 316.4 - 8.1 age + 0.119 age^2$$
+
+Females on a weekend:
+
+$$\widehat{\text{social_time}} = 406.4 - 8.1 age + 0.119 age^2$$

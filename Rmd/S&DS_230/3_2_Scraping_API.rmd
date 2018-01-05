@@ -1,0 +1,336 @@
+---
+title: "Interactions, then Datasets/APIs"
+author: "STAT 230"
+date: "3/2/2017"
+output:
+  html_document: default
+  pdf_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## ATUS
+
+Load in the dataset:
+
+```{r}
+# x <- read.csv("atus_social.csv", as.is = TRUE)
+x <- read.csv("https://www.dropbox.com/s/c7gidc2stjh3a2k/atus_social.csv?raw=1",
+              as.is = TRUE)
+head(x)
+```
+
+## Incorporating Diary Date
+
+```{r}
+head(x$diary_date)
+class(x$diary_date)
+
+#install.packages("lubridate")
+library(lubridate)
+x$diary_date <- ymd(x$diary_date)
+head(x$diary_date)
+class(x$diary_date)
+
+x$wday <- wday(x$diary_date)
+table(x$wday)
+
+x$wday <- factor(wday(x$diary_date, label=TRUE), ordered=FALSE)
+table(x$wday)
+class(x$wday)
+```
+
+```{r}
+m4 <- lm(social_time ~ age + I(age^2) + sex + wday, data=x)
+head(model.matrix(m4))
+```
+
+A categorical variable with $K$ levels can be encoded using $K-1$ dummy variables
+(indicators). These $K-1$ indicators are not independent: for each row, at most
+one of them will have the value 1, while the others will be 0's. If there are 
+no 1's, then we know that the row corresponds to the baseline reference level
+(here that would be Sunday, since there is no explicit indicator for Sundays).
+
+```{r}
+summary(m4)
+```
+
+
+All of the `wday` coefficients in this output are actually comparing each 
+labeled day of the week to Sunday, our reference level. Based on the 
+coefficients, we can see that Mondays and Thursdays are fairly similar -- on
+average, respondents spent about 90 minutes less time socializing/relaxing on 
+these days than on Sunday. Friday seemed to be a bit better, such that 
+respondents spent only 60 minutes less time socializing/relaxing compared to
+Sunday. Saturday and Sunday are about the same -- the p-value suggests that
+people on average spend about the same time socializing on Saturday and Sundays.
+
+What about fitting a "Friday effect"? After all, we saw that Fridays are 
+somewhat different from regular workdays and weekends:
+
+```{r}
+x$daytype <- ifelse(x$wday %in% c("Sat", "Sun"), "Wknd", "M_Th")
+x$daytype[x$wday == "Fri"] <- "Fri"
+table(x$daytype, x$wday)
+
+m5a <- lm(social_time ~ age + I(age^2) + sex + daytype, data=x)
+summary(m5a)
+```
+
+Is this model better or worse than our model with all the days of the week?
+
+```{r}
+summary(m4)$r.sq
+summary(m5a)$r.sq
+extractAIC(m4)
+extractAIC(m5a)
+```
+
+
+We also considered modeling just a weekday vs. weekend effect, bundling up 
+Fridays with the other days.
+
+```{r}
+x$wknd <- x$wday %in% c("Sat", "Sun")
+table(x$wknd, x$wday)
+m5 <- lm(social_time ~ age + I(age^2) + sex + wknd, data=x)
+summary(m5)
+```
+
+You should review notes from last class to see how this model translates into
+a fitted equation. 
+
+How does this model compare to the previous one?
+
+```{r}
+summary(m5a)$r.sq
+summary(m5)$r.sq
+
+extractAIC(m5a)
+extractAIC(m5)
+```
+
+
+In summary, if we were using AIC as the measure for comparison, 
+we would prefer the model that breaks the relationship down into a 
+Monday-Thursday, Friday, and a Weekend effect. This means that our model is 
+fitting 6 parallel parabolas. 
+
+
+```{r}
+myfun <- function(sex, daytype, model) {
+  vals <- predict(model, data.frame(age = 15:85, sex = sex, daytype = daytype))
+  return(vals)
+}
+
+plot(social_time ~ age, data=x, pch=16, col=rgb(0,0,0,0.1))
+lines(15:85, myfun("M", "M_Th", m5a), col="red", lwd=2)
+lines(15:85, myfun("M", "Fri", m5a), col="red", lwd=2, lty=2)
+lines(15:85, myfun("M", "Wknd", m5a), col="red", lwd=2, lty=4)
+lines(15:85, myfun("F", "M_Th", m5a), col="blue", lwd=2)
+lines(15:85, myfun("F", "Fri", m5a), col="blue", lwd=2, lty=2)
+lines(15:85, myfun("F", "Wknd", m5a), col="blue", lwd=2, lty=4)
+
+legend("topleft", col=rep(c("red", "blue"), each=3), lwd=2, lty=rep(c(1,2,4),
+                                                                    times=2),
+       legend=c("Males | M_Th", "Males | Fri", "Males | Wknd",
+                "Females | M_Th", "Females | Fri", "Females | Wknd"))
+```
+
+Suppose we want to interact sex and daytype to allow for, say, weekends to affect time spent socializing differently between males and females:
+
+```{r}
+m6 <- lm(social_time ~ age + I(age^2) + sex * daytype, data = x)
+
+
+plot(social_time ~ age, data=x, pch=16, col=rgb(0,0,0,0.1))
+lines(15:85, myfun("M", "M_Th", m6), col="red", lwd=2)
+lines(15:85, myfun("M", "Fri", m6), col="red", lwd=2, lty=2)
+lines(15:85, myfun("M", "Wknd", m6), col="red", lwd=2, lty=4)
+lines(15:85, myfun("F", "M_Th", m6), col="blue", lwd=2)
+lines(15:85, myfun("F", "Fri", m6), col="blue", lwd=2, lty=2)
+lines(15:85, myfun("F", "Wknd", m6), col="blue", lwd=2, lty=4)
+
+legend("topleft", col=rep(c("red", "blue"), each=3), lwd=2, lty=rep(c(1,2,4),
+                                                                    times=2),
+       legend=c("Males | M_Th", "Males | Fri", "Males | Wknd",
+                "Females | M_Th", "Females | Fri", "Females | Wknd"))
+
+summary(m6)
+```
+
+Equation for predicting how much time males spend socializing on Mondays through Thursdays:
+
+$$\widehat{socialtime} = 353 - 8.16 age + .119 age^2 + 17.47 - 33.2 + 4.717 = 342 - 8.16 age + .119 age^2$$
+
+It's hard to interpret the `sexM:daytypeM_Th` coefficient of 4.72 in isolation. 
+It might be more helpful to note that we have a total of 6 intercept-type 
+coefficients, so effectively we have 6 degrees of freedom to fit intercepts for
+6 different parabolas as seen in the plot.
+
+Note that the `sexM:daytypeM_Th` variable has a large p-value, suggesting that
+we don't have enough evidence to reject $H_0: \beta_{\text{sexM:daytypeMTh}} = 0$.
+The other interaction coefficient is actually statistically significant. We can't
+just keep the one that is significant in the model. 
+
+### F-statistics
+
+In the regression summary, the F-statistic at the bottom is
+simultaneously testing whether any of the non-intercept coefficients are statistically significant.
+
+$$H_0: \beta_{age} =\beta_{age^2} = ... = \beta_{sexM:daytypeWknd} = 0$$
+
+$$H_a: \text{ at least one of these }\beta_j \ne 0$$
+
+```{r}
+anova(m6)
+```
+
+This command provides us p-values that test the significance of individual predictors (and in cases where the predictor is associated with 2 or more coefficients, we get a single p-value that considers all coefficients).
+
+```{r}
+summary(m5a)$r.squared
+summary(m6)$r.squared
+```
+
+
+
+## Movie Data
+
+Pre-requisite packages:
+
+```{r}
+library(XML)
+library(omdbapi)
+```
+
+If the above packages don't load, you will need to install the following packages:
+
+```{r, eval=FALSE}
+install.packages("XML")
+install.packages("devtools")
+devtools::install_github("hrbrmstr/omdbapi")
+```
+
+
+
+### Part 1
+
+For this first part, we'd like to scrape the top 250 movies at the International
+Movies Database (IMDB) website here:
+
+> http://www.imdb.com/chart/top
+
+By scraping, we really mean that we want a representation of this dataset that
+is readable in R (say, as a data frame). Then, we can examine how movie ratings
+vary by year of release, for example. Or we can use an alternative data source
+to merge in additional variables that might be of interest to us.
+
+The XML package has a number of functions that can be used to extract 
+structured data from the web. Our data resides in an HTML table. Because an HTML table is pretty well-structured, we can use the `readHTMLTable()` to extract 
+the information in this table into R.
+
+```{r}
+imdb <- readHTMLTable("http://www.imdb.com/chart/top",
+                      which=1, stringsAsFactors = FALSE)
+head(imdb)
+colnames(imdb)
+imdb <- imdb[,2:3] # only really need the 2nd and 3rd columns
+head(imdb)
+```
+
+Data scraped from the web will typically have some degree of messiness that 
+needs to be cleaned. In this case, we can see that the first column of the dataset
+is informative, but is a bit too heterogeneous for us to work with. We'll now
+take a sequence of steps to parse this out into a `title` column and a `year` 
+column.
+
+```{r}
+title_years <- strsplit(imdb[,1], "\n")
+head(title_years)
+class(title_years)
+
+title_years <- unlist(title_years)
+head(title_years)
+class(title_years)
+
+imdb$year <- title_years[seq(3, length(title_years), 3)]
+head(imdb$year)
+
+imdb$title <- title_years[seq(2, length(title_years), 3)]
+head(imdb)
+
+imdb$year <- trimws(imdb$year)
+imdb$year <- substr(imdb$year, 2, 5)
+imdb$year <- as.numeric(imdb$year)
+hist(imdb$year)
+summary(imdb$year)
+
+imdb$title <- trimws(imdb$title)
+imdb <- imdb[,-1]
+imdb$rank <- 1:250
+
+colnames(imdb)[1] <- "imdbrating"
+
+plot(imdbrating ~ year, data=imdb, col=rgb(0, 0, 0, 0.2), pch=16)
+```
+
+
+### Part 2: using the API
+
+An API is a tool that allows software such as R or Python communicate with a 
+server to obtain information directly. Not all websites with interesting data
+have their own API. For example, IMDb did not have an API, so we had to take
+the manual route in Part 1 to scrape the data. While that was helpful for 
+obtaining some information about movies, we might be interested in other bits
+of information. Thankfully, an Open Movies Database (OMDB) exists with other
+pieces of information we might be interested in about any movies and someone
+has written an API for it to speak directly with R!
+
+One way to access a movie's data via the `omdbapi` is to locate it by 
+the name of the movie as well as the release year. 
+
+```{r}
+library(omdbapi)
+
+movie <- find_by_title(imdb$title[2], year_of_release = imdb$year[2],
+              include_tomatoes = TRUE)
+names(movie)
+movie
+
+```
+
+Some relevant info we might want about this movie:
+
+```{r}
+c(movie$Rated, movie$Runtime, movie$Genre, movie$tomatoRating)
+```
+
+
+Now, since we've proven that we can extract some useful information about a single
+movie, we can write a loop to extract information about all 250 movies.
+
+```{r}
+movieMat <- matrix(NA, nrow=250, ncol=4)
+for (i in 1:nrow(imdb)) {
+  movie <- find_by_title(imdb$title[i], 
+                         year_of_release = imdb$year[i],
+              include_tomatoes = TRUE)
+  if (length(movie) != 0) {
+    movieMat[i,] <- c(movie$Rated, movie$Runtime, movie$Genre, movie$tomatoRating)
+  }
+}
+head(movieMat)
+```
+
+Merging the two datasets.
+
+```{r}
+imdb$rated <- movieMat[,1]
+imdb$genre <- movieMat[,3]
+imdb$tomatorating <- as.numeric(movieMat[,4])
+head(imdb)
+```
+

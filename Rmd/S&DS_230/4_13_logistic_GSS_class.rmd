@@ -1,0 +1,305 @@
+---
+title: 'Logistic Regression: Going Beyond 2 Classes'
+output:
+  html_document: default
+  pdf_document: default
+date: "April 13, 2017"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(dplyr)
+library(ggplot2)
+```
+
+## GSS Survey
+
+```{r}
+x <- read.csv("GSS_v2.csv", as.is=TRUE)
+head(x)
+```
+
+I've added a few more variables of interest to the 2016 portion of the dataset from the homework assignment:
+
+* `happy`: "Taken all together, how would you say things are these days--would you say that you are very happy, pretty happy, or not too happy?"
+
+* `polviews`: Political views (on scale from extremely conservative to extremely liberal)
+
+* `partyid`: "Generally speaking, do you usually think of yourself as a Republican, Democrat, Independent, or what?"
+
+* `pres12`: Who the respondent voted for in the 2012 Presidential Election
+
+
+
+### Predicting Political Views
+
+We need a bit of data cleaning before we can use the political views variable. 
+
+```{r}
+table(x$polviews)
+x$polviews[x$polviews %in% c("Don't know", "No answer")] <- NA
+
+x$polviews[grep("onser", x$polviews)] <- "Conservative"
+x$polviews[grep("iber", x$polviews)] <- "Liberal"
+table(x$polviews)
+
+x$polviews <- factor(x$polviews, levels=c("Conservative", "Moderate", "Liberal"))
+table(x$polviews)
+```
+
+We'll start just by examining a binomial logistic regression, predicting moderate vs. non-moderate:
+
+```{r}
+x$moderate <- factor(ifelse(x$polviews == "Moderate", "Yes", "No"))
+table(x$moderate, x$polviews)
+```
+
+Suppose we are interested in `sex` vs. `moderate`.
+
+```{r}
+table(x$moderate, x$sex)
+mosaicplot(sex ~ moderate, data=x)
+```
+
+Chi-squared test approach:
+
+Null hypothesis assumes the two variables are independent. (In other words, knowledge of an individual's sex does not give us any information about whether they're more or less likely to be politically moderate.)
+
+Alternative hypothesis states that the two variables are dependent.
+
+
+```{r}
+chisq.test(table(x$moderate, x$sex))
+```
+
+Based on this p-value, and comparing say, to a significance level of 0.05, we conclude that the data suggest that `sex` is not independent of `moderate`. 
+
+We can also run a 2-sample z-test, considering:
+
+$$H_0: p_F = p_M$$
+
+vs.
+
+$$H_a: p_F \ne p_M$$
+
+
+where $p_F$ is the proportion of all females who would call themselves moderate and $p_M$ is the proportion of all males who would call themselves moderate.
+
+```{r}
+prop.test(table(x$sex, x$moderate))
+prop.test(table(x$sex, x$moderate)[,2:1])
+```
+
+The `prop.test()` function used in this way is equivalent to the chi-square test shown above. (The second command assumes the null hypothesis of $$p_M = p_F$$ and the first command assumes the null hypothesis of $$1-p_M = 1- p_F$$. They are equivalent, hence the same p-values.)
+
+A third tool for addressing the same question is binomial logistic regression:
+
+```{r}
+m1 <- glm(moderate ~ sex, data=x, family=binomial)
+coef(m1)
+```
+
+Intercept:
+
+-0.416 is the log-odds of females responding that they are moderates.
+
+$$-0.416 = \log \frac{\hat p_F}{1-\hat p_F}$$
+
+```{r}
+exp(-0.416)/(1+exp(-0.416))
+```
+
+
+Slope is a log-odds ratio:
+
+$$-0.2217 = \log \left(\frac{\frac{\hat p_M}{1-\hat p_M}}{\frac{\hat p_F}{1-\hat p_F}} \right)$$
+
+```{r}
+odds_M <- exp(-0.2217)*(0.3975/(1-0.3975))
+odds_M/(1+odds_M)
+```
+
+We can confirm that these are the sample proportions from the data:
+
+```{r}
+table(x$moderate, x$sex)
+p_f <- 607/(607+920)
+p_f
+
+p_m <- 425/(425+804)
+p_m
+
+
+# easier via an apply() function
+tbl <- table(x$moderate, x$sex)
+tbl[2,]/apply(tbl, 2, sum)
+```
+
+
+Also, we can check that all predicted values in the dataset are exactly these sample proportions:
+
+```{r}
+table(m1$fitted)
+```
+
+
+### Predicting Multiple Classes
+
+```{r}
+library(nnet)
+```
+
+We'll take a brief detour to consider a dataset on the diets of alligators. This is a dataset from a textbook called Categorical Data Analysis by Agresti (2002). Researchers examined the stomach contents of 219 captured alligators and recorded the primary contents discovered. 
+
+```{r}
+y <- read.csv("alligator.csv", as.is=TRUE)
+head(y)
+dim(y)
+```
+
+Let's transform this dataset so that we have 1 alligator per row:
+
+```{r}
+rep(1:nrow(y), y$count)
+
+z <- y[rep(1:nrow(y), y$count), 1:4]
+sum(y$count)
+
+head(z)
+
+rownames(z) <- NULL
+head(z)
+```
+
+The variable of interest is what `food` item makes up the majority of the alligator's diet.
+
+```{r}
+table(z$food)
+```
+
+
+We could predict this using multinomial logistic regression. The response variable is categorical with 5 classes, and these classes have no meaningful ordering. 
+
+Let's look at using `size` of the alligator to predict `food`.
+
+```{r}
+mosaicplot(size ~ food, data=z)
+
+m3 <- multinom(food ~ size, data=z)
+coef(m3)
+```
+
+
+5 classes of food, but only 4 sets of equation coefficients -- we don't get a fitted set of coefficients for bird, which is our default baseline level for the response.
+
+$$\log \frac{\hat p_{Fish}}{\hat p_{bird}} = 1.727 + 0.555small$$
+
+
+If we consider a small alligator:
+
+$$\frac{\hat p_{Fish}}{\hat p_{bird}} = \exp(1.727 + 0.555)= 9.796$$
+
+A large alligator:
+
+$$\frac{\hat p_{Fish}}{\hat p_{bird}} = \exp(1.727)= 5.624$$
+
+We could also consider expanding our model:
+
+
+In words, this suggests that odds that an alligator chooses fish over bird as its primary food source is doubled if it is small in size. To clarify, this **does not mean** that a small alligator is twice as likely to choose fish over bird. In fact, a small alligator is about 10 times as likely to choose fish over bird; a big alligator is about 5 times as likely to choose fish over bird.
+
+For the exact probabilities, we have a bit more algebra... or we could use the predicted probabilities from the `predict()` function:
+
+```{r}
+predict(m3, data.frame(size="small"), type="probs")
+predict(m3, data.frame(size="large"), type="probs")
+```
+
+We can also compare nested models using `anova()` for the analysis of deviance. For example, could we improve the model by including the rest of the predictors that are available?
+
+```{r}
+m4 <- multinom(food ~ ., data=z)
+anova(m3, m4, test="Chisq")
+```
+
+As with a nested F-test, this test above checks for whether `lake` and/or `sex` is useful in predicting `food`, after accounting for `size`. At a significance level of 0.05, our p-value of 1.395e-05 suggests that there is some useful information in the `lake` and `sex` variables.
+
+
+#### Regressing with Aggregated Data
+
+Instead of creating a data frame `z` that breaks out the `y` data frame such that each alligator is in its own row, we could have also directly made use of the `count` column in the `y` data frame using the `weights=` argument in the modeling function.
+
+```{r}
+m4.a <- multinom(food ~ . -count, data=y, weights=count)
+coef(m4)
+coef(m4.a) # same exact output!
+```
+
+
+
+### Back to Predicting the Political Views
+
+```{r}
+table(x$polviews)
+```
+
+Ordinal logistic regression is applicable in cases where the response variable has a natural (and informative) ordering.
+
+```{r}
+library(MASS)
+```
+
+The `polr()` function is used to do ordinal logistic regression.
+
+```{r}
+summary(x$age)
+head(x$age)
+x$age <- as.numeric(x$age)
+```
+
+
+```{r}
+p1 <- polr(polviews ~ age, data=x)
+summary(p1)
+
+table(p1$fitted.values)
+table(predict(p1, x))
+```
+
+Note that `polr()` encodes Y as 3 levels:
+
+* Y=1: Conservative
+* Y=2: Moderate
+* Y=3: Liberal
+
+The model uses equations that are based on predicting log-odds of **cumulative probabilities**.
+
+$$\log \frac{P(Y\le 1)}{P(Y > 1)} = \alpha_1 - (\beta_1\text{age})$$
+
+$$\log \frac{P(Y\le 2)}{P(Y > 2)} = \alpha_2 - (\beta_1\text{age})$$
+Check: What are the predicted class probabilities for a 50-year old?
+
+```{r}
+cumprobs <- rep(NA, 2)
+
+# this is the predicted probability of conservative
+cumprobs[1] <- exp(-1.3205 +0.01323*50)
+cumprobs[1] <- cumprobs[1] /(1+cumprobs[1] )
+
+# this is the predicted probability of conservative OR moderate
+cumprobs[2] <- exp(0.266 +0.01323*50)
+cumprobs[2] <- cumprobs[2] /(1+cumprobs[2] )
+
+# prob of conservative
+cumprobs[1]
+
+# prob of moderate
+cumprobs[2] - cumprobs[1]
+
+# prob of liberal
+1-cumprobs[2]
+
+# check
+predict(p1, data.frame(age=50), type="probs")
+```
+

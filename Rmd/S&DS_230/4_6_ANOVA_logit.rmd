@@ -1,0 +1,229 @@
+---
+title: "ANOVA and Logistic Regression"
+author: "STAT 230"
+date: "4/6/2017"
+output:
+  html_document: default
+  pdf_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(ggplot2)
+library(lubridate)
+library(dplyr)
+library(tidyr)
+```
+
+
+## Bike Rental Data
+
+The dataset comes from the UCI Machine Learning Repository: 
+> https://archive.ics.uci.edu/ml/datasets/Bike+Sharing+Dataset
+
+This dataset contains the hourly and daily count of rental bikes between years 2011 and 2012 in the Capital (Washington D.C.) bikeshare system with the corresponding weather and seasonal information.
+
+```{r}
+bike <- read.csv("bikerental.csv", as.is=TRUE)
+head(bike)
+```
+
+The variables include:
+
+1) season : season (1:spring, 2:summer, 3:fall, 4:winter)
+2) yr : year (0: 2011, 1:2012)
+3) mnth : month (1 to 12)
+4) hr : hour (0 to 23)
+5) holiday : whether day is holiday (1) or not (0) 
+6) weekday : day of the week - coded 0 (Sunday) to 6 (Saturday)
+7) workingday : if day is neither weekend nor holiday is 1, otherwise is 0.
+8) weathersit : weather situation with the following levels:
+- 1: Clear, Few clouds, Partly cloudy, Partly cloudy
+- 2: Mist + Cloudy, Mist + Broken clouds, Mist + Few clouds, Mist
+- 3: Light Snow, Light Rain + Thunderstorm + Scattered clouds, Light Rain + Scattered clouds
+9) temp : Normalized temperature in Celsius. The values are as a fraction of 41 (max)
+10) atemp: Normalized feeling temperature in Celsius. The values are as a fraction of 50 (max)
+11) hum: Normalized humidity. The values are as a fraction of 100 (max)
+12) windspeed: Normalized wind speed. The values are as a fraction of 67 (max)
+13) casual: count of casual users
+14) registered: count of registered users
+15) cnt: count of total rental bikes including both casual and registered
+
+As with some datasets you might be working with, a little bit of work will go a long way towards making your results more readable:
+
+```{r}
+bike <- bike %>% mutate(holiday=ifelse(holiday==1,"Holiday",
+                                       "Non-Holiday"),
+                        weathersit = factor(weathersit, 
+                                            labels=c("Clear", "Mist", "Precip")))
+```
+
+
+Registered users usage by weather situation:
+
+```{r}
+ggplot(bike, aes(x=weathersit, y=registered)) + geom_boxplot()
+```
+
+
+Fit a model:
+
+```{r}
+m1 <- lm(registered ~ weathersit, data=bike)
+anova(m1)
+```
+
+The p-value here is testing:
+
+$$H_0: \mu_c = \mu_m = \mu_p$$
+
+$$H_a: \text{ at least 1 }\mu_j \text{ is not equal to the others}$$
+
+Given that the p-value of 8.33e-14 is less than a significance level of 0.05, we reject the null hypothesis and conclude that the data suggest the mean usage in at least one of the weather situation groups is different from the others.
+
+At this point, we can compare the individual pairs of group means. 
+
+```{r}
+pairwise.t.test(bike$registered,
+                bike$weathersit,
+                p.adj = "none")
+```
+
+We might say, all of these p-values are very, very small, so the data suggest that the mean registered usage in each of the three populations is different from the others.
+
+* side note: ANOVA assumes that the three populations have the same variance (we might check this just by looking at a plot)
+
+* side note 2: when we use a significance level of 0.05, this is saying that out of 100 p-values where the null hypothesis is actually true, we would expect to reject 5 of them. When we have a lot of p-values to interpret, we need to be careful that we don't get too excited by one or two significant p-values. One way to remedy this issue of multiple testing is to adjust the p-values (or the significance level). The Bonferroni correction does one of two things:
+
+* divide the significance level by the number of tests being done
+
+-or-
+
+* multiply the p-values by the number of tests being done
+
+```{r}
+pairwise.t.test(bike$registered,
+                bike$weathersit,
+                p.adj = "bonf")
+```
+
+So the approach above multiplies the p-values, and so we would still compare these p-values to the same significance level, say 0.05. Our conclusions are unchanged. 
+
+
+What about incorporating holiday as well?
+
+```{r}
+ggplot(bike, aes(x=weathersit, y=registered)) + geom_boxplot()  + facet_wrap(~holiday)
+```
+
+
+```{r}
+m2 <- lm(registered ~ weathersit + holiday, data=bike)
+summary(m2)
+```
+
+
+```{r}
+interaction.plot(bike$holiday, bike$weathersit, bike$registered)
+
+interaction.plot(bike$weathersit, bike$holiday, bike$registered)
+m3 <- lm(registered ~ weathersit * holiday, data=bike)
+summary(m3)
+```
+
+## Logistic Regression
+
+Logistic regression is a technique useful for predicting a response with two outcomes.
+
+
+```{r}
+crabs <- read.table("crabs.txt", header=TRUE)
+```
+
+Brockmann (1996) conducted a study of female nesting horseshoe crabs. Each female horseshoe crab had a male crab resident in her nest and possibly other male crabs residing nearby (called satellites). The study investigated factors affecting whether the female crab had any satellites. A description of the variables is below:
+
+- `color` denotes the female crab's color. It is coded 1: light, 2: medium light, 3: medium, 4: medium dark, 5: dark. Not all of these categories are represented in this data set.
+- `spine` denotes the female's spine condition. It is coded 1: both good, 2: one worn or broken, 3: both worn or broken.
+- `width` denotes female's width (in cm).
+- `num.satellites` denotes the number of satellites nearby
+- `weight` denotes the female's weight (in g).
+
+```{r}
+head(crabs)
+plot(crabs)
+
+library(GGally)
+ggpairs(crabs)
+```
+
+
+```{r}
+table(crabs$num.satellites)
+
+crabs <- crabs %>% mutate(satellites = 1*(num.satellites > 0))
+
+table(crabs$num.satellites, crabs$satellites)
+```
+
+
+#### Linear Regression?
+
+Let's start with considering modeling `satellites` using `weight`.
+
+What if we just use linear regression?
+
+```{r}
+m1 <- lm(satellites ~ weight, data=crabs)
+summary(m1)
+```
+
+
+
+$$\hat p = \hat\beta_0+\hat \beta_1 \text{weight}$$
+
+If we pretend we are predicting probabilities, then we might interpret the coefficient of 3.2e-04 as saying that a 1g increase in the weight of a female is associated with a 3.2e-04 increase in the probability of having at least 1 satellite. 
+
+```{r}
+plot(jitter(satellites) ~ weight, data=crabs)
+abline(m1, col="blue")
+```
+
+
+
+
+
+
+#### Simple logistic regression
+
+Logistic regression gets around this problem by fitting the following model instead:
+
+$$\log\left(\frac{\hat p}{1-\hat p}\right) = \hat\beta_0+\hat \beta_1 \text{weight}$$
+
+
+This is called logistic regression. The transformation on the left hand side is called the logistic transformation (or the logit transformation). This equation shows that we are trying to predicting log-odds using a linear combination of the predictors.
+
+
+
+```{r}
+m2 <- glm(satellites ~ weight, data=crabs, family=binomial)
+summary(m2)
+```
+
+```{r}
+plot(jitter(satellites) ~ weight, data=crabs)
+curve(predict(m2, data.frame(weight=x), type="response"), col="blue", add=TRUE, lwd=2)
+```
+
+Empirical probability plot:
+
+```{r}
+crabs2 <- crabs %>% mutate(weightCat = cut(weight, 10)) %>% 
+  group_by(weightCat) %>% 
+  summarize(mweight = mean(weight),
+            msat = mean(satellites))
+crabs2
+
+plot(msat ~ mweight, data=crabs2)
+abline(m1, col="blue")
+curve(predict(m2, data.frame(weight=x), type="response"), col="red", add=TRUE, lwd=2)
+```

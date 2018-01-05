@@ -1,0 +1,340 @@
+---
+title: "Predicting Political Views in the GSS"
+output:
+  html_document: default
+  pdf_document: default
+date: "April 18, 2017"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(dplyr)
+library(ggplot2)
+```
+
+## GSS Survey
+
+```{r}
+x <- read.csv("https://www.dropbox.com/s/7yyj2507y6nlu9w/GSS_v2.csv?raw=1", as.is=TRUE)
+x$polviews[x$polviews %in% c("Don't know", "No answer")] <- NA
+x$polviews[grep("onser", x$polviews)] <- "Conservative"
+x$polviews[grep("iber", x$polviews)] <- "Liberal"
+x$polviews <- factor(x$polviews, levels=c("Conservative", "Moderate", "Liberal"))
+table(x$polviews)
+```
+
+### Predicting Political Views
+
+We examined a binomial logistic regression model, predicting moderate vs. non-moderate:
+
+```{r}
+x$moderate <- factor(ifelse(x$polviews == "Moderate", "Yes", "No"))
+mosaicplot(sex ~ moderate, data=x)
+
+# compute proportions using `apply()`
+tbl <- table(x$moderate, x$sex)
+tbl
+tbl[2,]/apply(tbl, 2, sum)
+```
+
+Model 1:
+
+```{r}
+m1 <- glm(moderate ~ sex, data=x, family=binomial)
+summary(m1)
+```
+
+How well does this model predict `moderate`? 
+
+```{r}
+table(m1$fitted)
+```
+
+This tells us there are just 2 distinct predictions for the probability that of someone being a moderate. This is not so helpful for generating individual predictions. 
+
+```{r}
+m2 <- glm(moderate ~ sex + age, data=x, family=binomial)
+summary(m2)
+
+# oops, age  needs to be numeric
+x$age <- as.numeric(x$age)
+m2 <- glm(moderate ~ sex + age, data=x, family=binomial)
+summary(m2)
+```
+
+
+
+How many unique predicted probabilities are there now? I would assume this is one for every combination of sex and age.
+
+```{r}
+length(unique(fitted(m2)))
+hist(fitted(m2))
+```
+
+A plot of the model:
+
+```{r}
+plot(I(moderate == "Yes") ~ age, data=x, type="n", ylab="Pr(moderate)")
+curve(predict(m2, data.frame(sex="Female", age=x),
+              type="response"), lwd=2, col="blue", lty=2, add=TRUE)
+curve(predict(m2, data.frame(sex="Male", age=x),
+              type="response"), lwd=2, col="red", lty=2, add=TRUE)
+
+legend("topleft", lwd=2, col=c("red", "blue"), legend=c("Males", "Females"))
+```
+
+Let's look at the fitted values:
+
+```{r}
+hist(fitted(m2))
+```
+
+For the sake of an example, let's use 0.38 as a threshold for classifying someone as a moderate.
+
+```{r}
+library(dplyr)
+y <- x %>% filter(!is.na(age) & !is.na(sex) & !is.na(moderate))
+m2a <- glm(moderate ~ sex + age, data=y, family=binomial)
+summary(m2a)
+
+pred <- ifelse(fitted(m2a) >= 0.38, "Yes", "No")
+
+# confusion matrix
+table(pred=pred, actual=y$moderate)
+
+#misclassification error rate
+mean(pred != y$moderate)
+```
+
+
+What was the misclassification error rate from our smaller model?
+
+```{r}
+m1a <- glm(moderate ~ sex, data=y, family=binomial)
+summary(m1a)
+
+pred <- ifelse(fitted(m1a) >= 0.38, "Yes", "No")
+
+# confusion matrix
+table(pred=pred, actual=y$moderate)
+
+#misclassification error rate
+mean(pred != y$moderate)
+```
+
+It appears we've lowered our error rate from 48% to 44%. However, this is an in-sample measure of performance. We should actually be assessing our model using data that was not used in the fitting process. Cross-validation is a tool for doing this.
+
+Idea is to, say, split the data into 5 parts.
+
+* Fit the model on parts 1-4, predict part 5.
+* Fit the model on parts 1-3, 5, predict part 4.
+...
+
+Come up with a single error measure based on these 5 sets of predictions.
+
+```{r}
+set.seed(230)
+y$fold <- sample(c(rep(1:5, 545), 1:2))
+table(y$fold)
+
+errs1 <- c()
+errs2 <- c()
+for (k in 1:5) {
+  train <- y[y$fold != k,]
+  test <- y[y$fold == k,]
+  
+  m1b <- glm(moderate ~ sex, data=train, family=binomial)
+  preds1 <- ifelse(predict(m1b, test, type="response") >= 0.38, 
+                   "Yes", "No")
+  errs1 <- c(errs1, test$moderate != preds1)
+  m2b <- glm(moderate ~ sex + age, data=train, family=binomial)
+  preds2 <- ifelse(predict(m2b, test, type="response") >= 0.38, 
+                   "Yes", "No")
+  errs2 <- c(errs2, test$moderate != preds2)
+}
+mean(errs1) # cross-validation error for model 1
+mean(errs2) # cross-validation error for model 2
+```
+
+
+Note: this approach can be used more generally for comparing any two models, for getting a good estimate of the out-of-sample prediction error, and for tuning model parameters, such as the classification threshold.
+
+
+
+### Conservatives, Moderates, and Liberals via Logistic Regression
+
+#### (Unordered) Multinomial Logistic Regression
+
+```{r}
+table(x$polviews)
+```
+
+For now, we will ignore the fact that there is a natural (and informative) ordering in response variable `polviews` and fit a multinomial logistic regression.
+
+
+```{r}
+library(nnet)
+m4 <- multinom(polviews ~ age, data=y)
+coef(m4)
+```
+
+
+The fitted model includes the following equations:
+
+$$\log\left( \frac{\hat p_{Mod}}{\hat p_{Cons}}\right) = 0.885 - 0.016 age$$
+$$\log\left( \frac{\hat p_{Lib}}{\hat p_{Cons}}\right) = 0.714 - 0.018 age$$
+
+* We expect that someone is $e^{0.714}=2.04$ times as likely to be born a Liberal as a Conservative.
+
+* As age increases by 1 year, the log-odds ratio of being a liberal versus a conservative decreases by 0.018 (or the odds ratio gets multiplied by $e^{-0.018}=0.98$).
+
+
+
+
+
+
+
+What are the predicted class probabilities for someone who is age 50? 
+
+$$\log\left( \frac{\hat p_{Mod}}{\hat p_{Cons}}\right) = 0.885 - 0.016 (50) = 0.085$$
+
+$$\hat p_{Mod} = \hat p_{Cons} e^{0.085} = 1.089 \hat p_{Cons}$$
+
+$$\log\left( \frac{\hat p_{Lib}}{\hat p_{Cons}}\right) = 0.714 - 0.018 (50) = -0.186$$
+
+$$\hat p_{Lib} = \hat p_{Cons} e^{-0.186} = 0.830\hat p_{Cons}$$
+
+We also know that $\hat p_{Lib} + \hat p_{Cons} + \hat p_{Mod} = 1$, so we can solve:
+
+$$\hat p_{Cons} + 1.089 \hat p_{Cons} + 0.830\hat p_{Cons} = 1 \ \ \ \Rightarrow \hat p_{Cons} = 0.343$$
+
+```{r}
+predict(m4, data.frame(age=50), type="class")
+predict(m4, data.frame(age=50), type="probs")
+```
+
+Let's try to visualize the model:
+
+```{r}
+plot(c(18,85), c(0,1), type="n", xlab="Age", ylab="Predicted Probs", main="Multinomial Logistic Regression")
+curve(predict(m4, data.frame(age=x), type="probs")[,1], 
+      col="red", lwd=2, add=TRUE)
+curve(predict(m4, data.frame(age=x), type="probs")[,2], 
+      col="black", lwd=2, add=TRUE)
+curve(predict(m4, data.frame(age=x), type="probs")[,3], 
+      col="blue", lwd=2, add=TRUE)
+legend("topleft", col=c("red", "black", "blue"), lwd=2, legend=levels(x$polviews))
+
+```
+
+In general, with K classes in the response variable and p predictors, we expect to have (K-1)*(p+1).
+
+
+
+#### Ordinal Logistic Regression
+
+Ordinal logistic regression is applicable in cases where the response variable has a natural (and informative) ordering. 
+
+
+```{r}
+library(MASS)
+
+p1 <- polr(polviews ~ age, data=y)
+summary(p1)
+```
+
+
+In general, with $K$ classes and p predictors, we have a total of (K-1)+p coefficients fitted.
+
+Note that `polr()` encodes Y as 3 levels:
+
+* Y=1: Conservative
+* Y=2: Moderate
+* Y=3: Liberal
+
+The model uses equations that are based on predicting log-odds of **cumulative probabilities** $P(Y \le j)$.
+
+Log odds ratios involve probabilities:
+
+* being in group 1 ($Y \le 1$)
+* being in group 1 or 2 ($Y \le 2$)
+
+
+$$\log \frac{P(Y\le 1)}{1-P(Y \le 1)} = \alpha_1 - (\beta_1\text{age})$$
+
+$$\log \frac{P(Y\le 2)}{1- P(Y \le 2)} = \alpha_2 - (\beta_1\text{age})$$
+
+
+* $\alpha_k$ is the log-odds of falling into or below category $k$ when the explanatory variables are 0.
+
+* $\beta_1$ is the **decrease** in log-odds of falling into or below any category associated with a 1 year increase in `age`. (Positive $beta$ values suggest increase in predictor is associated with lower chance of falling into lower categories.)
+
+
+
+Check: What are the predicted class probabilities for a 50-year old?
+
+```{r}
+cumprobs <- rep(NA, 2)
+
+# this is the predicted probability of conservative
+cumprobs[1] <- exp(-1.3205 +0.01323*50)
+cumprobs[1] <- cumprobs[1] /(1+cumprobs[1] )
+cumprobs[1] # P(Y <= 1) = P(Y = 1)
+
+# this is the predicted probability of conservative OR moderate
+cumprobs[2] <- exp(0.266 +0.01323*50)
+cumprobs[2] <- cumprobs[2] /(1+cumprobs[2] )
+cumprobs[2] # P(Y <= 2) = P(Y = 1) + P(Y=2)
+
+# prob of conservative
+cumprobs[1]
+
+# prob of moderate
+cumprobs[2] - cumprobs[1]
+
+# prob of liberal
+1-cumprobs[2]
+
+# check
+predict(p1, data.frame(age=50), type="probs")
+```
+
+
+Let's try to visualize the model:
+
+```{r}
+plot(c(18,85), c(0,1), type="n", xlab="Age", ylab="Predicted Probs", main="Ordinal Logistic Regression")
+curve(predict(p1, data.frame(age=x), type="probs")[,1], 
+      col="red", lwd=2, add=TRUE)
+curve(predict(p1, data.frame(age=x), type="probs")[,2], 
+      col="black", lwd=2, add=TRUE)
+curve(predict(p1, data.frame(age=x), type="probs")[,3], 
+      col="blue", lwd=2, add=TRUE)
+legend("topleft", col=c("red", "black", "blue"), lwd=2, legend=levels(y$polviews))
+
+```
+
+
+Let's take a look at the cumulative probabilities:
+
+```{r}
+plot(c(18,85), c(0,1), type="n", xlab="Age", ylab="Predicted Probs", main="Ordinal Logistic Regression")
+curve(predict(p1, data.frame(age=x), type="probs")[,1], 
+      col="red", lwd=2, add=TRUE)
+curve(rowSums(predict(p1, data.frame(age=x), type="probs")[,1:2]), 
+      col="black", lwd=2, add=TRUE)
+curve(rowSums(predict(p1, data.frame(age=x), type="probs")[,1:3]), 
+      col="blue", lwd=2, add=TRUE)
+llabels <- c("Cons", "Cons + Moderate")
+legend("bottomright", col=c("red", "black"), lwd=2, legend=llabels)
+```
+
+Interpretation: The distance between 0 and the red curve here gives the probability that someone is a conservative at a given age. The distance between the red and the black curve yields the probability that someone is a moderate at a given age. The distance between the black and blue gives the probability that someone is a liberal at a given age. We see the conservative probabilities growing as we age, suggesting that we're more likely to be come more conservative as we age, and that the liberal probabilities shrinks as we age. The gap between the red and the black line is fairly constant, so the moderate probabilities are relatively unaffected by age.
+
+Stepwise regression still works!
+
+```{r}
+mfull <- polr(polviews ~ . - fold - hrs1 - moderate, data=y )
+mstep <- step(mfull, direction="backward")
+```
+

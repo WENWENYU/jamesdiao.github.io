@@ -1,0 +1,206 @@
+---
+title: "STAT 230"
+date: "February 16, 2017"
+output: 
+  html_document:
+    toc: true
+    toc_float: 
+      collapsed: false
+
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, error=TRUE)
+```
+
+# Still more on regression
+## Body fat data
+
+```{r}
+library(MASS)
+b <- read.csv("http://www.stat.yale.edu/~jtc5/STAT230/data/bodyfat-252.csv")
+# b250 <- read.csv("http://www.stat.yale.edu/~jtc5/STAT230/data/bodyfat.csv")
+nrow(b)
+```
+
+Next I'd like to add row names to the data frame.  Let's make a vector of row names
+that looks like r1, r2, ..., r252.
+```{r}
+rownames(b) <- paste0("r",1:252)
+# An aside on how the "paste" function works:
+paste("I like stat", "230")
+paste("I like stat", "230", sep="")
+paste0("I like stat", "230")
+```
+
+Take a quick look at scatterplots of all pairs of variables:
+```{r}
+dim(b)
+head(b) 
+names(b)
+plot(b)
+plot(b[1:7])
+plot(b[c(1,8:14)])
+```
+
+There is a person in the data with an very low value of height. Let's see where this person falls in all of the scatterplots by coloring the corresponding point red, and making the other points mostly transparent:
+
+```{r}
+n <- nrow(b)
+i <- which(b$height < 60)
+mycol <- rgb(rep(0,n),rep(0,n),rep(0,n),rep(0.1,n))
+mycol[i] <- "red"
+plot(b[1:7], col=mycol, pch=19)
+```
+
+```{r}
+plot(b$weight ~ b$height)
+identify(b$weight ~ b$height)
+```
+
+For now just remove person 42.
+```{r}
+b <- b[-i,]
+dim(b)
+n <- nrow(b)
+```
+
+```{r}
+# View(b)
+hist(b$height)
+      # I kind of like truehist for histograms. It's in the MASS library.
+      truehist(b$height, h=.5, x0 = .25)
+hist(b$abdomen)
+hist(b$abdomen/2.54)
+```
+
+```{r}
+bf = b$bf
+ht = b$height
+ab = b$abdomen/2.54
+
+plot(bf ~ ht)
+cor(bf, ht)
+
+lmh = lm(bf ~ ht)
+summary(lmh)
+# ^^ not surprising; it's not true that taller people have systematically 
+# less or more percent bodyfat...
+
+plot(bf ~ ab)
+lma = lm(bf ~ ab)
+summary(lma)
+
+lmha = lm(bf ~ ht + ab)
+summary(lmha)
+```
+`ht` was not useful by itself in predicting `bf`, but when `ab` is also in the model,
+`ht` becomes useful (statistically significant, in any case).
+If we fix a value for `ab` (or restrict it to a narrow range),
+then ht becomes useful in predicting bf.
+
+Let's see if we can visualize this a bit. We'll plot subsets of the points having restricted ranges for `ab`, and see if the relationship between `bf` and `ht` tends to have negative slope.
+```{r}
+qs <- quantile(ab, seq(0,1,by=.2))
+ii <- which(ab >= qs[1] & ab <= qs[2])
+plot(bf ~ ht, type="n")
+points(bf[ii] ~ ht[ii])
+
+for(i in 1:(length(qs)-1)){
+  ii <- which(ab >= qs[i] & ab <= qs[i+1])
+  plot(bf ~ ht, type="n", main=paste("i =",i))
+  points(bf[ii] ~ ht[ii])
+}
+```
+
+In preparation to study model selection, let's run a big model including all columns:
+```{r}
+mall <- lm(bf ~ ., data=b)
+mall
+summary(mall)
+```
+
+To get a quick impression of how well we can predict using the regression, we could do a 
+plot that compares the actual `bf` values with the fitted values:
+```{r}
+plot(b$bf ~ mall$fitted.values)
+abline(0,1)
+```
+
+```{r}
+cor(b$bf, mall$fitted.values)
+cor(b$bf, mall$fitted.values)^2
+```
+The last square correlation is the same as the "multiple R-squared" 0.7463 we see in `summary(mall)`.
+
+
+NOTES 
+
+  * Now height is no longer significant!
+  * But R-squared is higher.
+  * This picture (plotting actual versus fitted values) will tend to overstate how good our predictions are expected to be.  See below.
+
+## Diagnostics for influential points and leverage
+
+There's a convenient function `influenceIndexPlot` (in the `car` library) that draws 4 plots that can be useful.
+```{r warning=FALSE, message=FALSE}
+library(car)
+influenceIndexPlot(mall)
+```
+
+We can also calculate these quantities using functions in the standard R distribution.
+One of these is "Cook's distance." 
+For each observation `i`, the `i`th Cook's distance reflects how much the 
+regression changes if we leave out the `i`th point versus if we include it.
+```{r}
+cooks <- cooks.distance(mall)
+plot(cooks)
+sort(cooks, decreasing = TRUE)[1:6]
+cookmaxs <- sort(cooks, decreasing = TRUE)[1:6]
+which.max(cooks)
+pf(cookmaxs, df1 = 14, q = nrow(b)-14)
+pfs <- pf(cooks, df1 = 14, q = 252-14)
+hist(pfs)
+```
+
+Rules of thumb:
+
+From Kutner, Nachtsheim, Neter (2004) "Applied Linear Regression Models" p. 403
+Look at percentiles of the Cook's distances $D_i$ in the $F(p, n-p)$ distribution, where 
+where $p$ is number of "x" variables in regression (plus 1 for the intercept)
+and $n$ is number of cases.
+If less than about 10 to 20%, not much influence. If near 50% or more, the $i$th case has major influence on the regression fit. So row r39 has major influence and we might want to remove this case.
+
+"Leverage" is related but different. A point has high leverage if the fitted value
+$\hat{y}_i$ changes a lot if we increase or decrease $y_i$. 
+This depends on the values of the explanatory variables for the `i`th case. If they 
+are near the "center" of the distribution of these variables, the case has low leverage,
+whereas if they are far off, outlying values, the case has more leverage.
+```{r}
+hats <- hatvalues(mall)
+sort(hats, decreasing = TRUE)[1:10]
+order(hatvalues(mall), decreasing = TRUE)[1:10]
+which.max(hatvalues(mall))
+```
+From Kutner, Nachtsheim, Neter (2004) "Applied Linear Regression Models" p. 399
+A rule of thumb: 0.5 or more is very high leverage, .2 to .5 is moderate leverage
+But average leverage is p/n, so expect smaller leverage for larger sample sizes.
+
+```{r}
+n <- nrow(b)
+ii <- 39
+mypch=rep(1, n); mypch[ii] <- 19
+mycol <- rep(1,n); mycol[ii] <- 2
+plot(b[1:7], col=mycol, pch=mypch)
+b <- b[-ii,]
+dim(b)
+plot(b[1:7])
+```
+
+Having removed r39 and r42, now at least visually there are no clear outliers, 
+which is consistent with the results of the diagnostics.
+
+We ended here to start the quiz! 
+We'll continue on model selection next time.
+
+

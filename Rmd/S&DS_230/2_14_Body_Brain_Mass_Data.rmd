@@ -1,0 +1,193 @@
+---
+title: "More on regression"
+author: "STAT 230"
+date: "February 14, 2017"
+output: 
+  html_document:
+    toc: true
+    toc_float: 
+      collapsed: false
+---
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, error=TRUE)
+```
+
+Note: the "error=TRUE" above (you need to look at the Rmd file to see it!) is useful for allowing the "knitting" process (making an html or doc or pdf file) to continue past an error and still produce a document. 
+
+  * Practice quiz solutions will be posted today
+  * For homework, question about linear vs quadratic is for yearly earnings, not a trick question.
+
+Terminology: 
+
+  * Simple regression: one explanatory variable
+  * Multiple regression: more than one explanatory variable
+
+## Something for Valentine's Day
+This is partly for fun and partly to as a review and application of some things we've been doing (including merging data sets).
+
+```{r}
+love <- read.csv("http://www.stat.yale.edu/~jtc5/STAT230/data/global-love-ranking.csv", as.is=TRUE)
+nations <- read.csv("http://www.stat.yale.edu/~jtc5/STAT230/data/nations2008.csv", as.is=TRUE)
+
+head(love)
+tail(love)
+head(nations)
+dat <- merge(x = love, y = nations[ ,c("code", "gdp_percap")], by="code")
+head(dat)
+tail(dat)
+hist(dat$love) #error
+dat$love <- as.numeric(gsub("%", "", dat$love, fixed=TRUE)) # ok without "fixed=TRUE" also
+hist(dat$love)
+
+# Doing a plot here with points and also the text codes for countries. The details aren't important and don't bother with them unless you are interested. But the picture is worth making, particularly on Valentine's Day!
+xvec <- na.omit(log10(dat$gdp_percap))
+L <- min(xvec); U <- max(xvec)
+dx <- .1; dy=.1
+xlim=c((1+dx)*L-dx*U, (1+dx)*U-dx*L)
+L <- min(dat$love); U <- max(dat$love)
+ylim=c((1+dy)*L-dy*U, (1+dy)*U-dy*L)
+
+plot(love ~ log10(gdp_percap), data=dat, pch=19, xlim=xlim, ylim=ylim)
+text(log10(dat$gdp_percap), dat$love, labels=dat$code, pos=4)
+```
+
+Well, linear regression doesn't seem like it will be all that useful here but let's run it to take a look.
+```{r}
+m <- lm(love ~ log10(gdp_percap), data=dat)
+m
+abline(m)
+R <- cor(dat$love, log10(dat$gdp_percap), use="complete")
+R^2  # .0481
+m
+summary(m) # See the .0481 in the display?
+```
+R-squared is two things in simple regression: 
+
+  * the square of the correlation between x and y
+  * the "proportion of variability explained by the regression".  
+
+Here R-squared is on 4.8%, nothing to write home about: Although we may "love" the scatterplot, we can't be very enthusiastic about the power of this regression to predict love from gdp.  
+
+## Mammals data set 
+The morals of this story are 
+
+  * We can use regression to help us make meaningful comparisons, but "adjusting" or "controlling" for variables.  Here we'll comparing brain mass controlling for body mass. 
+  * We'll see about `attach` and learn something about how R finds things.
+
+
+`mammals` is "built in" to R.
+
+```{r}
+head(mammals) # error
+library(MASS)
+head(mammals) # no error; mammals is in the MASS library
+dim(mammals)
+head(mammals)
+tail(mammals)
+plot(brain ~ body) # error
+plot(brain ~ body, data=mammals) # no error
+plot(brain ~ body) # still an error
+```
+`brain` and `body` exist only inside `mammals`. If you want to be able to refer to them without continually writing `mammals` you can use the `attach` function.
+
+```{r}
+attach(mammals)
+plot(brain ~ body)
+```
+
+Now there is no error because R will look in `mammals` to find the meaning of a name (like `brain`) if the name is not defined in the "global environment". So having attahed `mammals`, R will look in the "global environment" first, and then mammals, and then... what?  The `search` function will tell us the databases R will search, in order:
+
+```{r}
+search()
+find("brain")
+find("body")
+detach(2)
+search()
+brain # no brain now
+body # still a body in "package:base"
+```
+If you use `attach` you should use it with caution and understanding of how R finds things!
+
+OK, back to the data and the question: Which species has the biggest, most impressive brains?
+
+```{r}
+attach(mammals)
+brain
+sort(brain) # just the numbers; I'd like to see the species too
+head(mammals)
+head(rownames(mammals))
+names(brain) <- rownames(mammals)
+head(brain)
+sort(brain)
+```
+Well, humans are "up there" in the rankings but seemingly way outclassed by elephants!
+What happens if we try to account or normalize somehow for body mass?  E.g. we could take ratios:
+
+```{r}
+ratios <- brain/body
+head(ratios)
+sort(ratios)
+```
+Well, that didn't help; humans are looking even worse than before!
+
+Rather than trying to guess at a meaningful transformation (like taking ratios?), let's try to use regression to model brain mass using body mass. First look at the scatterplot again:
+
+```{r}
+plot(brain ~ body)
+```
+
+This doesn't look good for applying linear regression. Take logs and see if that helps:
+
+```{r}
+lbrain <- log(brain)
+lbody <- log(body)
+plot(lbrain ~ lbody)
+```
+
+Wow, this is crying out for linear regression; let's do it.
+
+Linear regression model: y = a + b*x + Normally distributed "errors"
+
+```{r}
+lm1 <- lm(lbrain ~ lbody)
+lm1
+summary(lm1)
+abline(lm1)
+names(lm1)
+sort(lm1$residuals)
+
+```
+So residuals from a linear regression using the log transformation (which was suggested as a good thing to do by looking at the scatterplot) gives quite a meaningful "ranking" of species. Here we are looking at brain mass in terms of how much it is above or below what is expected (from the linear model) given body mass.
+
+## Multiple regression with body fat data
+Accurate measurements of body fat percentage ("bf") involve submerging a person in water. How well can we "predict" (guess) a person's bf using other easily measured quantities? In class we saw some dramatic footage of Australian people doing this.   
+
+```{r}
+b <- read.csv("http://www.stat.yale.edu/~jtc5/STAT230/data/bodyfat.csv")
+dim(b)
+names(b)
+hist(b$abdomen)
+bf <- b$bf
+ht <- b$height
+ab <- b$abdomen/2.54
+
+plot(bf ~ ht)
+lmh <- lm(bf ~ ht)
+summary(lmh)
+
+plot(bf ~ ab)
+lma <- lm(bf ~ ab)
+summary(lma)
+
+lmha <- lm(bf ~ ht + ab)
+summary(lmha)
+summary(lma)
+
+```
+
+The moral of this story so far is: in multiple regression the significance and utility of a variable "x" in predicting a variable "y" depends on what other explanatory variables are included in the model!
+
+
+
+
+

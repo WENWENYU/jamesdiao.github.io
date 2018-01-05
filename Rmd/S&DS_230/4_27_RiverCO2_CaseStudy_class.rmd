@@ -1,0 +1,362 @@
+---
+title: "The Carbon Footprint of Water"
+author: "STAT 230"
+date: "April 25, 2017"
+output:
+  html_document: default
+  pdf_document: default
+  word_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE, warning=FALSE)
+library(knitr)
+library(ggplot2)
+library(GGally)
+library(dplyr)
+library(pander)
+```
+
+## The Data
+
+This dataset was collected by a researcher studying properties of rivers that are associated with the amount of CO2 emitted by rivers. We might conjecture that more turbulent rivers tend to emit more carbon dioxide, for example. 
+
+
+```{r}
+x <- read.csv("RiverCO2.csv", as.is=TRUE)
+kable(head(x), digits=2)
+```
+
+The response variable is `co2`, a quantitative measure of carbon dioxide emissions. This is a question we would explore using linear regression. First, we examine if any of the variables need to be cleaned up.
+
+```{r}
+kable(summary(x), digits=2)
+```
+
+What would you guess as the units of temperature?
+
+```{r, fig.width=4, fig.height=3}
+hist(x$temp, cex.lab=0.7, cex.axis=0.7)
+```
+
+From the summary, we also saw that `width` is a character variable. Let's see what the distinct values are:
+
+```{r}
+table(x$width)
+```
+
+It appears that `width` is encoded in 4 different categories. Let's convert this into a factor since that's how R prefers to work with categorical variables.
+
+```{r}
+x$width <- factor(x$width)
+boxplot(co2 ~ width, data=x)
+```
+
+This is an ok plot, well, it would be better if we had axis labels and a title. It would be even better if we could sort the boxes in increasing order of width:
+
+```{r}
+levels(x$width)
+x$width <- factor(x$width, levels=levels(x$width)[c(2, 1, 4, 3)])
+boxplot(co2 ~ width, data=x)
+```
+
+**Missing Values.** We saw earlier that there are a lot of missing values in the `temp` variable. We would need to think about what to do with them. For now, let's just toss out all of the rows that having a missing value anywhere:
+
+
+```{r}
+y <- na.omit(x)
+```
+
+Let's now look at a pairs plot:
+
+```{r, eval=FALSE}
+ggpairs(y)
+```
+
+```{r}
+ggpairs(y[,-3])
+```
+
+
+## Analysis
+
+```{r}
+m1 <- lm(co2 ~ ., data=y)
+summary(m1)
+```
+
+How do we feel about the model? The $R^2$ is fairly good. But there appears to be at least one large residual. In fact, it may be helpful to look at a plot of the residuals. We know that a linear regression model assumes normal errors. Perhaps this assumption is inappropriate here.
+
+```{r}
+hist(resid(m1))
+qqnorm(resid(m1))
+```
+
+
+Another diagnostic plot (which I hope we haven't forgotten):
+
+```{r}
+plot(resid(m1) ~ fitted(m1), pch=16)
+```
+
+What could be so bad about this model? (Esp. if we have such a high $R^2$? Well... the higher our predicted values are, the more uncertain/variable they seem to be.)
+
+```{r}
+plot(resid(m1) ~ y$co2, pch=16)
+```
+
+The standard diagnostic plots for linear regression, all on one plot area.
+
+```{r}
+par(mfrow=c(2,2))
+plot(m1)
+```
+
+
+
+The normal assumption is needed particularly if we want to be able to interpret things like confidence intervals and p-values. The fact that we can even compute a p-value for `slope` and `depth` is due to what we know about the behavior slopes when a particular variable is not associated with the response **under the assumption of normal errors**. 
+
+## Begin Thursday's work
+
+For example, what is a 95% CI for the coefficient of `slope`?
+
+```{r}
+confint(m1)[3,] # relies on normal assumptions
+```
+
+Recall that we also learned about the bootstrap, as a way of obtaining confidence intervals when distribution assumptions don't hold.
+
+Let's obtain a bootstrap confidence interval for the same slope of `slope` to see how closely it matches with our parametric CI.
+
+```{r}
+par(mfrow=c(1,1))
+set.seed(230)
+coefslope <- rep(NA, 1000)
+for (b in 1:1000) {
+  s <- sample(1:nrow(y), nrow(y), replace=TRUE)
+  ytemp <- y[s,]
+  mtemp <- lm(co2 ~ ., data=ytemp)
+  coefslope[b] <- coef(mtemp)[3]
+}
+hist(coefslope)
+quantile(coefslope, c(0.025, 0.975))
+
+```
+
+The problem with our dataset for fitting the linear model is that the variables are heavily right-skewed. A typical transformation to use in this case is the log-transformation.
+
+```{r}
+y$logco2 <- log(y$co2)
+y$logslope <- log(y$slope)
+y$logdepth <- log(y$depth)
+y$logflow <- log(y$flow)
+y$logvelocity <- log(y$velocity)
+```
+
+Be careful with this step if you have 0's in your variables. In that case, it might be advisable to do `log(1+x)` instead of `log(x)`.
+
+
+```{r}
+m2 <- lm(logco2 ~ temp+logslope + logdepth + logflow + logvelocity + width, data=y)
+par(mfrow=c(2,2))
+plot(m2)
+```
+
+Do we have any concerns about outliers?
+
+```{r}
+cols <- rep("gray", nrow(y))
+cols[which(resid(m2) > 2)] <- "blue"
+plot(y[,c("temp", "logslope", "logdepth", "logflow", "logvelocity",  "logco2")], col=cols, pch=16)
+```
+
+The regression diagnostic plots look a lot better. We should feel a bit better now trusting the confidence intervals and p-values associated with each predictor. For example, if you want the 95% confidence interval for the slope coefficient again, we can check that the parametric CI and the bootstrap CI align pretty closely.
+
+```{r}
+confint(m2)[3,]
+
+set.seed(230)
+coefslope <- rep(NA, 1000)
+for (b in 1:1000) {
+  s <- sample(1:nrow(y), nrow(y), replace=TRUE)
+  ytemp <- y[s,]
+  mtemp <- lm(logco2 ~ temp+logslope + logdepth + logflow + logvelocity + width, data=ytemp)
+  coefslope[b] <- coef(mtemp)[3]
+}
+hist(coefslope)
+quantile(coefslope, c(0.025, 0.975))
+```
+
+### Interpreting the Model
+
+```{r}
+summary(m2)
+```
+
+There's much we can say about this model. For example, we can say that a 1 degree Celsius increase in temperature is associated with a 0.03 unit decrease in log carbon dioxide emissions, all else being equal. This may seem like a wordy way to describe a relationship, so perhaps here's a better statement, applicable when you examine the coefficient of an untransformed predictor modeling a log-transformed response:
+
+> A 1 deg C increase in temperature is associated with about a 3% decrease in carbon dioxide emissions, all else being equal.
+
+Is this true? (And where in the world did I get this from...) 
+
+Given two observations with values $x_1$ and $x_2=x_1+1$ for temperature, let's compare the associated predicted values $\hat y_1$ and $\hat y_2$. Suppose the values of all other predictors agree for these two observations. 
+
+$$\hat y_1 = e^{\hat\beta_0 + \hat\beta_1(x_1) + \dots}$$
+
+$$\frac{\hat y_2}{\hat y_1} = \frac{e^{\hat\beta_0 + \hat\beta_1(x_1+1) + \dots}}{e^{\hat\beta_0 + \hat\beta_1(x_1) + \dots}} = e^{\hat\beta_1}$$
+
+The percentage change in $y$ resulting from a unit increase in $x_1$ can be expressed by $100(\hat y_2/\hat y_1 - 1)$.
+
+$$\frac{\hat y_2}{\hat y_1} -1 = e^{\hat \beta_1} - 1\approx \hat \beta_1$$
+
+This last step used the Taylor expansion for $e^x$.
+
+Let's check if my statement holds true:
+
+```{r}
+river1 <- y[1,]
+river1
+river2 <- river1
+river2$temp <- river1$temp + 1
+
+preds <- exp(predict(m2, rbind(river2, river1)))
+preds
+preds[1]/preds[2]
+
+```
+
+What about for a coefficient like that of `logslope`? We could say that a 1 unit increase in `logslope` is associated with a 0.55 unit increase in `logco2` or...
+
+> A 1% increase in slope is associated with a 0.55% increase in carbon dioxide emissions.
+
+```{r}
+river1 <- y[1,]
+river1
+river2 <- river1
+river2$logslope <- river1$logslope + log(1.01)
+
+preds <- exp(predict(m2, rbind(river2, river1)))
+preds
+preds[1]/preds[2]
+```
+
+Q: Is `width` significant?
+
+```{r}
+anova(m2)
+```
+
+
+
+Now that we think we have identified our favorite model, we might consider cleaning up the output a bit:
+
+```{r}
+kable(summary(m2)$coef)
+
+pander(summary(m2)$coef)
+pander(m2)
+```
+
+In-line text: The $R^2$ of this model is `r summary(m2)$r.squared`.
+
+
+## Missing Values: A Side-Conversation
+
+Thus far, we've tossed out any row containing any missing values. This could be seen as rather wasteful -- just because a missing value is sitting in `temp` doesn't mean that the values in the other predictors are unuseful.
+
+There are multiple approaches that can be taken to address and **impute** missing values, that is, to fill them in rather than tossing entire rows out. We'll examine a few simple strategies.
+
+```{r}
+apply(x, 2, function(z) sum(is.na(z)))
+```
+
+Based on this, the variables we need to fix are:
+
+* `temp`
+* `width`
+* `flow`
+
+Let's recreate our `y` data frame based on all of the rows in `x`, and fill in the missing values where needed.
+
+```{r}
+y <- x
+```
+
+### Imputing Categorical Vars
+
+```{r}
+table(y$width)
+```
+
+`width` is a categorical variable. An easy approach for handling missing data in categorical variables is just to create a 'missing' category so the effect of being in a 'missing' category can be modeled as part of the analysis.
+
+```{r}
+y$width <- as.character(y$width)
+y$width[is.na(y$width)] <- "missing"
+y$width <- factor(y$width, levels=c("missing", "narrow", "medium",
+                                    "wide", "verywide"))
+```
+
+### Imputing with the Mean
+
+In dealing with quantitative variables, an easy way to fill missing values is simply to substitute in the mean of the column.
+
+```{r}
+y$temp[is.na(y$temp)] <- mean(y$temp, na.rm=TRUE)
+```
+
+(We could do the same thing for `flow`, although in that case it's probably better to operate directly with `logflow` given the skewness of the `flow` variable. We'll now show a different strategy that can be undertaken with `flow`.)
+
+```{r}
+y$logslope <- log(y$slope)
+y$logdepth <- log(y$depth)
+y$logflow <- log(y$flow)
+y$logvelocity <- log(y$velocity)
+y$logco2 <- log(y$co2)
+```
+
+### Imputing via a Linear Model
+
+
+```{r}
+plot(y[, c(1, 8:12)])
+```
+
+Recall that some of the variables are pretty correlated with each other. In particular, `logflow` seems strongly associated with `logdepth` and `logvelocity`. Therefore, it makes sense for us to perhaps consider predicting `logflow` based on other predictors. (We don't want to use the response variable `logco2` in this imputation step, because that's what we're trying to predict.)
+
+```{r}
+mfill <- lm(logflow ~ temp + logslope + logdepth + logvelocity + width, data=y)
+summary(mfill)
+```
+
+The R^2 here seems pretty substantial, so I should get a better set of estimates for the missing `logflow` values than just imputing with the column means.
+
+```{r}
+y$logflow[is.na(y$flow)] <- predict(mfill, y[is.na(y$logflow),])
+```
+
+
+## Redo Model
+
+And now, our latest model with all rows utilized to fit the coefficients:
+
+```{r}
+m2 <- lm(logco2 ~ temp + logslope + logdepth + logflow + logvelocity + width, data=y)
+par(mfrow=c(2,2))
+plot(m2)
+summary(m2)
+
+```
+
+The final model:
+
+```{r}
+pander(m2)
+```
+
+
+## Code Appendix
+
+```{r, ref.label=knitr::all_labels(),echo=TRUE,eval=FALSE}
+
+```

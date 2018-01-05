@@ -4,7 +4,7 @@ title: "YSEA Award"
 date: 2017-04-28
 ---
 
-Today, I was surprised to receive an award from the Yale Science and Engineering Association. I unfortunately missed the awards dinner because of a friend's birthday party I had already committed to, but it was a nice honor nonetheless. I was not surprised by any of the other names on the list, but it was definitely a pleasant surprise to be named among them. 
+Today, I was surprised to receive an award from the Yale Science and Engineering Association. The other names on the list are all familiar to me, and it was a pleasant surprise to be named among them. 
 
 [Recipients in the class of 2018:](http://news.yale.edu/2017/05/03/deans-vanderlick-and-cooley-among-those-honored-ysea) 
 

@@ -1,0 +1,184 @@
+---
+title: 'Class Questionnaire: Data Cleaning'
+author: "STAT 230"
+date: "Feb 2, 2017"
+output:
+  html_document: default
+  pdf_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+## Data Cleaning
+
+Data cleaning is a critical first step in most data analysis. We will spend 
+some time cleaning up the rest of this raw dataset. Let's start by loading in the
+raw data again.
+
+```{r}
+x <- read.csv("stat_230_survey_raw.csv",
+              as.is = TRUE)
+str(x)
+```
+
+We will now iterate over each of the variables in turn to check for any issues 
+that need fixing.
+
+```{r}
+summary(x$Pcredit)
+hist(x$Pcredit)
+```
+
+```{r}
+table(x$UorG)
+```
+
+There's a missing value here... see the 1 lingering on the left? In fact, let's
+take a peek at this individual. 
+
+```{r}
+x[x$UorG == "",]
+```
+
+It appears that this person only answered the first question before submitting. 
+How do we want to handle this row? Suppose we decide we simply don't trust the
+data (not even the 1 for `Pcredit`). Then, we might decide to take this row out
+entirely.
+
+```{r}
+x <- x[x$UorG != "",]
+```
+
+
+**A suggestion from last class...**
+
+Can we just replace all blanks with NA simultaneously?
+
+```{r}
+x[x==""] <- NA
+```
+
+```{r}
+table(x$UorG)
+```
+
+We can still abbreviate the labels:
+
+```{r}
+x$UorG[x$UorG == "Graduate student"] <- "Grad"
+x$UorG[x$UorG == "Undergraduate student"] <- "Undergrad"
+table(x$UorG)
+```
+
+Let's take a look at 'Year':
+
+```{r}
+table(x$Year)
+
+x$Year[x$Year == "1 = freshman or first year grad"] <- "1"
+unique(x$Year)
+```
+
+To save ourselves some typing:
+
+```{r}
+x$Year[grep("2 =", x$Year)] <- "2"
+x$Year[grep("3 =", x$Year)] <- "3"
+x$Year[grep("4 =", x$Year)] <- "4"
+x$Year[grep("Beyond", x$Year)] <- "4+"
+unique(x$Year)
+table(x$Year)
+```
+
+```{r}
+barplot(table(x$Year))
+class(x$Year)
+```
+
+Height
+
+```{r}
+x$Height
+
+# input: 'z' a vector that is supposedly numeric but has nonnumeric values
+# output: a vector of indices corresponding to those nonnumeric values
+findNonNumbers <- function(z) {
+  return(which(is.na(as.numeric(z))))
+}
+
+temp <- findNonNumbers(x$Height)
+temp
+x$Height[temp[1]] # nothing to do, started as an NA
+x$Height[temp[2]] <- 6*12+1
+x$Height[temp[2]]
+
+x$Height[temp[3]] <- 6*12+3
+x$Height[temp[6]] <- 5*12+3
+x$Height[temp[7]] <- 4*12+2
+x$Height <- as.numeric(x$Height)
+hist(x$Height)
+```
+
+Who are the outliers?
+
+```{r}
+x[which(x$Height > 100),]
+
+x$Weight[which(x$Height > 100)] <- 110.23
+x$Height[which(x$Height > 100)] <- 162/2.54
+
+x[which(x$Height < 30),]
+
+# if we believe these are all in units of feet, we can fix them together
+x$Height[which(x$Height < 30)]
+x$Height[which(x$Height < 30)] <- x$Height[which(x$Height < 30)]*12
+hist(x$Height)
+```
+
+SAT scores:
+
+```{r}
+x$SAT_CR[findNonNumbers(x$SAT_CR)]
+x$SAT_M[findNonNumbers(x$SAT_M)]
+x$SAT_W[findNonNumbers(x$SAT_W)]
+
+x[x == "n/a"] <- NA
+x$SAT_CR <- as.numeric(x$SAT_CR)
+x$SAT_M <- as.numeric(x$SAT_M)
+x$SAT_W <- as.numeric(x$SAT_W)
+```
+
+```{r}
+hist(x$High.school.GPA)
+```
+
+Television:
+
+```{r}
+x$Television[findNonNumbers(x$Television)]
+x$Television <- as.numeric(x$Television)
+hist(x$Television)
+
+sort(x$Television)
+```
+
+```{r}
+x[which(x$Television > 0 & x$Television < 5), 
+  c("Television", "Web", "Exercise",
+                                         "Academics")]
+```
+
+
+
+```{r}
+temp <- findNonNumbers(x$Haircut)
+x$Haircut[temp[2]] <- 10
+x$Haircut[temp[5]] <- 45
+x$Haircut[temp[6]] <- 0
+x$Haircut <- as.numeric(x$Haircut)
+hist(x$Haircut)
+```
+

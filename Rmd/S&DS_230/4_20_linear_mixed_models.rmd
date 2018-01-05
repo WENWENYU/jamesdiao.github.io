@@ -1,0 +1,228 @@
+---
+title: "Linear mixed-effects models"
+author: "STAT 230"
+date: "April 20, 2017"
+output:
+  html_document:
+    toc: yes
+    toc_float:
+      collapsed: no
+  pdf_document:
+    toc: yes
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, error=TRUE)
+```
+
+This is a brief introduction to a pretty big subject.
+To find more you can do Google searches like
+
+  "mixed effects models" r (nlme OR lme4) 
+
+E.g. you can find anything from a nice gentle tutorial here:
+
+  https://arxiv.org/ftp/arxiv/papers/1308/1308.5499.pdf
+
+to the full story in the book "Mixed-Effects Models in S and S-PLUS" by Pinheiro and Bates.
+
+
+# Simulating an example: male and female blood pressures
+
+## Generating a data set
+
+```{r}
+set.seed(230)
+nm <- nf <- 10
+n <- nm+nf
+timesm <- sample(1:10, nm, replace=TRUE)
+timesf <- sample(1:10, nf, replace=TRUE)
+times <- c(timesm, timesf)
+id <- rep(1:n, times=times)
+idfac <- as.factor(id)
+N <- length(id)
+male <- rep(c(1,0), times=c(sum(timesm), sum(timesf)))
+beta0 <- c(125, 0)
+# muf=beta0[1]; mum=beta0[1]+beta0[2]
+sigb0 <- 12
+b <- rnorm(n, 0, sigb0)
+bb <- b[id]
+sige0 <- 10
+e <- rnorm(N, 0, sige0)
+bp0 <- beta0[1] + beta0[2]*male + bb
+bp <- bp0 + e
+```
+
+Data with the truth (we would not see the bp0 column):
+```{r}
+dat0 <- data.frame(id, idfac, male, bp0, bp) 
+```
+
+Data as we would see it:
+```{r}
+dat <- data.frame(id, idfac, male, bp)
+```
+
+Start a plot:
+```{r}
+jit <- .15
+plot(id + runif(N,-jit,jit), bp, xlab='id')
+for(j in 1:n){
+  abline(v=j, col=gray(.8))
+}
+points(1:n, unique(bp0), pch="*", cex=3)
+abline(v=nm+0.5, col='red')
+```
+
+## Some inappropriate analyses
+
+
+
+
+
+
+## Show the sample means for each person
+
+
+
+
+
+## Mixed effects models
+
+
+
+
+
+## Looking further at what we got
+
+```{r}
+# BLUPs (fitted values from lme model)
+s1 <- summary(m1)
+names(s1)
+m1$fitted
+m1$fitted[,'id']
+points(id, m1$fitted[,'id'], pch=19, col='blue')
+
+# show the fitted fixed effects
+m1$coef$fixed  # or:
+fixef(m1)
+lines(c(1,nm),rep(sum(fixef(m1)),2), col='blue')
+lines(c(nm+1,n),rep(fixef(m1)[1],2), col='blue')
+# So the predicted random effects are shrunk toward the estimated group means.
+
+# the 20 BLUPs:
+pred = unique(m1$fitted[,'id'])
+# or:
+pred = fixef(m1)[1] + 
+  fixef(m1)[2] * rep(c(1,0),c(nm,nf)) + 
+  ranef(m1)[[1]]
+bps.true = beta0[1] + (beta0[2] * ((1:n)<=nm)) + b
+
+fixed.est <- fixef(m1)[1] + fixef(m1)[2] * rep(c(1,0),c(nm,nf))
+
+cbind(bps.true, fixed.est, sample.means, pred)
+shrink <- (pred - fixed.est)/(sample.means - fixed.est)
+ind=1:n
+tmp <- data.frame(ind, times, shrink)
+tmp[order(times,ind),]
+```
+
+How do the BLUPs do compared to the sample means?
+```{r}
+mean((sample.means-bps.true)^2)
+mean((pred-bps.true)^2)
+```
+
+## A simulation: repeat the above, say 200 times, and record relevant results
+
+```{r}
+set.seed(230)
+nit <- 200
+results <- matrix(NA, nit, 4)
+colnames(results) <- c("pvalbad", "pval", "sample_means_MSE", "lme_preds_MSE")
+for(it in 1:nit){ 
+  nm <- nf <- 10
+  n <- nm+nf
+  timesm <- sample(1:10, nm, replace=TRUE)
+  timesf <- sample(1:10, nf, replace=TRUE)
+  times <- c(timesm, timesf)
+  id <- rep(1:n, times=times)
+  idfac <- as.factor(id)
+  N <- length(id)
+  male <- rep(c(1,0), times=c(sum(timesm), sum(timesf)))
+  beta0 <- c(125, 0)
+  sigb0 <- 12
+  b <- rnorm(n, 0, sigb0)
+  bb <- b[id]
+  sige0 <- 10
+  e <- rnorm(N, 0, sige0)
+  bp0 <- beta0[1] + beta0[2]*male + bb
+  bp <- bp0 + e
+  dat <- data.frame(id, idfac, male, bp)
+  dat <- group_by(dat, id)
+  sample.means <- summarize(dat, mean=mean(bp))$mean
+  mbad <- lm(bp ~ male)
+  smbad <- summary(mbad)
+  pvalbad <- smbad$coefficients["male",4]
+  m1 <- lme(bp ~ male, random=~1|id, data=dat)
+  sm1 <- summary(m1)
+  pval <- sm1$tTable["male", "p-value"]
+  # the 20 BLUPs:
+  pred = fixef(m1)[1] + 
+    fixef(m1)[2] * rep(c(1,0),c(nm,nf)) + 
+    ranef(m1)[[1]]
+  bps.true = beta0[1] + beta0[2] * ((1:n)<=nm) + b
+  MSE_sample_means <- mean((sample.means-bps.true)^2)
+  MSE_lme_preds <- mean((pred-bps.true)^2)
+  results[it,] <- c(pvalbad, pval, MSE_sample_means, MSE_lme_preds)
+}
+```
+
+Look at how we did:
+
+```{r}
+results <- data.frame(results)
+hist(results$pvalbad)
+hist(results$pval)
+sort(results$pvalbad)[1:20]
+sort(results$pval)[1:20]
+hist(results$lme_preds_MSE/results$sample_means_MSE)
+abline(v=1, col=2, lwd=2)
+hist(log2(results$lme_preds_MSE/results$sample_means_MSE))
+abline(v=0, col=2, lwd=2)
+```
+
+# Science survey data
+
+School Science Survey Data on attitudes to science, from a survey containing results for students from classes in private schools and in public schools.
+From DAAG package.
+
+  * PrivPub: a factor with levels private school, public school
+  * school: a factor, coded to identify the school
+  * class: a factor, coded to identify the class
+  * sex: a factor with levels f, m
+  * like: a summary score based on two of the questions, on a scale from 1 (dislike) to 12 (like)
+  * Class: a factor with levels corresponding to each class
+
+Get the data:
+```{r}
+science <- read.csv("http://www.stat.yale.edu/~jtc5/STAT230/data/science_DAAG.csv")
+str(science)
+for(j in c(2,3,6)){
+  science[,j] <- as.factor(science[,j])
+}
+str(science)
+
+sum(is.na(science))
+s <- na.omit(science)
+```
+
+How many public and private schools?
+```{r}
+table(s$school, s$pp)
+table(s$school, s$pp) > 0
+colSums(table(s$school, s$pp) > 0)
+```
+
+
+

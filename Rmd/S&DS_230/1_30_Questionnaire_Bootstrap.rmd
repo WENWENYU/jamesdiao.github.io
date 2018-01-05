@@ -1,0 +1,217 @@
+---
+title: 'Class Questionnaire: Bootstrapping Revisited (and Some Data Cleaning)'
+author: "STAT 230"
+date: "January 31, 2017"
+output:
+  html_document: default
+  pdf_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## The Bootstrap
+
+Let's play around with some simulated data just to make things extra clear.
+I will start by simulating 10,000 values from a Normal distribution with mean 0
+and standard deviation 1. Let's pretend that this constitutes the population.
+
+```{r}
+set.seed(230) 
+
+pop <- rnorm(10000)
+hist(pop)
+```
+
+I will now take a sample from this population (n=100):
+
+```{r}
+my_sample <- sample(pop, 100, replace = FALSE)
+hist(my_sample, breaks=seq(-4,4,by=0.5))
+```
+
+
+A typical one-sample inference problem might be to estimate the population mean 
+$\mu$. Our best guess, given the data, is of course going to be the sample mean
+$\bar X$.
+
+```{r}
+mean(my_sample)
+```
+
+If we want a range of values for $\mu$ that are plausible (rather
+than just a single point estimate), then we might take additional samples.
+
+```{r}
+xbars <- rep(NA, 1000) 
+for (i in 1:1000) {
+  new_sample <- sample(pop, 100, replace=FALSE)
+  xbars[i] <- mean(new_sample)
+}
+hist(xbars)
+```
+
+
+What we are looking at is a simulated **sampling distribution**, that is,
+the distribution of a sample statistic, like $\bar X$. This is easy for us 
+to simulate because we simulated the population. In practice, this is an
+expensive way of obtaining an interval for $\mu$. 
+
+
+From the Central Limit Theorem, we know about the behavior of $\bar X$. Namely,
+as sample size increases, the distribution of $\bar X$ tends to a normal 
+distribution with standard deviation $\sigma/\sqrt{n}$. Therefore, we can rely
+on our knowledge of probabilities under the normal distribution to compute
+a 95% confidence interval:
+
+$$\bar X \pm z^*\frac{\sigma}{\sqrt{n}}$$
+
+```{r}
+mean(my_sample) + c(-2, 2)*1/sqrt(100)
+```
+
+This of course, relies on the assumption that the population distribution is
+sufficiently symmetric (or that n=100 is large enough) such that the 
+distribution of $\bar X$ is close to being normal (under CLT). If we felt 
+unsure, we could use **bootstrapping** to get a confidence interval instead.
+
+The idea is: we'd like to obtain more samples from the population to get a
+sense of the sampling variability. We don't have access to the population (to
+sample again and again), so we'll simply create a fake population that contains 
+infinite copies of our sample, and sample from this fake population again and 
+again.
+
+```{r}
+N <- 10000
+xbars <- rep(NA, N)
+for (i in 1:N) {
+  new_sample <- sample(my_sample, 100, replace = TRUE)
+  xbars[i] <- mean(new_sample)
+}
+hist(xbars)
+```
+
+A 95% CI can be obtained by obtaining the 2.5th and 97.5th percentile of
+this distribution:
+
+```{r}
+quantile(xbars, c(0.025, 0.975))
+```
+
+
+
+
+## Back to The Pulse vs. Gender Question...
+
+```{r}
+x <- read.csv("stat_230_survey_raw.csv", as.is = TRUE)
+x <- x[x$Gender != "" & !is.na(x$Pulse),]
+```
+
+
+1. Start by computing the statistic of interest.
+
+```{r}
+xbar_d <- mean(x$Pulse[x$Gender == "Female"]) - mean(x$Pulse[x$Gender == "Male"])
+```
+
+2. Repeatedly sample from "artificial population" with replacement and
+compute the statistic on each of these bootstrap samples.
+
+```{r}
+N <- 10000    # number of fake datasets (and statistics) to simulate
+xbar_d_b <- rep(NA, N) # placeholder for the sample means from bootstrap samples
+for (i in 1:N) {
+  rows <- sample(1:nrow(x), replace = TRUE)
+  s <- x[rows,c("Gender", "Pulse")]
+  xbar_d_b[i] <- mean(s$Pulse[s$Gender == "Female"]) - 
+    mean(s$Pulse[s$Gender == "Male"])
+}
+```
+
+3. We can now take quantiles of this bootstrap distribution to obtain a 95%
+CI.
+
+```{r}
+q <- quantile(xbar_d_b, c(0.025, 0.975))
+q
+
+hist(xbar_d_b)
+abline(v=xbar_d, col="red", lwd=2)
+abline(v=q, col="blue", lwd=2)
+
+```
+
+
+Compare to t-interval:
+
+```{r}
+t.test(Pulse ~ Gender, data=x)
+t.test(Pulse ~ Gender, data=x)$conf
+```
+
+## And Beyond?
+
+It's no surprise that our bootstrap CI is very close to the t-distribution CI 
+in this case. The sampling distribution of means are well-behaved and 
+well-understood, and we have a decent sample size. There are cases, however,
+where the parameter of interest is a lot more complicated. For example, sample
+correlation (as in your homework) does not have as nice and straight-forward
+of a sampling distribution. A parametric test for the correlation exists (but
+to be honest, I can never remember the test statistic formula...). The non-parametric
+approaches for obtaining p-values and CIs are very useful in these cases.
+
+We'll come back to these ideas again and again as the need for them arises in 
+other datasets.
+
+
+## Data Cleaning
+
+Data cleaning is a critical first step in most data analysis. We will spend 
+some time cleaning up the rest of this raw dataset. Let's start by loading in the
+raw data again.
+
+```{r}
+x <- read.csv("stat_230_survey_raw.csv", as.is = TRUE)
+str(x)
+```
+
+We will now iterate over each of the variables in turn to check for any issues 
+that need fixing.
+
+```{r}
+summary(x$Pcredit)
+hist(x$Pcredit)
+```
+
+```{r}
+table(x$UorG)
+```
+
+There's a missing value here... see the 1 lingering on the left? In fact, let's
+take a peek at this individual. 
+
+```{r}
+x[x$UorG == "",]
+```
+
+It appears that this person only answered the first question before submitting. 
+How do we want to handle this row? Suppose we decide we simply don't trust the
+data (not even the 1 for `Pcredit`). Then, we might decide to take this row out
+entirely.
+
+```{r}
+x <- x[x$UorG != "",]
+```
+
+Now, are we satisfied with this variable? One criticism might be that the label
+is too long (which would be annoying in plots).
+
+```{r}
+table(x$UorG)
+x$UorG[x$UorG == "Graduate student"] <- "Grad"
+x$UorG[x$UorG == "Undergraduate student"] <- "Undergrad"
+table(x$UorG)
+```
+

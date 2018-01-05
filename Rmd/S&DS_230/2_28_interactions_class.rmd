@@ -1,0 +1,271 @@
+---
+title: 'Categorical Predictors and Interactions'
+author: "STAT 665"
+date: "2/28/2017"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+## Rail Trail Data
+
+> http://www.mass.gov/eea/agencies/dcr/massparks/region-west/norwottuck-rail-trail.html
+
+The Norwottuck Rail Trail is a public green space in Western Massachusetts covering 11 miles of what used to be railroad tracks. Between April 5 and November 15, 2005, data collectors set up a laser sensor at a specific location along the Rail Trail to study daily volumes of people who use the trail. More precisely, the laser beam would detect when there were breaks in the laser beam recording; these breaks would then be used to count the number of trail users.
+
+```{r}
+x <- read.csv("RailTrail.csv", as.is=T)
+head(x)
+plot(x[,c(3,7:9)])
+
+```
+
+Starting with a simple linear regression model:
+
+```{r}
+m1 <- lm(volume ~ avgtemp, data=x)
+summary(m1)
+```
+
+
+Now considering the `weekday` variable:
+
+```{r}
+x$weekday <- factor(x$weekday)
+table(x$weekday)
+
+m2 <- lm(volume ~ avgtemp + weekday, data=x)
+summary(m2)
+
+m2c <- coef(m2)
+m2c
+
+plot(volume ~ avgtemp, data=x, pch=16, col=weekday)
+abline(a= m2c[1], b= m2c[2], col=1, lwd=2)
+abline(a= m2c[1] + m2c[3], b= m2c[2], col=2, lwd=2)
+```
+
+Interacting weekday and average temp allows for the possibility of different slopes:
+
+```{r}
+m3 <- lm(volume ~ avgtemp * weekday, data=x)
+summary(m3)
+```
+
+$$\widehat{volume} = 23.7 + 5.76avgtemp + 262 wknd - 3.30 avgtemp\times wknd$$
+
+
+The model for predicting traffic on weekdays ('wknd' is 0 in above equation):
+
+$$\widehat{volume} = 23.7 + 5.76avgtemp$$
+
+The model for predicting traffic on weekends and holidays ('wknd' is 1 in above equation):
+
+$$\widehat{volume} = 285.7 + 2.46avgtemp$$
+
+
+```{r}
+m3c <- coef(m3)
+m3c
+
+plot(volume ~ avgtemp, data=x, pch=16, col=weekday)
+abline(a= m3c[1], b= m3c[2], col=1, lwd=2)
+abline(a= m3c[1] + m3c[3], b= m3c[2] + m3c[4], col=2, lwd=2)
+summary(m3)
+```
+
+Considering cloudcover or precip...
+
+```{r}
+plot(resid(m3) ~ x$precip)
+plot(resid(m3) ~ x$cloudcover)
+```
+
+Cloudcover looks promising (negatively associated with residuals from the previous model).
+
+```{r}
+m4 <- lm(volume ~ avgtemp * weekday + cloudcover, data=x)
+summary(m4)
+```
+
+### Checking assumptions
+
+Normality of errors:
+
+```{r}
+hist(resid(m4))
+hist(resid(m4), breaks=5)
+
+qqnorm(resid(m4))
+
+plot(m4, which=2)
+```
+
+From this qq-plot, we are looking for a close to diagonal line formed by the points.
+
+Equal variance assumption:
+
+```{r}
+plot(m4, which=1)
+plot(resid(m4) ~ fitted(m4))
+```
+
+Generally, with this plot, we're hoping to see no consistent
+patterns. For the equal variance assumption, we are looking for a consistent amount of vertical scatter as we look at the plot from left to right.
+
+## Back to ATUS
+
+Load in the dataset:
+
+```{r}
+# x <- read.csv("atus_social.csv", as.is = TRUE)
+x <- read.csv("https://www.dropbox.com/s/c7gidc2stjh3a2k/atus_social.csv?raw=1",
+              as.is = TRUE)
+head(x)
+```
+
+## Incorporating Diary Date
+
+```{r}
+head(x$diary_date)
+class(x$diary_date)
+
+#install.packages("lubridate")
+library(lubridate)
+x$diary_date <- ymd(x$diary_date)
+head(x$diary_date)
+class(x$diary_date)
+
+x$wday <- wday(x$diary_date)
+table(x$wday)
+
+x$wday <- factor(wday(x$diary_date, label=TRUE), ordered=FALSE)
+table(x$wday)
+class(x$wday)
+```
+
+```{r}
+m4 <- lm(social_time ~ age + I(age^2) + sex + wday, data=x)
+head(model.matrix(m4))
+```
+
+A categorical variable with $K$ levels can be encoded using $K-1$ dummy variables
+(indicators). These $K-1$ indicators are not independent: for each row, at most
+one of them will have the value 1, while the others will be 0's. If there are 
+no 1's, then we know that the row corresponds to the baseline reference level
+(here that would be Sunday, since there is no explicit indicator for Sundays).
+
+```{r}
+summary(m4)
+```
+
+
+All of the `wday` coefficients in this output are actually comparing each 
+labeled day of the week to Sunday, our reference level. Based on the 
+coefficients, we can see that Mondays and Thursdays are fairly similar -- on
+average, respondents spent about 90 minutes less time socializing/relaxing on 
+these days than on Sunday. Friday seemed to be a bit better, such that 
+respondents spent only 60 minutes less time socializing/relaxing compared to
+Sunday. Saturday and Sunday are about the same -- the p-value suggests that
+people on average spend about the same time socializing on Saturday and Sundays.
+
+What about fitting a "Friday effect"? After all, we saw that Fridays are 
+somewhat different from regular workdays and weekends:
+
+```{r}
+x$daytype <- ifelse(x$wday %in% c("Sat", "Sun"), "Wknd", "M_Th")
+x$daytype[x$wday == "Fri"] <- "Fri"
+table(x$daytype, x$wday)
+
+m5a <- lm(social_time ~ age + I(age^2) + sex + daytype, data=x)
+summary(m5a)
+```
+
+Is this model better or worse than our model with all the days of the week?
+
+```{r}
+summary(m4)$r.sq
+summary(m5a)$r.sq
+extractAIC(m4)
+extractAIC(m5a)
+```
+
+
+We also considered modeling just a weekday vs. weekend effect, bundling up 
+Fridays with the other days.
+
+```{r}
+x$wknd <- x$wday %in% c("Sat", "Sun")
+table(x$wknd, x$wday)
+m5 <- lm(social_time ~ age + I(age^2) + sex + wknd, data=x)
+summary(m5)
+```
+
+You should review notes from last class to see how this model translates into
+a fitted equation. 
+
+How does this model compare to the previous one?
+
+```{r}
+summary(m5a)$r.sq
+summary(m5)$r.sq
+
+extractAIC(m5a)
+extractAIC(m5)
+```
+
+
+In summary, if we were using AIC as the measure for comparison, 
+we would prefer the model that breaks the relationship down into a 
+Monday-Thursday, Friday, and a Weekend effect. This means that our model is 
+fitting 6 parallel parabolas. 
+
+
+```{r}
+myfun <- function(sex, daytype, model) {
+  vals <- predict(model, data.frame(age = 15:85, sex = sex, daytype = daytype))
+  return(vals)
+}
+
+plot(social_time ~ age, data=x, pch=16, col=rgb(0,0,0,0.1))
+lines(15:85, myfun("M", "M_Th", m5a), col="red", lwd=2)
+lines(15:85, myfun("M", "Fri", m5a), col="red", lwd=2, lty=2)
+lines(15:85, myfun("M", "Wknd", m5a), col="red", lwd=2, lty=4)
+lines(15:85, myfun("F", "M_Th", m5a), col="blue", lwd=2)
+lines(15:85, myfun("F", "Fri", m5a), col="blue", lwd=2, lty=2)
+lines(15:85, myfun("F", "Wknd", m5a), col="blue", lwd=2, lty=4)
+
+legend("topleft", col=rep(c("red", "blue"), each=3), lwd=2, lty=rep(c(1,2,4),
+                                                                    times=2),
+       legend=c("Males | M_Th", "Males | Fri", "Males | Wknd",
+                "Females | M_Th", "Females | Fri", "Females | Wknd"))
+```
+
+Suppose we want to interact sex and daytype to allow for, say, weekends to affect time spent socializing differently between males and females:
+
+```{r}
+m6 <- lm(social_time ~ age + I(age^2) + sex * daytype, data = x)
+
+
+plot(social_time ~ age, data=x, pch=16, col=rgb(0,0,0,0.1))
+lines(15:85, myfun("M", "M_Th", m6), col="red", lwd=2)
+lines(15:85, myfun("M", "Fri", m6), col="red", lwd=2, lty=2)
+lines(15:85, myfun("M", "Wknd", m6), col="red", lwd=2, lty=4)
+lines(15:85, myfun("F", "M_Th", m6), col="blue", lwd=2)
+lines(15:85, myfun("F", "Fri", m6), col="blue", lwd=2, lty=2)
+lines(15:85, myfun("F", "Wknd", m6), col="blue", lwd=2, lty=4)
+
+legend("topleft", col=rep(c("red", "blue"), each=3), lwd=2, lty=rep(c(1,2,4),
+                                                                    times=2),
+       legend=c("Males | M_Th", "Males | Fri", "Males | Wknd",
+                "Females | M_Th", "Females | Fri", "Females | Wknd"))
+
+summary(m6)
+```
+
+Equation for predicting how much time males spend socializing on Mondays through Thursdays:
+
+$$\widehat{socialtime} = 353 - 8.16 age + .119 age^2 + 17.47 - 33.2 + 4.717 = 342 - 8.16 age + .119 age^2$$

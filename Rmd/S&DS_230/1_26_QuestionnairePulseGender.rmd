@@ -1,0 +1,291 @@
+---
+title: 'Class Questionnaire: Pulse vs. Gender'
+author: "STAT 230"
+date: "January 26, 2017"
+output:
+  html_document: default
+  pdf_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## The Data
+
+```{r}
+x <- read.csv("stat_230_survey_raw.csv", as.is = TRUE)
+x <- x[x$Gender != "",]
+```
+
+Question from last class: do men and women have different pulses on average?
+
+```{r}
+boxplot(Pulse ~ Gender, data=x)
+```
+
+## Some Approaches
+
+### Independent 2-Sample t-test
+
+```{r}
+t.test(Pulse ~ Gender, data=x)
+```
+
+How do we interpret the results here? We have a p-value of 0.8091. At any 
+reasonable significance level $\alpha$ (say, 0.05), we do not have evidence to
+suggest that the mean pulse differs between the genders. We also get a
+95% confidence interval of (-6.16, 4.83). We might say that we are 95% confident
+that the difference $\mu_F-\mu_M$ is between (-6.16, 4.83). How did we know it 
+was $\mu_F-\mu_M$ and not $\mu_M-\mu_F$? Because in the line below 'sample 
+estimates', we see 'Female' before 'Male'. 
+
+Some questions you may have:
+
+* The p-value here corresponds to a 2-sided alternative hypothesis. What can
+I do if I wanted a 1-sided alternative hypothesis test instead? 
+
+Questions like these can generally be answered by pulling up the help page, i.e.
+`?t.test`. You will see that you can add the argument `alternative=` to be
+'less' or 'greater', but that it defaults to 'two.sided'.
+
+* What if I want a confidence interval for a different confidence level? 
+
+The help file suggests that `conf.level=` is the argument to be modified.
+
+
+We did have to make some assumptions about the population when applying the
+t-test. The most important one is perhaps that the population distributions
+ought to be normal. What happens if they're not?
+
+```{r}
+hist(x$Pulse[x$Gender == "Female"])
+hist(x$Pulse[x$Gender == "Male"])
+```
+
+### A Brief Intro to For-Loops (and if-statements)
+
+This is a good time to talk about a for-loop. A for-loop is good for doing some
+sort of repeated action again and again. Suppose we wanted to count the number 
+of students who expressed at least an 95% chance of taking this class for 
+credit `Pcredit >= 0.95`. This can be thought of as a repeated action; for each
+`Pcredit` value in the dataset and increment a counter by 1 if the value is at
+least 0.95. 
+
+A for-loop is not the best way to do this, but this is good for practice.
+
+```{r}
+numCreditStudents <- 0
+for (i in 1:nrow(x)) {
+  if (!is.na(x$Pcredit[i]) & x$Pcredit[i] >= 0.95) {
+    numCreditStudents <- numCreditStudents + 1
+  }
+}
+numCreditStudents
+```
+
+What if we wanted to know the fraction of students who have higher than a 95%
+probability of taking the class for credit? Then we need to keep track of the
+denominator as well:
+
+```{r}
+numCreditStudents <- 0
+numResponses <- 0
+for (i in 1:nrow(x)) {
+  if (!is.na(x$Pcredit[i])) {
+    numResponses <- numResponses + 1
+    if (x$Pcredit[i] >= 0.95) {
+      numCreditStudents <- numCreditStudents + 1
+    }
+  }
+}
+numCreditStudents/numResponses
+```
+
+Can I do this in one line of code? Absolutely:
+
+```{r}
+sum(x$Pcredit >= 0.95, na.rm = TRUE) # this discards the NAs
+sum(x$Pcredit >= 0.95, na.rm = TRUE)/sum(!is.na(x$Pcredit))
+mean(x$Pcredit >= 0.95, na.rm = TRUE)
+```
+
+In summary, there is a time and a place for loops. R is very efficient with
+vectorized observations like `sum()` and `mean()`, so that if you can avoid 
+using loops, by all means do!
+
+But, today we will show situations where indeed a for-loop-based solution is a
+natural fit.
+
+### Permutation Test
+
+We'll learn a different way of addressing the 2-sample mean comparison problem. 
+The permutation test is a general, nonparametric approach that can be used in a 
+wide range of scenarios requiring hypothesis testing (not just this 2-sample 
+problem).
+
+The steps used in a permutation test are as follows:
+
+1. Compute a test statistic related to our hypothesis. (A natural one for us
+is $\bar X_F-\bar X_M$, the difference in the sample means.)
+
+2. Simulate the distribution of the test statistic under $H_0$.
+
+3. Compare our actual test statistic in Step 1 to the distribution in Step 2. 
+How unusual is our actual test statistic relative to what we would've expected
+if $H_0$ were true?
+
+
+#### Step 0
+
+It turns out that we have an added complication. There are missing values in
+`Pulse`!
+
+```{r}
+summary(x$Pulse)
+```
+We will need to remove these missing values before we can proceed. We can also
+discard all other variables (for now).
+
+```{r}
+x <- x[,c("Gender", "Pulse")]
+x <- x[!is.na(x$Pulse),]
+```
+
+
+#### Step 1
+
+```{r}
+xbar_d <- mean(x$Pulse[x$Gender == "Female"]) - mean(x$Pulse[x$Gender == "Male"])
+```
+
+#### Step 2
+
+Under $H_0$, there is no distinction between the mean pulse of females and the
+mean pulse of males. It's like we just have one distribution of pulses. In order
+to simulate one scenario consistent with this "fake" reality, we could just 
+shuffle up (i.e. **permute**) the `Pulse` column. Then we can re-compute the 
+test statistic for this "fake" dataset, repeat 10000 times, and voila, we have
+a distribution of test statistics consistent with $H_0$.
+
+
+```{r}
+set.seed(230)   # we're about to do some random things
+
+N <- 10000    # number of fake datasets (and test statistics) to simulate
+xbar_d_0 <- rep(NA, N)
+
+for (i in 1:N) {
+  s <- data.frame(Gender = x$Gender, 
+                  Pulse = sample(x$Pulse))
+  xbar_d_0[i] <- mean(s$Pulse[s$Gender == "Female"]) - 
+    mean(s$Pulse[s$Gender == "Male"])
+}
+
+
+```
+
+
+What does this distribution look like?
+
+```{r}
+hist(xbar_d_0)
+```
+
+Now we can compare our actual difference in sample means to this distribution.
+
+```{r}
+hist(xbar_d_0)
+abline(v=xbar_d*c(-1,1), lwd=2, col="red")
+```
+
+We can obtain a p-value by counting what fraction of the fake test statistics
+were more extreme than the actual one:
+
+```{r}
+sum(abs(xbar_d_0) > abs(xbar_d))/N
+```
+
+
+
+### Bootstrapping
+
+Permutation tests are nonparametric analogues of parametric hypothesis tests. 
+Bootstrapping provides a nonparametric analogue of parametric confidence 
+intervals.
+
+Recall that a confidence interval provides us an interval for a population 
+parameter, like the difference in mean pulses between females and males. 
+Whereas the CI from the t-test output heavily relies on normality assumptions of
+both populations, bootstrapping produces CIs from a simple idea: the population
+should look like many, many copies of your sample. If we believe this to be
+true, then by repeatedly resampling from our existing sample (replicated
+infinitely many times), we can mimic what similar samples might tell us about
+the population to obtain CIs.
+
+
+1. Compute your quantity of interest based on the original sample. (Again, 
+in our case, this might be the difference in the sample means.)
+
+2. Let our imaginary population consist of infinite copies of our sample. 
+Simulate new samples from this population. Compute our quantity of interest
+based on each new sample. 
+
+3. Compute an interval based on the distribution of these quantities from Step 2.
+
+#### Step 1
+
+```{r}
+xbar_d <- mean(x$Pulse[x$Gender == "Female"]) - mean(x$Pulse[x$Gender == "Male"])
+```
+
+
+#### Step 2
+
+Note that Step 2 sounds very similar to what we did in Step 2 of the permutation
+test. The difference is that we are not interested in disrupting the relationship
+between `Pulse` and `Gender`. We want to preserve entire rows while we sample. 
+Also, because we are imagining the population just consists of infinite copies
+of our original sample, we will allow for the possibility of getting duplicates
+in our sample.
+
+```{r}
+set.seed(230)   # we're about to do some random things
+
+N <- 10000    # number of fake datasets (and test statistics) to simulate
+xbar_d_b <- rep(NA, N)
+
+for (i in 1:N) {
+  rows <- sample(1:nrow(x), replace = TRUE)
+  s <- x[rows,c("Gender", "Pulse")]
+  xbar_d_b[i] <- mean(s$Pulse[s$Gender == "Female"]) - 
+    mean(s$Pulse[s$Gender == "Male"])
+}
+```
+
+
+
+#### Step 3
+
+There are actually some options for Step 3. We'll take the easiest and perhaps 
+most intuitive approach. Given a **bootstrap distribution** from Step 2, we can 
+now take the 0.025 quantiles and 0.975 quantiles of this distribution 
+to obtain our CI for the difference in the population means.
+
+```{r}
+q <- quantile(xbar_d_b, c(0.025, 0.975))
+q
+```
+
+
+Graphically:
+
+```{r}
+hist(xbar_d_b)
+abline(v=xbar_d, col="red", lwd=2)
+abline(v=q, col="blue", lwd=2)
+```
+
+In cases where your population distributions are not symmetric (maybe heavily 
+skewed), this approach may produce an asymmetric confidence interval, with a 
+larger width on either side of the sample statistic. 

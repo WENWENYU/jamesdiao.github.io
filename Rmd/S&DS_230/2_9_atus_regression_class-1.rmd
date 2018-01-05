@@ -1,0 +1,202 @@
+---
+title: 'American Time Use Survey: Social/Leisure'
+author: "STAT 230"
+date: "2/9/2017"
+output:
+  html_document: default
+  pdf_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## The Data
+
+> https://www.bls.gov/tus/datafiles_2014.htm
+
+We looked at this last class and got the data to a almost-clean enough format for us to work with. We quickly run the commands that get up to 
+the point where we left off.
+
+
+```{r}
+load("atusresp.rda")
+load("atussum.rda")
+load("atuscps.rda")
+
+social_cols <- names(atussum)
+social_cols <- grep("t12", social_cols)
+social_times <- rowSums(atussum[,social_cols])
+
+x <- atussum[,c(1, 3:8)] # we like these columns!
+x$social_time <- social_times
+keep <- c("tucaseid", "num_children", "weekly_earn", "diary_date")
+y <- atusresp[, keep]
+x <- merge(x, y, by="tucaseid", all.x = TRUE)
+
+keep <- c("tucaseid", "age", "sex", "famincome", "hh_size") # use age to check
+y <- atuscps[atuscps$atus == 1,keep]
+z <- merge(x, y,by="tucaseid", all.x=TRUE)
+
+```
+
+We were pondering this problem of strange differences in reported age
+between ATUS and CPS for the same individuals. 
+
+```{r}
+table(z$age.x-z$age.y)
+```
+
+We decided that maybe we should toss out all of the individuals with a
+discrepancy greater than 1 in absolute value. We did the following:
+
+```{r}
+# z <- z[abs(z$age.x-z$age.y) <= 1,]
+```
+
+Remove the -1's as well. 
+
+```{r}
+agediffs <- z$age.x - z$age.y
+z <- z[agediffs == 0 | agediffs == 1,] 
+z <- z[agediffs %in% 0:1, ] # same as above
+```
+
+Check the 'sex' variables:
+
+```{r}
+table(z$sex.x, z$sex.y)
+```
+
+The entire set of variables:
+
+```{r}
+names(z)
+```
+
+Tossing out the duplicate variables:
+
+```{r}
+all_cols <- names(z)
+z <- z[, !(all_cols %in% c("age.y", "sex.y"))]
+names(z)
+```
+
+Let's clean up the '.x' column names:
+
+```{r}
+gsub("\\.x", "", names(z))
+names(z) <- gsub("\\.x", "", names(z))
+names(z)
+```
+
+Save this file:
+
+```{r}
+write.csv(z, "atus_social.csv", row.names = FALSE)
+
+# x <- read.csv("atus_social.csv", as.is = TRUE)
+# names(x)
+```
+
+## Looking at Social_Time vs. Age
+
+```{r}
+plot(social_time ~ age, data=z)
+```
+
+We can make the points "transparent" to better
+visualize denser areas:
+
+```{r}
+plot(social_time ~ age, data=z, col=rgb(0,0,0, 0.2), pch=16)
+```
+
+With a simple linear regression model, we might be
+fitting the following equation:
+
+$$\widehat{\text{social_time}} = \hat\beta_0 + \hat\beta_1 \text{age}$$
+
+
+In R, the coefficients can be estimated by using the `lm()` function.
+
+```{r}
+lm(social_time ~ age, data=z)
+```
+
+According to R, the equation can be written as:
+
+$$\widehat{\text{social_time}} = 130.80 + 3.55 \text{age}$$
+
+```{r}
+plot(social_time ~ age, data=z, col=rgb(0,0,0, 0.2), pch=16)
+abline(a=130.80, b=3.55, lwd=2, col="red")
+```
+
+What about some other lines?
+
+```{r}
+plot(social_time ~ age, data=z, col=rgb(0,0,0, 0.2), pch=16)
+abline(a=131, b=3.7, lwd=2, col="blue")
+abline(a=200, b=0, lwd=2, col="green")
+```
+
+Residual is observed y minus predicted y.
+
+$$e_i = y_i - \hat y_i$$
+
+More precisely,
+
+$$e_i = y_i - (\hat \beta_0 + \hat \beta_1 x_i)$$
+
+For **least squares**, we want to minimize the sum of the squared residuals. We pick $\hat \beta_0$ and $\hat \beta_1$ such that $RSS=\sum e_i^2$ is minimized. 
+
+$$RSS(\beta_0, \beta_1) = \sum_i (y_i - ( \beta_0 +  \beta_1 x_i))^2$$
+
+We choose $\hat\beta_0$ and $\hat \beta_1$ to minimize the above quantity.
+
+Assumptions for inference using linear regression.
+LINE assumptions:
+
+* Linearity - do the variables appear to be linearly associated?
+
+* Independence - are the observations independent
+
+* Normality
+
+Usually we check a histogram of the residuals:
+
+```{r}
+m1 <- lm(social_time ~ age, data=z)
+summary(m1)
+hist(m1$resid)
+```
+
+Residuals, mathematically, will sum to 0. 
+
+* Equal variance
+
+Residuals should appear to have about constant variance throughout. This below is a plot of $e$ against $\hat y$.
+
+```{r}
+plot(resid(m1) ~ fitted(m1), col=rgb(0,0,0,0.2),
+     pch=16)
+```
+
+Not a great model. For example, this plot is showing that we would be under-predicting for lower values of $\hat y$. 
+
+Try a squared term for age:
+
+```{r}
+m2 <- lm(social_time ~ age + I(age^2), data=z)
+m2
+
+x <- data.frame(age = seq(0, 85, by=1))
+head(x)
+yhats <- predict(m2, x)
+head(yhats)
+
+plot(social_time ~ age, data=z, col=rgb(0,0,0,0.2))
+lines(x$age, yhats, lwd=2, col="red")
+```
+

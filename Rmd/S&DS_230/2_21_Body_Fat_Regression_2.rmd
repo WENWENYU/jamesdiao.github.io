@@ -1,0 +1,521 @@
+---
+title: "STAT 230"
+date: "February 21, 2017"
+output: 
+  html_document:
+    toc: true
+    toc_float: 
+      collapsed: false
+
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, error=TRUE)
+```
+
+# Yet more on regression
+Wow, I just knit this, and it looks like a __*long*__ page!  That's mostly because
+there are a lot of plots and output, much of which is meant just for a quick
+look and smooth scrolling. And there's a table of contents on the left
+that I hope will help further ease navigation.
+
+## Body fat data
+
+Last time we decided to remove two cases from the data set: rows 39 and 42
+
+```{r}
+library(MASS)
+b <- read.csv("http://www.stat.yale.edu/~jtc5/STAT230/data/bodyfat-252.csv")
+b <- b[-c(39,42), ]
+n <- nrow(b)
+```
+
+```{r}
+ma <- lm(bf ~ abdomen, data=b)
+summary(ma)
+# Look at R-squared (.6785)
+# Residual standard error: 4.713
+plot(ma$fitted.values ~ b$bf)
+abline(0,1)
+
+mh <- lm(bf ~ height, data=b)
+summary(mh)
+# Look at R-squared (.00086)
+# Residual standard error: 8.307
+sd(b$bf)
+# How close are our fitted values to the actual values?
+plot(b$bf ~ mh$fitted.values)
+abline(0,1)
+
+mha <- lm(bf ~ height + abdomen, data=b)
+summary(mha)
+# Look at R-squared (.7132)
+# Residual standard error: 4.46
+plot(mha$fitted.values ~ b$bf)
+```
+
+A big model including all columns:
+```{r}
+mall <- lm(bf ~ ., data=b)
+mall
+summary(mall)
+# R-squared is .7505
+# Residual standard error: 4.255
+plot(b$bf ~ mall$fitted.values)
+abline(0,1)
+```
+
+NOTES 
+
+  * Thing can change back and forth... e.g. now height is no longer significant.
+  * But R-squared is higher.
+  * The plot we've been doing will tend to overstate how good our predictions are expected to be.  See below.
+
+```{r}
+summaries <- list(mh=summary(mh), ma=summary(ma), mha=summary(mha), mall=summary(mall))
+sapply(summaries, function(x){x$r.squared})
+sapply(summaries, function(x){x$adj.r.squared})
+sapply(summaries, function(x){x$sigma})
+```
+
+## Model selection
+Note the big model `mall` has the highest R-squared. Why not just use it? 
+
+### Example: Polynomials
+This is to help get more insight into the problem of model selection.
+
+```{r}
+# Sample 7 rows at random from the data:
+set.seed(230)
+rows <- sample(nrow(b),7)
+
+bs <- b[rows,]
+
+y <- bs$bf
+x <- bs$abdomen/2.54
+ord <- order(x)
+x <- x[ord]
+y <- y[ord]
+plot(y~x)
+
+L <- min(x); U <- max(x)
+newdat <- data.frame(x = seq(L, U, length.out = 100))
+
+#Least squares linear fit:
+lm1 = lm(y~x)
+pred <- predict(lm1, newdata = newdat)
+lines(newdat$x, pred)
+
+# Quadratic:
+lm2 <- lm(y~x + I(x^2))
+pred <- predict(lm2, newdata = newdat)
+plot(y~x)
+lines(newdat$x, pred)
+# this is just kind of a freakish coincidence that the coefficient
+# of the squared term is so close to zero that this has negligible curvature.
+
+# Higher degree polynomials:
+lm3 <- lm(y~x + I(x^2) + I(x^3))
+pred <- predict(lm3, newdata = newdat)
+plot(y~x)
+lines(newdat$x, pred)
+# R tip: we can also use poly(x,d) to express polynomials of degree d.
+lm3a <- lm(y ~ poly(x,3))
+preda <- predict(lm3a, newdata = newdat)
+lines(newdat$x, preda, col=2)
+
+lm4 <- lm(y~x + I(x^2) + I(x^3) + I(x^4))
+pred <- predict(lm4, newdata = newdat)
+plot(y~x)
+lines(newdat$x, pred)
+
+lm5 <- lm(y~x + I(x^2) + I(x^3) + I(x^4) + I(x^5))
+pred <- predict(lm5, newdata = newdat)
+plot(y~x)
+lines(newdat$x, pred)
+
+yrange <- range(pred)
+plot(y ~ x, ylim=yrange)
+lines(newdat$x, pred)
+```
+
+Clearly if your waist is 38 inches and you want to get down to negative bf percentage, gain 2 more inches on your waist!
+
+```{r}
+lm6 <- lm(y~x + I(x^2) + I(x^3) + I(x^4) + I(x^5) + I(x^6))
+pred <- predict(lm6, newdata = newdat)
+    
+# If you really want a 6th degree fit you can do it this way:
+lm6 <- lm(y ~ poly(x,6))
+pr <- predict(lm6, newdata = newdat)
+plot(y ~ x)
+lines(newdat$x, pr, col="blue")
+
+# Overstating how good our predictions are:
+plot(y ~ lm1$fitted)
+plot(y ~ lm2$fitted)
+plot(y ~ lm3$fitted)
+plot(y ~ lm4$fitted)
+plot(y ~ lm5$fitted); abline(0,1)
+plot(y ~ lm6$fitted); abline(0,1)
+```
+
+The plots for lm5 and lm6 look great, but we know these are bad models!
+
+### Model selection criteria  
+The most famous one is "AIC", which stands for 
+"An Information Criterion," due to Akaike. 
+
+Model selection is a deep problem and a lot of differing 
+proposals have followed AIC, including BIC, BPIC, CIC, DIC, EIC, FIC, NIC, TIC, WAIC, ... 
+(don't worry, I don't know what all of these are either!)
+But AIC was the first to be proposed and still the most well known,
+and I believe it is still the most commonly used.
+
+These model selection criteria generally start with some measure
+of how well the model fits the data at hand, and then penalize
+that fit by some measure of complexity of the model.
+
+```{r}
+extractAIC(lm3)
+
+# Here, I'll write a function that shows what extractAIC is doing, for linear models
+myaic <- function(lm1){
+  res <- resid(lm1)
+  n <- length(res)
+  p <- lm1$rank
+  return(n*log(mean(res^2)) + 2*p)
+}
+myaic(lm3) # see, it's the same as extractAIC(lm3)
+```
+So as we can see, AIC is measuring fit of the model to the data
+by the average squared residual (mean(res^2)).
+It takes log and multiplies by n. Still, so far, the smaller
+the better (smaller mean squared residual is better).
+The "penalty" is to add 2*p, that is, twice the number of
+parameters in the model (we can think of this as the number of
+coefficients in our linear model, including the intercept).
+
+The next bit is included just for completeness, and you can 
+probably skip it at least at first reading.
+I just wanted to point out that different authors and software
+may use definitions for AIC that look different and give
+different numbers, but in fact are "equivalent" to this one
+in the sense that if we are comparing models for some data
+set, the different versions of AIC will still rank the models
+in the same order of preference. Even within R there are two functions `extractAIC` and `AIC` that give different answers:
+```{r}
+extractAIC(mha)
+myaic(mha)
+AIC(mha)  # ! differet from extractAIC (and myaic) !
+p <- 3 # for mha
+myaic(mha) + n*log(2*pi) + n + 2 # so this is what AIC is doing
+# The extra addition of n*log(2*pi) + n + 2 doesn't affect
+# comparison between models.
+```
+Formula used by extractAIC:
+$$n\log(ASR) + 2p.$$
+
+Formula used by AIC:
+$$n\log(ASR) + 2(p+1) + n\log(2\pi) + n.$$
+
+
+```{r}
+extractAIC(lm1)
+extractAIC(lm2)
+extractAIC(lm3)
+extractAIC(lm4)
+extractAIC(lm5)
+extractAIC(lm6)
+```
+
+To get more of a feeling for "overfitting"... a start on the idea of cross-validation:
+
+Do the next thing for d=1 and then d=3, for various i values (crl+shift+enter to run block)
+```{r}
+d <- 1
+i <- 3
+plot(y ~ x)
+lm0 <- lm(y ~ poly(x,d))
+newx <- seq(L,U,length.out = 100)
+pr0 <- predict(lm0, data.frame(x=newx))
+lines(newx, pr0)
+yi <- y[-i]
+xi <- x[-i]
+lmi <- lm(yi ~ poly(xi,d))
+ypredi <- predict(lmi, newdata = data.frame(xi=x[i]))
+#^^ predicted y for ith point from regression not using ith point
+ypredi
+points(x[i], ypredi, pch=19, col=2)
+pri <- predict(lmi, data.frame(xi=newx))
+lines(newx, pri, col=2)
+#^^ regression line not using ith point
+```
+
+```{r}
+d <- 2
+ypred <- rep(NA, 7)
+for(i in 1:7){
+  yi <- y[-i]
+  xi <- x[-i]
+  lmi <- lm(yi ~ poly(xi,d))
+  ypredi <- predict(lmi, newdata = data.frame(xi=x[i]))
+  ypred[i] <- ypredi
+}
+
+myrange <- range(c(y, ypred))
+plot(y ~ x, ylim=myrange)
+points(x, ypred, col=2, pch=20)
+mean((y - ypred)^2)
+```
+
+To try to get a nice visual feeling for this,
+here I'll write a function LOO (for "Leave One Out") 
+that shows the effect of leaving one point out of the data out.  
+`LOO(d,i)` will do degree `d` polynomials, and show
+the fit to the full data set in black, and the
+fit to the data set with the ith point left out in red.
+```{r}
+LOO <- function(d, i, ylim=NULL){
+  lm0 <- lm(y ~ poly(x,d))
+  yi <- y[-i]
+  xi <- x[-i]
+  lmi <- lm(yi ~ poly(xi,d))
+  ypredi <- predict(lmi, newdata = data.frame(xi=x[i]))
+  ypredi
+  mytitle <- paste0("y[",i,"]=",y[i],",  cv[",i,"]=",signif(ypredi,3))
+  plot(y ~ x, main=mytitle, ylim=ylim)
+  points(x[i],y[i], pch=4, cex=1.5, col=2)
+  L <- min(x); U <- max(x)
+  newx <- seq(L,U,length.out = 100)
+  pr0 <- predict(lm0, data.frame(x=newx))
+  lines(newx, pr0)
+  pri <- predict(lmi, data.frame(xi=newx))
+  lines(newx, pri, col=2)
+  points(x[i], ypredi, pch=19, col=2)
+}
+
+for(i in 1:7)LOO(1,i)
+```
+The last command produced 7 plots; you can use the arrows
+on the upper left of the plot window to page through
+the plots.
+
+So that's how a linear model performs if we use it to predict
+data that was not used in fitting the model. Compared to 
+measures like R-squared, which measure how well a model 
+fits to data that were used in constructing the model, 
+this type of "leave-one-out" "cross validation" is a more 
+"honest" way to estimate how well a model will perform on 
+unseen data.
+
+Here are the analogous plots for degree 2, 3, and 4, polynomials.
+```{r}
+for(i in 1:7)LOO(2,i)
+for(i in 1:7)LOO(3,i)
+for(i in 1:7)LOO(4,i)
+```
+
+Moral of the story:
+Bigger models are not necessarily better!
+AIC and cross-validation can give us quantitative guidance.
+
+OK, let's go back to multiple regression for `bf`.
+
+### Stepwise regression
+
+First let's remove variables if they have high P values.
+
+```{r}
+mall <- lm(bf ~ ., data=b)
+summary(mall)
+```
+
+```{r}
+m <- update(mall, .~.-knee); summary(m)
+    
+m <- update(m, .~.-weight); summary(m)
+
+m <- update(m, .~.-ankle); summary(m)
+m <- update(m, .~.-biceps); summary(m)
+m <- update(m, .~.-chest); summary(m)
+m <- update(m, .~.-hip); summary(m)
+m <- update(m, .~.-thigh); summary(m)
+m <- update(m, .~.-forearm); summary(m)
+m <- update(m, .~.-neck); summary(m)
+```
+
+That may be a nice idea, but why use P values and why use
+an arbitrary threshold of .05? Better to use AIC:
+
+```{r}
+(d <- drop1(mall))
+names(d)
+d[order(d$AIC),]
+```
+
+```{r}
+d <- drop1(mall); d[order(d$AIC),]
+m <- update(mall, .~.-knee); d <- drop1(m); d[order(d$AIC),]
+m <- update(m, .~.-weight); d <- drop1(m); d[order(d$AIC),]
+m <- update(m, .~.-ankle); d <- drop1(m); d[order(d$AIC),]
+m <- update(m, .~.-biceps); d <- drop1(m); d[order(d$AIC),]
+m <- update(m, .~.-chest); d <- drop1(m); d[order(d$AIC),]
+m
+# AIC ends up with a model bigger than backwards
+# stepwise using .05 threshold for P value
+```
+
+A "stepwise regression" function that automates what we just did:
+```{r}
+msb <- step(mall, direction="backward")
+msb
+m
+```
+
+```{r}
+# going forward, first "by hand"
+m <- lm(bf ~ 1, data=b)
+
+add1(m) # doesn't work
+add1(m, scope=formula(mall))
+a <- add1(m, scope=formula(mall)); a[order(a$AIC),]
+
+m <- update(m, .~.+abdomen); a <- add1(m, scope=formula(mall)); a[order(a$AIC),]
+m <- update(m, .~.+weight); a <- add1(m, scope=formula(mall)); a[order(a$AIC),]
+m <- update(m, .~.+wrist); a <- add1(m, scope=formula(mall)); a[order(a$AIC),]
+m <- update(m, .~.+biceps); a <- add1(m, scope=formula(mall)); a[order(a$AIC),]
+m <- update(m, .~.+age); a <- add1(m, scope=formula(mall)); a[order(a$AIC),]
+m <- update(m, .~.+thigh); a <- add1(m, scope=formula(mall)); a[order(a$AIC),]
+m
+
+# abd now, with a the step function to automate the process:
+msf <- step(lm(bf ~ 1, data=b), scope=formula(mall), direction='forward')
+msf
+m
+```
+
+```{r}
+msf
+msb
+summary(msf)
+summary(msb)
+extractAIC(msf)
+extractAIC(msb)
+```
+
+So far according to AIC our best model so far is msb.
+
+### All-subsets regression. 
+If we don't have too many variables, R can examine all of the
+possible models for us, and we don't need to use "greedy"
+stepwise methods.
+We can use `regsubsets` in the `leaps` library for this.
+
+```{r}
+library(leaps)
+# ?regsubsets
+
+r1 = regsubsets(bf ~ . , data=b)
+r1 # <-- not informative
+s1 <- summary(r1)
+s1$which  
+```
+The `which` thing shows the variables included in the best model 
+of each size. 
+
+The above was limited to models of size up to 8 variables
+by default.  But we can use the `nvmax` argument to change
+this.
+
+```{r}
+r2 = regsubsets(bf ~ . , data=b, nvmax=13)
+r2s = summary(r2)
+r2s
+r2s$which 
+```
+Again `r2s$which` is telling us which model is the best 
+of each size.
+Note that within models of a given size, all
+model selection criteria will agree in preferring the model with
+the highest R-squared (smallest average squared residual).
+What we need the model selection criteria for is to give us
+an idea about which model sizes to prefer.
+```{r}
+names(r2s)
+```
+So `r2s` contains information about various criteria for all
+of the best models of each size.
+
+```{r}
+r2s$rsq
+r2s$cp
+r2s$bic
+```
+The built-in criteria include `rsq` is R-squared, 
+cp is "Mallows' Cp" which is essentially (nearly equivalent to) AIC
+for linear models, and I've shown BIC for variety, which adds
+a larger penalty favoring more parsimonious models than AIC.
+Instead of using the nearly equivalent Cp, we could also just
+go ahead and calculate the AIC's ourselves since it's easy in terms of
+the rss (residual sum of squares), which `regsubsets` provides:
+```{r}
+pvec <- 1+(1:13)  # intercept plus number of x variables in models
+r2s$aic <- n * log(r2s$rss/n) + 2*pvec 
+```
+
+
+```{r}
+plot(r2s$rsq)
+plot(r2s$cp)
+which.min(r2s$cp)
+plot(r2s$aic)
+which.min(r2s$aic)
+plot(r2s$bic)
+which.min(r2s$bic)
+```
+Note `r2s$rsq` increases as the model gets larger.
+It will always do this, and this makes it not useful for model
+selection, since it will always favor the largest model,
+which we know not to be a sensible general idea.
+The Cp criterion and AIC both favor the model with 7 variables,
+and bic favors the model with 3 variables.
+(We told you it favors more parsimonious models than AIC!)
+
+Here are some more things you can calculate and 
+plots you can make:
+```{r}
+plot(r2, scale="Cp") # best models are on top
+which.min(r2s$cp) # best model has 7 variables plus intercept.
+# Let's look at the model Cp and AIC like best:
+bestwhich <- r2s$which[7,]
+bestwhich
+X <- mall$model 
+names(X)
+mbestAIC <- lm(bf ~ ., data=X[,bestwhich])
+mbestAIC
+extractAIC(mbestAIC)
+extractAIC(msb)
+
+```
+Yes, indeed, the best model of all in terms of Cp does have
+a slightly lower AIC than the best we have seen so far
+using the greedy stepwise procedures.
+
+If regression is used for prediction, the model selection problem 
+is not terribly serious. We can just pick any one of the many good models 
+and use it, and it's best not to view the model that happens to win the 
+AIC competition as "the best" model dominating all the others
+in its utter superiority. 
+For prediction it doesn’t matter which good prediction is used. 
+But if regression is used for more for explanation, such as problems of
+causality, then the model selection problem is more difficult and 
+it's hard to be definitive.
+
+```{r}
+order(r2s$aic, decreasing = TRUE)
+order(r2s$cp, decreasing = TRUE)
+# aic and cp do not give exactly the same order (contrary to 
+# some claims on the web).
+```
+

@@ -1,0 +1,201 @@
+---
+title: "Data Wrangling (continued) and ANOVA"
+author: "STAT 230"
+date: "4/4/2017"
+output:
+  html_document: default
+  pdf_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(ggplot2)
+library(lubridate)
+library(dplyr)
+library(tidyr)
+library(nycflights13)
+```
+
+## Tidy Data
+
+As we transition from data acquisition/cleaning to data analysis, we'll really want to make sure that our dataset is in a format that is ready for analysis. "Tidy data" (coined by Hadley Wickham, author of dplyr, tidyr, ggplot2 packages) is described by two features:
+
+* each variable is stored in its own column
+* each observation is stored in its own row
+
+Sometimes it's not so clear what each "variable" or unit of "observation" is meant to be... other times, it's very clear that your data will need fixing up before standard analyses may be applied.
+
+## Financial Data
+
+```{r}
+fin <- read.csv("stock_dat.csv", as.is=T)
+head(fin)
+```
+
+How can we plot these stock prices?
+
+We'll start by creating a date column:
+
+```{r}
+fin <- fin %>% unite(date, year, month, day, sep="-")
+head(fin)
+```
+
+(To undo this:)
+
+```{r}
+fin %>% separate(date, c("year", "month", "day"), sep="-") %>% head()
+```
+
+Convert this `date` variable into a date:
+
+```{r}
+fin <- fin %>% mutate(date = ymd(date))
+head(fin)
+```
+
+Now, let's plot the stock prices over time:
+
+```{r}
+ggplot(fin, aes(x=date, y = FB)) + geom_line() 
+
+
+ggplot(fin, aes(x=date, y = FB)) + geom_line() +
+  geom_line(aes(y=GOOG, col="GOOG")) +
+  geom_line(aes(y=MSFT, col="MSFT"))
+```
+
+Let's reformat this dataset so that we have a column for date, a column for company, and a column for price:
+
+```{r}
+fin2 <- fin %>% gather(company, price, FB:MSFT)
+head(fin2)
+unique(fin2$company)
+```
+
+Using this dataset, we can now make the plot a lot easier!
+
+```{r}
+ggplot(fin2, aes(x=date, y=price, col=company)) + geom_line()
+```
+
+
+
+
+
+
+
+## Back to NYC Flights
+
+Now we'll use `tidyr` to examine the overall trend in arrival/departure delays over the course of each day.
+
+Let's remove the NA's again, as we did last class:
+
+```{r}
+flights <- flights %>% filter(!is.na(arr_delay) & !is.na(dep_delay))
+```
+
+
+Let's use gather:
+
+```{r}
+df <- flights %>% gather(delay_type, delay_val,
+                         c(dep_delay, arr_delay))
+df %>% select(delay_type:delay_val)
+```
+
+
+Now, compute some summary statistics regarding departure and arrival delays:
+
+```{r}
+df <- df %>% mutate(delay_type = ifelse(delay_type == "dep_delay", "Departure", "Arrival")) %>% 
+  group_by(hour, delay_type) %>% 
+  summarize(mean = mean(delay_val),
+            se = sqrt(var(delay_val)/length(delay_val)),
+            obs = length(delay_val))
+head(df)
+```
+
+To plot:
+
+```{r}
+ggplot(df, aes(x=hour, y=mean, col=delay_type)) + geom_line() + geom_point() + 
+  geom_errorbar(aes(min=mean-se, max = mean + se), width=0.33) +
+  scale_x_continuous(breaks=5:23) + 
+  labs(x="Hour of the Day", y="Average Delay (Min)", title = "Flight Delays (NYC) by Departure Time") + 
+  theme(legend.position = "bottom") + 
+  scale_color_discrete(name = "Delay Type")
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+## Runners dataset
+
+This dataset includes data from runners who averaged at least 15 miles per week and a control group described as generally sedentary. Both men and women were included in the study. Individuals in the study were asked to run six minutes on a treadmill and their heart rates were subsequently recorded.
+
+```{r}
+y <- read.csv("heartrates.csv", as.is=TRUE)
+head(y)
+names(y)
+head(y[,1:4])
+```
+
+
+
+Using `gather()` to get this dataset into long form (since we really have 3 variables `gender`, `group`, and `hr`):
+
+```{r}
+z <- y %>% gather(id, hr, starts_with("hr_"))
+head(z)
+
+z <- z %>% select(-id) %>% arrange(group, gender)
+head(z)
+```
+
+
+Suppose we want to see whether or not average heart rates differs across either groups or genders.
+
+This is a case where we could potentially fit linear regression models explaining `hr` using the other variables.
+
+```{r}
+m1 <- lm(hr ~ group, data=z)
+summary(m1)
+```
+
+When we have a single quantitative response and a categorical predictor, we are fitting an one-way ANOVA model. ANOVA stands for ANalysis Of VAriance. 
+One-way ANOVA is used to compare 2 or more population means. In general, when there are $K$ different populations, ANOVA is testing:
+
+$$H_0: \mu_1 = \mu_2 = \dots = \mu_K$$
+
+vs.
+
+$$H_a: \text{ at least 1 }\mu_k \text{ is not equal to others}$$
+
+In our case, $K=2$, and in the regression summary, there are 2 statistics that are relevant to the hypotheses above. (-23.69, the t-value corresponding to `groupRunners` coefficient and 561.1, the F-statistic at the bottom).
+
+```{r}
+ggplot(z, aes(x=group, y=hr)) + geom_boxplot()
+```
+
+```{r}
+m2 <- lm(hr ~ group + gender, data=z)
+summary(m2)
+anova(m2)
+```
+
+```{r}
+m3 <- lm(hr ~ group * gender, data=z)
+summary(m3)
+
+interaction.plot(z$group, z$gender, z$hr)
+```

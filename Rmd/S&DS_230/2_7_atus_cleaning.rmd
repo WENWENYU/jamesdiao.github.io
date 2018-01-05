@@ -1,0 +1,175 @@
+---
+title: "American Time Use Survey 2014 Data"
+author: "STAT 230"
+date: "2/7/2017"
+output:
+  html_document: default
+  pdf_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## The Data
+
+The dataset consists of a survey of individuals about how they spent their time on a particular **diary day**. The survey is conducted as a follow-up to the Current Population Survey, a monthly survey of households conducted by the Bureau of Labor Statistics to examine various characteristics of the U.S. labor force. A select subset of households that have completed the CPS are chosen for ATUS, and one person aged 15+ is randomly chosen from the selected households to respond to the ATUS survey. The data are collected/compiled once a year by the BLS and are publicly available online. 
+
+> https://www.bls.gov/tus/datafiles_2014.htm
+
+We'll work with 3 different components of the survey data files.
+
+```{r}
+load("atusresp.rda")
+load("atussum.rda")
+load("atuscps.rda")
+```
+
+Note that these are not .csv files that we're loading in. These are more compressed files (in binary format) in a format that is exclusive to R.
+
+The first two relate to (n=11,592) individuals surveyed in ATUS, and the third file is CPS data for the entire year. 
+
+Each household is identified by a variable called `tucaseid`:
+
+```{r}
+atusresp$tucaseid[1:5]
+```
+
+Are these all the same individual? It appears that the scientific notation may be obscuring some of the distinguishing digits:
+
+```{r}
+as.character(atusresp$tucaseid[1:5])
+```
+
+
+What variables are included?
+
+```{r}
+names(atusresp)
+```
+
+This first data frame is the **respondent** data, where we have some variables of interest regarding the respondent's work-related characteristics as well as the diary day. (I've commented this out below so that we don't end up with a full
+page of print-out when knitting the file!)
+
+```{r}
+# names(atussum)
+```
+
+The second data frame corresponds to the **activity summary** data, where a number of columns like `txxyyzz` summarize the amount of time the individual spent on specific types of activities over the course of the diary day.
+
+## Time Spent Socializing (and Relaxing/Leisure)
+
+Suppose we'd like to study the how much time each individual spends on socializing, relaxing, and leisure. This corresponds to Tier 12. That means that any columns beginning with "t12" in the `atussum` data frame records a different form of socializing, relaxing, and leisure. Henceforth, we'll just call this class of activities "socializing".
+
+
+```{r}
+social_cols <- names(atussum)
+social_cols <- grep("t12", social_cols)
+social_times <- rowSums(atussum[,social_cols])
+```
+
+What we've done is created a new variable that contains the total amount of time spent on any form of socializing for each respondent.
+
+```{r}
+hist(social_times)
+```
+
+Now we'd probably like to try to understand how socializing behavior differs 
+among different individuals in the population (different genders, different
+income levels, etc.). For that, we'll create a new data frame to hold this
+newly-created variable, and any other bits of interesting information.
+
+
+```{r}
+x <- atussum[,c(1, 3:8)] # we like these columns!
+x$social_time <- social_times
+# head(x)
+```
+
+We started with the activity summary dataset and carved out the columns we 
+like. We can also merge in variables in other datasets we might be interested
+in.
+
+For example, I think the respondents dataset has the following interesting
+things I might care about (in relation to socializing times).
+
+```{r}
+# names(atusresp)
+# head(atusresp)
+keep <- c("tucaseid", "num_children", "weekly_earn", "diary_date")
+y <- atusresp[, keep]
+```
+
+Now we're ready to do a merge:
+
+```{r}
+x <- merge(x, y, by="tucaseid", all.x = TRUE)
+# head(x)
+```
+
+
+The CPS data frame also might have some interesting bits of household information. 
+
+```{r}
+keep <- c("tucaseid", "age", "famincome", "hh_size", "atus") # use age to check
+y <- atuscps[,keep]
+z <- merge(x, y,by="tucaseid", all.x=TRUE)
+```
+
+Hmm, something looks a bit weird. Row 2 of the dataset actually has `atus=0`, suggesting this person was not surveyed in the ATUS and `age.x` differs from `age.y`. What's going on here?
+
+```{r}
+head(z)
+```
+
+Turns out we need to merge in not only by 'tucaseid', but also by 'atus == 1'.
+
+```{r}
+keep <- c("tucaseid", "age", "sex", "famincome", "hh_size") # use age to check
+y <- atuscps[atuscps$atus == 1,keep]
+z <- merge(x, y,by="tucaseid", all.x=TRUE)
+head(z)
+```
+
+Let's take a look at possible discrepancies in the two age variables:
+
+```{r}
+table(abs(z$age.x-z$age.y))
+w <- which(abs(z$age.x-z$age.y) > 3)
+```
+
+
+According to the FAQ's below, there is a gap between the time when the 
+individuals were interviewed for CPS and when they're interviewed for ATUS:
+
+> https://www.bls.gov/tus/atusfaqs.htm#4
+
+Maybe this can help describe discrepancies of 1 year or less. The stranger 
+discrepancies are larger than 1 year.
+
+
+Now peeking at the first few that have a gap of more than 3 years:
+
+```{r}
+head(z[w,])
+```
+
+Who is this first person and what do we know about their household? Could there
+have been a mix-up with the 'atus' variable? Maybe the spouse was interviewed 
+for ATUS instead?
+
+```{r}
+first_person <-  z$tucaseid[w[1]]
+atuscps[atuscps$tucaseid == first_person,]
+```
+
+Doesn't seem likely to be the case. Maybe we should give up on cleaning the data
+for these individuals with more than 1 year in discrepancy. After all there 
+aren't that many of them:
+
+```{r}
+sum(abs(z$age.x-z$age.y) > 1)
+z <- z[abs(z$age.x-z$age.y) <= 1,]
+```
+
+

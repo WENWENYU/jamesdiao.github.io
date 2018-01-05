@@ -1,0 +1,266 @@
+---
+title: "Dissecting Tweets from Donald Trump (and his alter-ego)"
+author: "STAT 230"
+date: "1/17/2017"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Intro
+
+> http://varianceexplained.org/r/trump-tweets/
+
+
+## Data
+
+```{r}
+library(twitteR)
+library(lubridate)
+library(wordcloud)
+library(tidytext)
+```
+
+
+In order to obtain data from the Twitter API, you'll need to first setup a developer's account on Twitter via http://dev.twitter.com. 
+
+```{r}
+setup_twitter_oauth("consumer_key", "consumer_secret", "access_token", "access_secret")
+trump_tweets <- userTimeline("realDonaldTrump", n = 3200)
+trump_tweets_df_2 <- twListToDF(trump_tweets)
+# saveRDS(trump_tweets_df_2, "trump_tweets_df_recent.rds")
+# trump_tweets_df_2 <- readRDS("trump_tweets_df_recent.rds")
+load(url("http://varianceexplained.org/files/trump_tweets_df.rda"))
+trump_tweets_df <- rbind(trump_tweets_df_2, trump_tweets_df)
+Encoding(trump_tweets_df$text) <- "latin1"
+```
+
+Data cleaning:
+
+```{r}
+tweets <- data.frame(text = trump_tweets_df$text,
+                     date = with_tz(trump_tweets_df$created, "EST"),
+                     source = trump_tweets_df$statusSource,
+                     stringsAsFactors = FALSE)
+table(tweets$source)
+tweets$source <- gsub(".*Twitter for (.*)<.*", "\\1", tweets$source) 
+table(tweets$source)
+
+## select only the tweets from iphone or android
+tweets <- tweets[tweets$source %in% c("iPhone", "Android"),]
+```
+
+Take a look at recent tweets from each device:
+
+```{r}
+head(tweets$text[tweets$source == "iPhone"])
+head(tweets$text[tweets$source == "Android"])
+
+```
+
+
+## A few plots
+
+```{r}
+tweets_by_date <- aggregate(tweets$text~ date(tweets$date)+tweets$source,
+                            FUN=length)
+colnames(tweets_by_date) <- c("date", "source", "count")
+
+plot(count ~ date, data = tweets_by_date, subset=source=="Android",
+     type="l", lwd=2, col=2, xlab="Date",
+     ylab="# Tweets by Device", ylim=c(0,35), xaxt="n")
+xdates <- seq(from=as.Date("2015-12-01"), to=as.Date("2017-01-31"), by="months")
+axis(1, labels=format(xdates, "%m/%y"), at=xdates )
+
+lines(count ~ date, data = tweets_by_date, subset=source=="iPhone", lwd=2, col=3)
+legend("topleft", col=2:3, lwd =2, c("Android", "iPhone"))
+abline(v=as.Date("2016-11-08"), col="blue", lwd=2, lty=2)
+```
+
+
+```{r}
+tweets_by_hour <- table(hour(tweets$date), tweets$source)
+hrs <- as.numeric(rownames(tweets_by_hour))
+plot(tweets_by_hour[,1]/sum(tweets_by_hour) ~ hrs, type="l", lwd=2, col=2, xlab="Hour",
+     ylab="% of all Tweets by Device")
+lines(tweets_by_hour[,2]/sum(tweets_by_hour) ~ hrs, lwd=2, col=3)
+legend("topright", col=2:3, lwd =2, c("Android", "iPhone"))
+```
+
+
+```{r}
+tweets_by_hour <- tweets_by_hour / rowSums(tweets_by_hour)
+barplot(t(tweets_by_hour), xlab="Hour (EST)", 
+        ylab="% of Hourly Tweets by Device", legend=colnames(tweets_by_hour))
+```
+
+## Examining Tweet Features
+
+```{r}
+tweets$quote <- "not quoted"
+tweets$quote[grep('^"', tweets$text)] <- "double-quote"
+tweets$quote[grep("^'", tweets$text)] <- "single-quote"
+
+head(tweets$text[tweets$quote == "double-quote"])
+head(tweets$text[tweets$quote == "single-quote"])
+
+tweets$picture <- "no picture/link"
+tweets$picture[grep("t.co", tweets$text)] <- "picture/link"
+```
+
+```{r}
+tmp <- table(tweets$quote, tweets$source)
+barplot(tmp, beside=TRUE,
+         legend=rownames(tmp), ylab="# Tweets")
+
+```
+
+```{r}
+barplot( table(tweets$picture, tweets$source), beside=TRUE,
+         legend=c(unique(tweets$picture)), ylab="# Tweets")
+```
+
+
+## Tweets to Words
+
+Some more cleaning:
+
+```{r}
+tweet_words <- tweets[tweets$quote == "not quoted",]
+tweet_words$text <- gsub("https://t.co/[A-Za-z0-9]+", "", tweet_words$text)
+tweet_words$text <- gsub("&amp;", "", tweet_words$text)
+
+reg <- "([^A-Za-z\\d#@']|'(?![A-Za-z\\d#@]))"
+tweet_words <- unnest_tokens(tweet_words, word, text, token = "regex", pattern = reg)
+tweet_words <- tweet_words[grep("[a-z]", tweet_words$word),]
+tweet_words <- tweet_words[!(tweet_words$word %in% stop_words$word),]
+```
+
+
+Comparing word frequencies
+
+```{r}
+word_freq <- sort(table(tweet_words$word), decreasing = TRUE)
+word_freq_i <- sort(table(tweet_words$word[tweet_words$source=="iPhone"]),
+                    decreasing = TRUE)
+word_freq_a <- sort(table(tweet_words$word[tweet_words$source=="Android"]),
+                    decreasing = TRUE)
+```
+
+Common words:
+
+```{r}
+par(las=1)
+par(mar=c(5,8,4,2)) # increase y-axis margin.
+
+barplot(word_freq[1:15], horiz=TRUE, main="Top 15 Tweeted Words", xlab="Count")
+barplot(word_freq_i[1:15], horiz=TRUE, 
+        main="Top 15 Tweeted Words (iPhone)", xlab="Count")
+barplot(word_freq_a[1:15], horiz=TRUE, 
+        main="Top 15 Tweeted Words (Android)", xlab="Count")
+```
+
+A better way to present this?
+
+```{r}
+wordcloud(names(word_freq), word_freq, min.freq=50, random.order=FALSE,
+          scale=c(3, 0.5))
+```
+
+
+```{r}
+# iphone
+wordcloud(names(word_freq_i), word_freq_i, min.freq=30, random.order=FALSE,
+          scale=c(3, 0.5))
+# android
+wordcloud(names(word_freq_a), word_freq_a, min.freq=30, random.order=FALSE,
+          scale=c(3, 0.5))
+```
+
+
+To examining words that are more frequently used in one of the two sources than the other, we'll construct a ratio: 
+
+$$AIratio = \log\left(\frac{\frac{\text{# in Android} +1}{\text{Total Android}+1}}{\frac{\text{# in iPhone}+1}{\text{Total iPhone}+1}}\right)$$
+
+```{r, fig.height=8}
+a_i_ratios <- table(tweet_words$word, tweet_words$source)
+a_i_ratios <- a_i_ratios[rowSums(a_i_ratios) >= 10,]  
+a_i_ratios <- log((a_i_ratios[,1]+1)/(sum(a_i_ratios[,1])+1))-
+                                 log((a_i_ratios[,2]+1)/(sum(a_i_ratios[,2])+1))
+a_i_ratios <- sort(a_i_ratios)
+
+par(las=1)
+par(mar=c(5,8,4,2)) # increase y-axis margin.
+barplot(c(head(a_i_ratios, 10), tail(a_i_ratios, 10)), horiz=TRUE, 
+        main="Frequently Tweeted Words", xlab="Android / iPhone log ratio")
+
+```
+
+
+## Sentiment Analysis
+
+Details on lexicons:
+> http://saifmohammad.com/WebPages/lexicons.html 
+
+```{r}
+nrc <- sentiments[sentiments$lexicon == "nrc", c("word", "sentiment")]
+head(nrc)
+table(nrc$sentiment)
+```
+
+
+```{r}
+tweet_words_sent <- merge(tweet_words, nrc, by="word", all.x = TRUE)
+head(tweet_words_sent)
+```
+
+Hmm... still some quotes... what's going on?
+
+```{r}
+tweets$text[tweets$date == "2016-10-22 21:26:32"] # doesn't work
+class(tweets$date) # because date is being compared to character here
+
+tweets$text[as.character(tweets$date) == "2016-10-22 21:26:32"] # attempt 2
+tweets$quote[as.character(tweets$date) == "2016-10-22 21:26:32"] # attempt 2
+
+```
+Okay, so we haven't picked out all of the tweets with quotes. Could we fix this?
+
+
+```{r}
+grep("'", tweets$text) # finds indices of tweets with any single-quotes
+grep("\\s+'", tweets$text) # finds indices of any occurrence of space followed by '
+tweets$text[grep("\\s+'", tweets$text)]
+```
+
+```{r}
+head(tweets$text[tweets$quote=="single-quote"])
+```
+
+Now, looking at the sentiments of the quotes more closely.
+
+```{r}
+sent_tbl <- table(tweet_words_sent$source, tweet_words_sent$sentiment)
+mosaicplot(sent_tbl,
+           main="Proportion of Sentiments Expressed by Source", las=1)
+```
+
+What are the frequently-used words that make up each sentiment?
+
+```{r, fig.height=8, fig.width=8}
+par(mfrow=c(2, 2), las=1, mar=c(5,8,4,2)) # increase y-axis margin.
+sents <- unique(nrc$sentiment)
+sents <- sents[!(sents %in% c("negative", "positive"))]
+for(s in sents) {
+  tmp <- unique(tweet_words_sent$word[tweet_words_sent$sentiment == s])
+  ratios <- a_i_ratios[names(a_i_ratios) %in% tmp]
+  
+  ratios <- head(ratios[order(abs(ratios), decreasing=TRUE)], 10)
+  barplot(sort(ratios), horiz=TRUE, 
+        main=s, xlab="Android / iPhone log ratio")  
+}
+
+```
+

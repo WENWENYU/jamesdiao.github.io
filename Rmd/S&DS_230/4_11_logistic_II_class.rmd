@@ -1,0 +1,294 @@
+---
+title: "Logistic Regression"
+author: "STAT 230"
+date: "April 11, 2017"
+output:
+  html_document: default
+  pdf_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(ggplot2)
+library(dplyr)
+library(tidyr)
+library(GGally)
+```
+
+
+## Logistic Regression
+
+Logistic regression is a technique useful for predicting a response with two outcomes.
+
+
+```{r}
+crabs <- read.table("crabs.txt", header=TRUE)
+```
+
+- `color` denotes the female crab's color. It is coded 1: light, 2: medium light, 3: medium, 4: medium dark, 5: dark. Not all of these categories are represented in this data set.
+- `spine` denotes the female's spine condition. It is coded 1: both good, 2: one worn or broken, 3: both worn or broken.
+- `width` denotes female's width (in cm).
+- `num.satellites` denotes the number of satellites nearby
+- `weight` denotes the female's weight (in g).
+
+```{r}
+head(crabs)
+summary(crabs)
+ggpairs(crabs)
+```
+
+
+Suppose we want to predict whether a female crab has at least one satellite. That means we need to create a categorical variable to represent this.
+
+```{r}
+crabs <- crabs %>% mutate(satellites = 1*(num.satellites > 0))
+```
+
+#### Weight
+
+```{r}
+plot(jitter(satellites) ~ weight, data=crabs)
+```
+
+Logistic regression considers a linear relationship between the expected (natural) log-odds (of having a satellite) and `weight`.
+
+$$\log\left(\frac{\hat p}{1-\hat p}\right) = \hat\beta_0+\hat \beta_1 \text{weight}$$
+
+
+```{r}
+m2 <- glm(satellites ~ weight, data=crabs, family=binomial)
+summary(m2)
+```
+
+
+How we can get predictions from a logistic regression model:
+
+```{r}
+predict(m2, data.frame(weight = 2000))
+cc <- coef(m2)
+
+cc[1]+ cc[2]*2000
+```
+
+By default, the predict function here will provide predicted log-odds. We can work out the math:
+
+$$\hat p = \frac{\exp(\hat\beta_0+\hat \beta_1 \text{weight})}{1+\exp(\hat\beta_0+\hat \beta_1 \text{weight})}$$
+
+```{r}
+v <- cc[1]+ cc[2]*2000
+exp(v)/(1+exp(v))
+```
+
+A 2000 g female horseshoe crab is predicted to have 0.48 probability of having at least 1 satellite male crab.
+
+```{r}
+predict(m2, data.frame(weight=2000), type="response")
+```
+
+
+
+
+
+
+
+Here's a plot of what the fitted model might look like:
+
+```{r}
+plot(jitter(satellites)~weight, data=crabs, col=rgb(0,0,0,0.2), pch=16)
+
+curve(predict(m2, data.frame(weight=x), type="response"), 
+      col="blue", add=TRUE)
+
+```
+
+Maybe the model fit seems questionable. After all, all we see are these long rectangular blobs of points that seem to extend over roughly the same intervals of weight. To simplify, we can make an **empirical probability plot** that shows the average probability of having at least 1 satellite plotted against bins of weight. 
+
+```{r}
+crabs2 <- crabs %>% mutate(weightCat = cut(weight, 10)) %>%
+  group_by(weightCat) %>% 
+  summarize(mweight=mean(weight),
+            msat = mean(satellites))
+plot(msat ~ mweight, data=crabs2, ylab="Probability of 1+ Satellite",
+     xlab="Mean Weight (in Bin)")
+
+```
+
+Here, we're looking for some sort of visible S-shaped curve (forward facing or backward facing). It's okay if we don't see both ends of the S. This plot seems to show what we're looking for. 
+
+Let's superimpose the linear regression as well as the logistic regression models on top:
+
+```{r}
+m1 <- lm(satellites ~ weight, data=crabs)
+plot(msat ~ mweight, data=crabs2, ylab="Probability of 1+ Satellite",
+     xlab="Mean Weight (in Bin)")
+abline(m1, col="red", lty=2, lwd=2) # linear regression model
+curve(predict(m2, data.frame(weight=x), type="response"), 
+      col="blue", add=TRUE, lwd=2)
+```
+
+The nice thing about such logistic curves is it has two horizontal asymptotes at 0 and 1, which is desirable for predicting probabilities. The parameters of this curve give us the flexibility to control how rapidly the curve changes from 0 to 1 (or vice versa). Some examples of logistic curves:
+
+```{r}
+ilogit <- function(x, b0, b1) {
+  exp(b0 + b1*x)/(1+exp(b0 + b1*x))
+}
+ilogit(3000, cc[1], cc[2])
+```
+
+Let's look at some curves using this function:
+
+```{r}
+curve(ilogit(x, b0 = -1, b1 = 0.1), from=-50, to=50)
+curve(ilogit(x, b0 = -1, b1 = 0.2), from=-50, to=50)
+curve(ilogit(x, b0 = -1, b1 = 1), from=-50, to=50)
+
+curve(ilogit(x, b0 = -20, b1 = 1), from=-50, to=50)
+curve(ilogit(x, b0 = -20, b1 = -1), from=-50, to=50)
+
+```
+
+
+##### Interpretation
+
+```{r}
+coef(m2)
+```
+
+* Intercept $\beta_0$: The predicted log odds for an individual with $x=0$ to be $\beta_0$. The predicted odds of a 0g horseshoe crab having at least 1 satellite is $e^{-3.69}$
+
+* Slope $\beta_1$: As $x$ increases by 1 unit, we predict that log odds increases by $\beta_1$, or that the odds gets multiplied by $e^{\beta_1}$. As weight increases by 1g, the predicted odds of having at least 1 satellite is multiplied by $e^{0.0018} = 1.0018$ (the predicted odds increases by 0.18%).
+
+
+##### Inference
+
+Getting 95% confidence intervals for coefficients:
+
+```{r}
+confint(m2, level = 0.95)
+```
+
+CI of odds ratio:
+
+```{r}
+exp(confint(m2, level = 0.95))[2,]
+```
+
+We are 95% confident that the odds ratio (multiplicative factor applied to the odds of having at least one satellite with a 1g increase in weight) is between 1.001 and 1.003.
+
+At a significance level of 0.05, the data suggest that weight is a helpful predictor of probability of at least 1 satellite.
+
+```{r}
+summary(m2)
+```
+
+
+
+#### Width and Weight
+
+```{r}
+m3 <- glm(satellites ~ weight + width, data=crabs, family=binomial)
+summary(m3)
+```
+
+Another way to assess the overall significance of a logistic regression model is based off of deviance. (Lower deviance is better.) Residual deviance is a measure of how well our model fits the data. Null deviance is a measure of how well a model with only the intercept fits the data.
+
+
+```{r}
+m.null <- glm(satellites ~ 1, data=crabs, family=binomial)
+summary(m.null)
+anova(m.null, m3, test="Chisq")
+```
+
+Based on the p-value here, we conclude that there is at least one significant slope coefficient (weight and/or width). 
+
+```{r}
+ggpairs(crabs)
+```
+
+
+
+#### Color
+
+
+```{r}
+m4 <- glm(satellites ~ color, data=crabs, family=binomial)
+class(crabs$color)
+summary(m4)
+```
+
+Or we can encode color as a categorical variable:
+
+```{r}
+crabs$colorCat <- factor(crabs$color)
+class(crabs$colorCat)
+
+m5 <- glm(satellites ~ colorCat, data=crabs, family=binomial)
+summary(m5)
+```
+
+Equation for color 2:
+
+$$\log (\frac{\hat p}{1-\hat p}) = 1.10$$
+
+Equation for color 3:
+
+$$\log (\frac{\hat p}{1-\hat p}) = 1.10 - 0.122$$
+
+
+Equation for color 4:
+
+$$\log (\frac{\hat p}{1-\hat p}) = 1.10 - 0.731$$
+
+
+#### Combining Color and Weight
+
+```{r}
+m6 <- glm(satellites ~ color + weight, data=crabs, family=binomial)
+summary(m6)
+```
+
+
+We can also try including interactions:
+
+```{r}
+m6a <- glm(satellites ~ color * weight, data=crabs, family=binomial)
+summary(m6a)
+```
+
+We can of course also compare nested models using `anova()`
+
+```{r}
+anova(m6, m6a, test="Chisq")
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+### Pima Indians
+
+This dataset relates to a study of diabetes among female family members in the Pima Indians tribe. We want to predict diabetes status `test`, which is a binary outcome, where 1 means testing positive.
+
+```{r}
+x <- read.table("pima.txt", header = TRUE, as.is = TRUE)
+summary(x)
+plot(x)
+```
+
+Stepwise regression also works!
+
+```{r}
+m.full <- glm(test ~ ., data=x, family=binomial)
+summary(m.full)
+step(m.full, direction="backward")
+```
+
+

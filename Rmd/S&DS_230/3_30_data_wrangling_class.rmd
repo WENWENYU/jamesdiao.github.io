@@ -1,0 +1,250 @@
+---
+title: "NYC Flight Data"
+author: "STAT 230"
+date: "3/30/2017"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Packages
+
+```{r}
+library(nycflights13)
+
+library(dplyr)
+library(tidyr)
+library(ggplot2)
+```
+
+## The Data
+
+```{r}
+dim(flights)
+flights
+summary(flights)
+```
+
+### Filtering by Row
+
+`filter()` allows us to filter a dataset by row.
+
+Suppose we want to just look at flights that departed on New Year's Day.
+
+```{r}
+newyears <- filter(flights, month == 1, day == 1)
+
+newyears <- filter(flights, month == 1 & day == 1)
+head(newyears)
+tail(newyears)
+
+newyears <- flights %>% filter(month == 1, day == 1)
+```
+
+
+### Selecting columns
+
+`select()` allows us to extract one or more columns from a data frame.
+
+```{r}
+newyears %>% select(dep_delay)
+
+colnames(newyears)
+newyears %>% select(starts_with("arr"))
+newyears %>% select(contains("arr_"))
+
+newyears %>% select(7:9)
+newyears %>% select(arr_time:arr_delay)
+newyears %>% select(-(arr_time:arr_delay))
+
+newyears %>% select(-starts_with("arr"))
+```
+
+Getting distinct values of `carrier`:
+
+```{r}
+newyears %>% select(carrier) %>% distinct()
+```
+
+
+### Arranging the Data
+
+```{r}
+newyears %>% arrange(sched_dep_time, dep_delay)
+newyears %>% arrange(sched_dep_time, desc(dep_delay))
+
+```
+
+
+
+
+### Renaming Columns
+
+
+```{r}
+names(newyears)
+
+newyears %>% rename(hr = hour, min = minute)
+```
+
+
+
+### Adding new columns
+
+```{r}
+newyears <- newyears %>% mutate(gain = arr_delay - dep_delay)
+
+# the old way of doing this:
+
+# newyears$gain <- newyears$arr_delay - newyears$dep_delay
+```
+
+
+### Summarizing Data
+
+`summarize()` can be used to compute summary statistics based on one or more columns in the data frame.
+
+```{r}
+flights %>% summarize(delay = mean(dep_delay, na.rm=TRUE),
+                      numdests = n_distinct(dest))
+```
+
+By hour... what are these summary statistics?
+
+```{r}
+flights %>% group_by(hour) %>% 
+  summarize(delay = mean(dep_delay, na.rm=TRUE),
+                      numdests = n_distinct(dest))
+```
+
+Be careful when inserting line breaks. It's best to break after the piping operator and not before.
+
+## Some Practice
+
+Q: How many flights go out of NYC each day?
+
+
+```{r}
+daily <- flights %>% group_by(month, day) %>% 
+  summarize(numflights = n())
+
+library(lubridate)
+flights <- flights %>% mutate(date = ymd(paste(year, month, day)))
+head(flights$date)
+tail(flights$date)
+
+daily <- flights %>% group_by(date) %>% 
+  summarize(numflights = n())
+ggplot(daily, aes(x=date, y= numflights)) + geom_point()
+```
+
+
+
+How does this break down by day of the week?
+
+```{r}
+ggplot(daily, aes(x=date, y= numflights, 
+                  color=wday(date, label=TRUE))) +
+  geom_point()
+
+```
+
+
+
+Q: Suppose I am flying out of NYC on New Year's Day. Which airline carriers had the longest average arrival delay?
+
+```{r}
+newyears %>% group_by(carrier) %>% 
+  summarize(meandelay = mean(arr_delay, na.rm=TRUE))
+```
+
+
+
+
+
+
+(This is not a well-posed question... why?)
+
+Let's just consider flights to FLL (Fort Lauderdale):
+
+```{r}
+newyears %>% filter(dest == "FLL") %>% 
+  group_by(carrier) %>% 
+  summarize(meandelay = mean(arr_delay, na.rm=TRUE))
+```
+
+Or a plot:
+
+```{r}
+newyears %>% filter(dest == "FLL") %>%
+  ggplot(aes(x= carrier, y = arr_delay)) +
+  geom_boxplot()
+```
+
+
+
+
+Q: What do the NA's mean?
+
+```{r}
+newyears %>% filter(is.na(arr_delay)) %>% select(-(1:3))
+```
+
+It appears that some NAs are legitimate cancellations. Others might be fixable (with some work), but we'll choose to remove the NAs at this point.
+
+```{r}
+flights <- flights %>% filter(!is.na(arr_delay) & !is.na(dep_delay))
+dim(flights)
+```
+
+
+
+
+
+
+Q: Consider the flights between NYC and BOS (Boston) each day. What are the average delays per hour of the day for each carrier?
+
+```{r}
+tmp <- flights %>% filter(dest == "BOS") %>% group_by(carrier, hour) %>%
+  summarize(meandelay = mean(arr_delay))
+
+ggplot(tmp, aes(x=hour, y=meandelay, color=carrier)) + geom_point()
+```
+
+Break this down further by airport of origin:
+
+```{r}
+tmp <- flights %>% filter(dest == "BOS") %>% 
+  group_by(carrier, hour, origin) %>%
+  summarize(meandelay = mean(arr_delay))
+
+ggplot(tmp, aes(x=hour, y=meandelay, color=carrier)) + geom_point() + facet_wrap(~origin)
+```
+
+
+Break this down further by day of the week:
+
+```{r}
+tmp <- flights %>% filter(dest == "BOS") %>% 
+  mutate(day_of_week = wday(date, label = TRUE)) %>%
+  group_by(carrier, hour, origin, day_of_week) %>%
+  summarize(meandelay = mean(arr_delay))
+
+ggplot(tmp, aes(x=hour, y=meandelay, color=carrier)) + geom_point(alpha=0.5) + facet_grid(origin ~ day_of_week) +
+  theme(legend.position = "none")
+```
+
+
+Q: How many flights are available at each of these combinations of variables?
+
+```{r}
+tmp <- flights %>% filter(dest == "BOS") %>% 
+  mutate(day_of_week = wday(date, label = TRUE)) %>%
+  group_by(carrier, hour, origin, day_of_week) %>%
+  summarize(nflights = n())
+
+ggplot(tmp, aes(x=hour)) + geom_bar(aes(weight=nflights, fill = carrier)) + facet_grid(origin ~ day_of_week) +
+  theme(legend.position = "none")
+```

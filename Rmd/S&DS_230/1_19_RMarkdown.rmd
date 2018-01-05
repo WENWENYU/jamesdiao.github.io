@@ -1,0 +1,330 @@
+---
+title: "RMarkdown 101"
+author: 'STAT 230'
+date: 'Jan. 19'
+output:
+  html_document:
+    fig_height: 3
+    fig_width: 5
+  word_document:
+    fig_height: 3
+    fig_width: 5
+---
+
+## Getting Started
+
+R is a freely available scripting language that statisticians like to use for just about everything. We will work with R extensively in this class, for homework assignments, lab activities, and the final project. RMarkdown (the format of this particular file) is a markup language that allows for a seamless integration of R code, R output, and formatted text commentary. Let's get started with some simple examples.
+
+### Calculations
+
+R is first and foremost a (scientific) calculator. Let's try a few things:
+
+```{r}
+3 + 5
+2 + 5*2
+(2+5)*2
+2^5
+sqrt(2)
+
+exp(3)
+```
+
+Lines 25-30 make up a **code chunk**, that is, a block of R code embedded into the RMarkdown file. Once you click on the `Knit` button at the top of the editor panel, you'll see the generated file which not only contains code from your code chunk, but also the processed R output. 
+
+### Creating variables
+
+Not only can we calculate things, we can also store values (like our calculations). To do this, we use the `<-` operator (or equivalently, the `=` operator) for assignment. 
+
+```{r}
+x <- 3  # this creates a variable `x` with the value 3 stored
+x  # if we just type `x` without an assignment, we can now see what's stored in `x`
+```
+
+(A keyboard shortcut for the `<-` operator is 'Alt + -' or 'Option + -'.)
+
+It's useful to create a variable that saves the output of a calculation:
+
+```{r}
+y <- 2 + 5 * 2
+```
+
+### Vectors 
+
+Vectors are one-dimensional objects of the same type in R. We can create them in several ways:
+
+```{r}
+v <- c(1,2,5)
+v
+
+v <- seq(1, 5, by=1)
+v
+
+v <- 1:5 # shorthand for sequences that increment by 1
+v
+
+v <- seq(1, 50, by=2)
+v
+
+v <- seq(1, length.out = 25, by = 2)
+v
+
+v <- rep("Friday", 7)
+v
+
+```
+
+We can also create a random vector by taking a random sample from a set of integers.
+
+```{r}
+v <- sample(1:9, 5, replace = TRUE) # a random sample (n=5) from the integers 1 through 9
+v
+```
+
+Note that every time we run this, we'll get a different `v`. If I wanted to be able to reproduce the same random values, I need to set the seed:
+
+```{r}
+set.seed(5)
+v <- sample(1:9, 5, replace = TRUE)
+v
+```
+
+Now, each time I run the chunk above, I am guaranteed to get the same random vector `v`.
+
+We often want to extract elements from vectors. We can do this by typing indices within square brackets:
+
+```{r}
+v[4] # the 4th element
+v[-4] # everything but the 4th element
+v[2:5] # the 2nd through the 5th element
+v[-1] # same thing!
+
+v[c(1,3,5)]
+```
+
+Mathematical operations can also be applied to each element in the vector. For example, we can add 3 to each element in `v`.
+
+```{r}
+v + 3
+```
+
+Note that this doesn't actually overwrite the existing vector `v`. To do that, we'd have to use the assignment operator again: 
+
+```{r}
+v <- v + 3
+```
+
+Sometimes, you may want to ask about specific values in vectors.
+
+```{r}
+v > 5 # element is greater than 5?
+v >= 5 # element is at least 5?
+v == 5 # element is exactly 5?
+v < 5 # element is less than 5?
+v > 5 & v < 11 # element is between 5 and 11?
+```
+
+Each element in the above vectors is a logical type, TRUE or FALSE. Suppose you wanted just the indices of the TRUEs. That can b accomplished using the `which()` command:
+
+```{r}
+which(v > 5)
+```
+
+Suppose we only want to show the elements in the vector `v` that is greater than 5. We can do this using:
+
+```{r}
+v[which(v > 5)]
+```
+
+We can use the logical vector to accomplish the same, foregoing the `which()` function. 
+
+```{r}
+v[v > 5]
+```
+
+Some other useful functions that can be applied to vectors might include:
+
+```{r}
+mean(v)
+var(v)
+sd(v)
+```
+
+Of course, because a subset of a vector is still a vector, you can apply these functions to a subset of `v` as well:
+
+```{r}
+mean(v[v > 5])
+sd(v[v > 5])
+```
+
+
+### Data Frames
+
+Data frames are two-dimensional objects in R. These are like matrices because they are rectangular. Each column might have a different variable type. As you can imagine, data frames are a standard way for storing datasets in R. 
+
+For now, we probably don't need to create data frames from scratch (unless you are collecting raw data on pen/paper and you need to key things in). More likely, we can simply read in datasets that are already in the form of data frames.
+
+
+### Reading Data from a File
+
+Very often, we will need to load in data from an external source, say a .csv file. This is easy to do:
+
+```{r}
+NYC <- read.csv("https://www.dropbox.com/s/k5pl1rf7s0o1mox/nyc.csv?raw=1")
+```
+
+Here, I've created a new variable called `NYC` and stored a dataset from the provided URL into it. 
+
+We can peek at the beginning and end of this dataset using:
+
+```{r}
+head(NYC)
+tail(NYC)
+```
+
+### And More
+
+One reason why R is so powerful is the fact that it is _open-source_, meaning that anyone can contribute functions, datasets, and packages to it. We won't be using too many external packages in this course, but they're easy to install and use via the `install.packages()` and `library()` commands. 
+
+When in doubt, you can also ask R for help using `?`. For example, let's say you'd like some help with the `head()` function. You'd type:
+
+```{r}
+?head
+```
+
+
+## The NYC dataset
+
+The Zagat guide contains restaurant ratings and reviews for many major world cities.  Assume that you are heading to New York City, and want to take your significant other out for a meal.  Putting your statistics skills to good use, you do some research prior to the trip and obtain the following `NYC` dataset with ratings and prices for 168 Italian restaurants in 2001.
+
+The variables are:
+
+* `Price`: the price of an average dinner meal (including a drink and tips)
+* `Restaurant`: the restaurant name
+* `Food`: customer rating of the food (out of 30)
+* `Decor`: customer rating of the decor (out of 30)
+* `Service`: customer rating of the service (out of 30)
+* `East`: an indicator variable for whether the restaurant is east of Fifth Ave.
+
+We can take a look at the summary of this dataset by doing:
+
+```{r}
+summary(NYC)
+```
+
+Aha -- we have our first example of a data frame. We can access individual columns of this data frame (e.g. variables) in a number of ways:
+
+```{r}
+NYC$Price # by column name
+NYC[,2] # by column index, kind of like treating NYC as a matrix
+```
+
+Effectively, the above commands extracted a vector from the `NYC` data frame. We can then proceed to operate on either result as you would a vector:
+
+```{r}
+mean(NYC[,2])
+sd(NYC[,2])
+
+mean(NYC$Price)
+sd(NYC$Price)
+```
+
+There are pros and cons to using the `$` vs. the `[,]` way of subsetting data frames. Obviously `$` directly references the variable name, so in some ways using this approach makes the intent more transparent (and easier to read code). However, if you'd like to extract multiple columns, you might want to use the `[,]` approach:
+
+```{r}
+head(NYC[,c(2,4)])
+```
+
+We can also extract particular rows of the data frame as well. You already know one way of extracting from the beginning or the end of the data frame (via `head()` and `tail()`). We can also do:
+
+```{r}
+NYC[3,] # extracts the third row
+NYC[c(3,9),] # extracts the 3rd and 9th rows
+```
+
+So, to subset two-dimensional object `x`, we do `x[row indices, col indices]`. If no row indices are provided, then we subset by columns (and assume all rows are included in the result). If no column indices are provided, then we subset by rows (and assume all columns to be included in the result). It both are provided, we can extract cells or something like a submatrix.
+
+```{r}
+NYC[1,3] # extracts the value in the 1st row, 3rd column
+NYC[1:3, c(1,5)] # extracts the data in the 1st 3 rows corresponding to columns 1 and 5
+```
+
+### Some Exploratory Data Analysis
+
+Suppose you'd like to understand which factors contribute most to the price of a meal. Before we fit any statistical models, it may be helpful to have a visual look at the dataset. Different plots could be considered.
+
+
+A univariate plot of price could shed light on the distribution of the price of an average dinner in this dataset.
+
+```{r}
+hist(NYC$Price)
+```
+
+So it would seem that dinners are quite expensive amongst Zagat-rated restaurants in New York City, averaging 40 dollars a meal back in 2001. 
+
+
+When we want to examine the relationship between 2 quantitative variables, we can use a scatterplot. 
+
+```{r}
+plot(Price ~ Food, data=NYC)
+```
+
+What do we learn from this? The points appear to be positively sloped, suggesting a positive association between food ratings and price. That makes sense, better food should intuitively be valued at a higher price. (Or you could say that perhaps if you are willing to pay more for a meal only if you perceive it as tasting better than a cheaper meal.) The fact that the points seem to align in vertical stripes is suggestive of rounding. No one gives half-points. No surprise there. However, vertical stripes like these can sometimes mask the number of points that appear in the plot due to overplotting. A solution to this is to jitter the points ever so slightly, that is, to add a bit of random noise to the discrete-valued variable.
+
+```{r}
+plot(Price ~ jitter(Food), data=NYC)
+```
+
+Can we make this plot better? Labels and titles are always helpful when you have a formal write-up. 
+
+```{r}
+plot(Price ~ jitter(Food), data=NYC, main="Zagat-Rated Restaurants in NYC (2001)",
+     ylab="Average Price of a Dinner", xlab="Food Score (jittered)")
+```
+
+There are other optional arguments you can pass into the `plot()` function as well. Again, `?functionname` will pull up the help file for that particular function. So `?plot` can give you more info.
+
+
+If you'd like to visualize how a quantitative variable and a categorical variable relate to each other, a boxplot is helpful.
+
+```{r}
+boxplot(Price ~ East, data=NYC, ylab="Price of an Average Dinner", xlab="0 = West, 1 = East of 5th Ave.")
+```
+
+From this plot, we gather that restaurants East of 5th Ave. tend to be pricier.
+
+Thus far, we have seen two instances of the syntax `function(y ~ x, data=df)`. Try to commit this to memory since this pattern comes up in other places as well. The order in which the variables appear around the `~` matters. It's always the response variable `y` before the `~` and the explanatory variable(s) `x` after.
+
+Suppose we wanted to incorporate the `East` variable into our plot relating price to food ratings. We could do this by letting the color of each point vary by its value for `East`.
+
+```{r}
+plot(Price ~ jitter(Food), data=NYC, main="Zagat-Rated Restaurants in NYC (2001)",
+     ylab="Average Price of a Dinner", xlab="Food Score (jittered)", 
+     col=East+1)
+```
+
+We would want a legend to tell us which color is which value of `East`.
+
+```{r}
+plot(Price ~ jitter(Food), data=NYC, main="Zagat-Rated Restaurants in NYC (2001)",
+     ylab="Average Price of a Dinner", xlab="Food Score (jittered)", 
+     col=East+1)
+legend("topleft", col=1:2, pch=1, legend=c("East=0", "East=1"))
+```
+
+Sometimes solid circles can look a bit better:
+
+```{r}
+plot(Price ~ jitter(Food), data=NYC, main="Zagat-Rated Restaurants in NYC (2001)",
+     ylab="Average Price of a Dinner", xlab="Food Score (jittered)", 
+     col=East+1, pch=16)
+legend("topleft", col=1:2, pch=16, legend=c("East=0", "East=1"))
+```
+
+Another way to use `plot()` is to run it on an entire data frame. This is not recommended if you have a ton of variables, or if a lot of variables are not quantitative.
+
+```{r, fig.width=8, fig.height=8}
+#plot(NYC)  # bad idea
+
+plot(NYC[,-1])
+```
+

@@ -1,0 +1,348 @@
+---
+title: "The Titanic, Class Questionnaire (and Practicing R Best Practices)"
+author: "STAT 230"
+date: "January 24, 2017"
+output:
+  html_document: default
+  pdf_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## R Best Practices, Tips & Tricks
+
+Last class, we saw some of the basic ways that R can be used for exploratory 
+data analysis. Today we'll spend some time getting a bit more acquainted with 
+R, see some FAQ's you may encounter, and discuss some good habits to get into. 
+We'll illustrate some of these on the raw class questionnaire dataset, 
+of which a cleaned up version was provided for your homework assignment. 
+
+* Configure RStudio options. Go to 'Tools' -> 'Global Options...'. There are a 
+lot of options here you can select to help you form good coding habits. 
+
+For example, I choose to add a vertical edge at 80 characters, so that I get into
+the practice of not writing extremely long lines of code. I also select to 
+indent via 2 spaces instead of a tab to save myself space. You're far less likely
+to get text that trails off the page after compiling things if you stick to 
+this rule.
+
+* Set up organized folders on your computer for your work in this class (and
+other classes in which you will be using R).
+
+It can be extremely tempting to put all your R-related files into one place, such
+as in the default **working directory**. This could cause all sorts of chaos as
+the number of files increases throughout the semester.
+
+* Maintain good coding style. 
+
+We couldn't emphasize this enough. It isn't sufficient to write code that works 
+for the moment being; you need to write code that you can read and interpret in
+2 weeks, 4 weeks, etc. For that reason, following the following coding 
+guidelines:
+
+1. Always use `<-` for variable assignment. Ensure that all operators are 
+preceded and followed by a space.
+
+```{r}
+a <- 5 # this is the right way to do it!
+
+a<-5  # this seems harmless, does it?
+a< -5 # how about this?
+```
+
+
+Here's an example of where it could all go wrong...
+
+```{r}
+a <- -5:5   # shorthand for seq(-5, 5, by=1)
+a
+a[a<-5]
+a
+```
+
+For instances where you want to explicitly check whether, say, `a` is less than 
+-5, put a space before and after the operator to remove the ambiguity.
+
+```{r}
+a < -5
+```
+
+2. Don't let yourself write lines of code longer than 80 characters. When you 
+compile the file, say into Word, you might find that the larger font makes it
+hard to have your code be wrapped around legibly. What happens if you need to 
+write commands that are longer than 80 characters? Add returns and align 
+appropriately. 
+
+Here's what not to do:
+
+```{r}
+x <- data.frame(name=c("Anna", "Bob", "Casper", "Doris", "Ethan"), age=runif(5, min=0, max=50))
+```
+
+By the way, this is how we create a data frame. But really, it's better to 
+format this code as follows:
+
+```{r}
+x <- data.frame(name=c("Anna", "Bob", "Casper", "Doris", "Ethan"), 
+                age=runif(5, min=0, max=50))
+```
+
+You may have read from other places that it's possible to put multiple R commands
+on the same line when separated by a `;`. Avoid doing this because it makes the
+code less readable.
+
+```{r}
+x <- 5*exp(5); x  # there's no need to save yourself space. Just use a new line!
+```
+
+3. Indent your code.
+
+As we get into topics like for-loops and if-statements, proper indentation will
+significantly improve the readability of your code. (Thankfully, RStudio does
+auto-indent for you, and a Cmd+I or Ctrl+I can help clean-up an existing mess.)
+
+
+### Other Tips
+
+* R is case sensitive. `x` is not the same thing as `X`.
+
+* When the console is ready to take in a new command, you should see the line
+begin with `>`. Sometimes it thinks you're still waiting to finish a previous
+command, in which case, it shows `+`. Just click into the console, and hit
+'Escape' on your keyboard and you should get back to the `>`.
+
+* An R script (or Rmd script) runs sequentially from beginning to end. Do not
+run code chunks out of order.
+
+## Titanic Dataset
+
+> Video clip: (1:10)
+> https://www.youtube.com/watch?v=BQHaR_OdghI
+
+This is a dataset that is stored as a .csv file, and is posted on Canvas. You should download this file and save it into an appropriate folder. We'll then read the file into R using the `read.csv()` function.
+
+```{r, eval=F}
+x <- read.csv("titanic.csv")
+```
+
+Did this work? If not, it's quite likely that your working directory is not the
+one that contains the .csv file we're trying to load in. You'll have to either
+put in the full path leading to this .csv file, or to set the proper **working
+directory**. For example,
+
+```{r}
+titanic <- read.csv("titanic.csv")
+colnames(titanic) <- tolower(colnames(titanic))
+```
+
+A good workflow when you start working with any dataset is to examine its dimensions and the first and last rows of the dataset.
+
+```{r}
+dim(titanic) # 1309 rows, 6 columns
+head(titanic) 
+tail(titanic)
+```
+
+You should only have to set the working directory once in a .Rmd file, generally. 
+Keeping your data files organized in an appropriate directory structure will 
+make this possible. It's also a good idea to set the working directory at the
+beginning of your .Rmd file (say in the first code chunk).
+
+
+The variable names above are generally obvious, with the exception of perhaps 
+the following:
+
+* `sibsp`: # of siblings or spouses aboard 
+* `parch`: # of parents or children aboard
+
+Here's a new command we haven't seen before that can help give us a sneak
+preview of the data frame, its columns, and their types.
+
+```{r}
+str(titanic)
+```
+
+Each variable is summarized with its type ('num', 'int', or 'Factor'). 
+'num' and 'int' are numeric or integer variables. Then we have 'Factor', which 
+is actually R's way of encoding categorical variables. It's interesting to note
+that factors look sort of like text values, but are actually represented as
+numeric values on the back end (see the `str()` output above).
+
+```{r}
+head(titanic$pclass)
+```
+
+The distinct categories of a categorical variable can be seen using:
+
+```{r}
+levels(titanic$pclass)
+```
+
+The order in which these levels appear tells us what number gets assigned to 
+each factor. (This detail is not particularly important for now, but will be
+when we start looking at using categorical variables in linear regression.)
+
+
+We can get a peek at some frequency tables:
+
+```{r}
+table(titanic$pclass)
+table(titanic$survived)
+table(titanic$sex)
+```
+
+We've long heard that women are more likely to have survived the Titanic disaster.
+Do the data support this claim?
+
+```{r}
+table(titanic$sex, titanic$survived)
+```
+
+A graphical display may be more helpful here:
+
+```{r}
+# which one addresses the question better?
+mosaicplot(sex ~ survived, data=titanic)
+mosaicplot(survived ~ sex, data=titanic)
+
+```
+
+The first plot shows that a higher proportion of women survived compared to men.
+The second plot shows that a higher proportion of survivors were women. 
+To address the question of whether are more likely to survive, the first plot
+does a better job of answering the question.
+
+We can rotate the axis labels by tweaking the `las=` argument.
+
+```{r}
+mosaicplot(sex ~ survived, data=titanic, las=1)
+
+```
+We can make the axis text bigger by changing `cex=`.
+
+```{r}
+mosaicplot(sex ~ survived, data=titanic, cex=1.2)
+```
+
+Another way to do a mosaic plot is to use the `plot()` function again. 
+Unfortunately, the `las=` axis label rotation functionality seems incompatible
+with this approach.
+
+```{r}
+plot(sex ~ survived, data=titanic)
+```
+
+## Questionnaire Data
+
+The New York City dataset we looked at last class is a nice first example because
+it has already been scrubbed clean. Often, the data come to us in a relatively
+messy format. For example, the class questionnaire....
+
+```{r}
+x <- read.csv("stat_230_survey_raw.csv")
+```
+
+** A bit of a sidebar:** Typically, we like to use the `as.is=TRUE` argument
+when we run the `read.csv()` command. Here is a bit about why we might care. 
+We'll start by checking the type of each column in the data frame:
+
+```{r}
+str(x)
+```
+
+Suppose we want to explore the hypothesis of whether the average pulse for 
+all females is different than that for males. I threw the word **all** in there
+to reflect that this is a question about the mean pulse in a population. We can
+try to answer this question using our sample, of course, with an assumption that
+our sample is a representative sample from the population.
+
+Let's take a peek at the variables in question first to see what our sample
+tells us.
+
+```{r}
+class(x$Gender)
+table(x$Gender)
+```
+That stray 1 is actually a missing value for Gender, but is currently coded as a 
+blank. Note that blanks appeared as one of the distinct values in the column in
+the .csv file, so R thought that this is an appropriate level of the factor.
+
+```{r}
+levels(x$Gender)
+```
+
+The way that R is meant to encode missing values is to use an `NA`. 
+Because we exported this data file from Google Docs, we have to recode 
+this ourselves.
+
+```{r}
+x$Gender[x$Gender == ""] <- NA
+levels(x$Gender)
+table(x$Gender)
+```
+
+It's still there... how annoying. Lesson learned: factors can be annoying to 
+clean up in R. You can't just discard a particular level or add one on the fly.
+So to get around this problem, we can simply add `as.is=` in the `read.csv()`
+command when we load in the data.
+
+```{r}
+x <- read.csv("stat_230_survey_raw.csv", as.is = TRUE)
+x$Gender[x$Gender == ""] <- NA
+table(x$Gender)
+class(x$Gender)
+```
+
+So now, `Gender` is no longer a factor. `chr` stands for character, aka. text. That's okay, R will know to convert `Gender` to factor type when needed.
+
+
+Let's examine the `Pulse` variable.
+
+```{r}
+summary(x$Pulse)
+```
+
+
+```{r}
+boxplot(Pulse ~ Gender, data=x, ylab="Pulse")
+```
+
+Does it appear that the mean pulse for females might differ from the mean pulse
+for males? Formally, we are asking about these two hypotheses:
+
+$$H_0: \mu_{F} = \mu_M \;\;\;\;\;\text{ vs.  }\;\;\;\;\;H_a: \mu_F \ne \mu_M$$
+where $\mu_F$ and $\mu_M$ are the mean pulses in the population of females and
+males, respectively.
+
+There are several ways we can answer this question.
+
+### 2-Sample T-test
+
+```{r}
+t.test(Pulse ~ Gender, data=x)
+```
+
+How do we interpret the results here? We have a p-value of 0.8091. At any 
+reasonable significance level $\alpha$ (say, 0.05), we do not have evidence to
+suggest that the mean pulse differs between the genders. We also get a
+95% confidence interval of (-6.16, 4.83). We might say that we are 95% confident
+that the difference $\mu_F-\mu_M$ is between (-6.16, 4.83). How did we know it 
+was $\mu_F-\mu_M$ and not $\mu_M-\mu_F$? Because in the line below 'sample 
+estimates', we see 'Female' before 'Male'. 
+
+Some questions you may have:
+
+* The p-value here corresponds to a 2-sided alternative hypothesis. What can
+I do if I wanted a 1-sided alternative hypothesis test instead? 
+
+Questions like these can generally be answered by pulling up the help page, i.e.
+`?t.test`. You will see that you can add the argument `alternative=` to be
+'less' or 'greater', but that it defaults to 'two.sided'.
+
+* What if I want a confidence interval for a different confidence level? 
+
+The help file suggests that `conf.level=` is the argument to be modified.
+
+

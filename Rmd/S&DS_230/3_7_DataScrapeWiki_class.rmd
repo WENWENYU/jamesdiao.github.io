@@ -1,0 +1,318 @@
+---
+title: "Scraping Data II"
+author: "STAT 230"
+date: "3/7/2017"
+output:
+  html_document: default
+  pdf_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Movie Data Recap
+
+Pre-requisite packages:
+
+```{r}
+library(XML)
+library(omdbapi)
+```
+
+If the above packages don't load, you will need to install the following packages:
+
+```{r, eval=FALSE}
+install.packages("XML")
+install.packages("devtools")
+devtools::install_github("hrbrmstr/omdbapi")
+```
+
+
+
+### Part 1
+
+```{r}
+imdb <- readHTMLTable("http://www.imdb.com/chart/top",
+                       stringsAsFactors = FALSE)
+
+# to access the second element of this list, say, 
+imdb[[2]]
+
+imdb <- imdb[[1]]
+head(imdb)
+
+colnames(imdb)
+imdb <- imdb[,2:3] # only really need the 2nd and 3rd columns
+head(imdb)
+```
+
+Data scraped from the web will typically have some degree of messiness that 
+needs to be cleaned. In this case, we can see that the first column of the dataset
+is informative, but is a bit too heterogeneous for us to work with. We'll now
+take a sequence of steps to parse this out into a `title` column and a `year` 
+column.
+
+
+#### A quick reminder of functions for text processing:
+
+* `grep()` - search for a text pattern and return indices of matches
+
+```{r}
+grep("abc", c("tabc", "abcd", "dcab"))
+```
+
+* `substr()` - extract bits of text based on starting and ending locations
+
+```{r}
+# nchar(c("tabc", "abcd", "dcab"))
+substr(c("tabc", "abcd", "dcab"), 2, 4)
+```
+
+* `gsub()` - search for a text pattern and replace it with another text pattern
+
+```{r}
+gsub(" ", ",", c("a bc", "d p lo"))
+```
+
+(This can also be used to extract elements of a string using regular expressions. See movie year example below.)
+
+* `trimws()` - trim away trailing and leading whitespaces
+
+```{r}
+trimws(c("  abc", "a  bc"))
+```
+
+* `strsplit()` - split a string based on some text pattern
+
+
+```{r}
+a <- strsplit(c("a bc", "d p lo"), " ")
+a[[1]]
+a[[2]]
+
+a[[2]][3]
+```
+
+
+
+```{r}
+title_years <- strsplit(imdb[,1], "\n")
+head(title_years)
+class(title_years)
+
+title_years <- unlist(title_years)
+head(title_years)
+class(title_years)
+
+imdb$year <- title_years[seq(3, length(title_years), 3)]
+head(imdb$year)
+
+imdb$title <- title_years[seq(2, length(title_years), 3)]
+head(imdb)
+
+# imdb$year <- trimws(imdb$year)
+# imdb$year <- substr(imdb$year, 2, 5)
+# imdb$year <- as.numeric(imdb$year)
+
+### another approach, using `gsub()`
+
+tmp <- imdb$year[1]
+tmp
+gsub(".*([[:digit:]]{4}).*", "\\1", tmp)
+imdb$year <- as.numeric(gsub(".*([[:digit:]]{4}).*", "\\1", imdb$year))
+
+head(imdb$year)
+
+###
+
+imdb$title <- trimws(imdb$title)
+imdb <- imdb[,-1]
+imdb$rank <- 1:250
+
+colnames(imdb)[1] <- "imdbrating"
+
+plot(imdbrating ~ year, data=imdb, col=rgb(0, 0, 0, 0.2), pch=16)
+```
+
+
+### Part 2: using the API
+
+```{r}
+library(omdbapi)
+
+movie <- find_by_title(imdb$title[2], year_of_release = imdb$year[2],
+              include_tomatoes = TRUE)
+names(movie)
+movie
+
+```
+
+
+
+
+
+
+
+
+
+
+## Scraping Wikipedia
+
+```{r}
+url <- "https://en.wikipedia.org/wiki/United_States_presidential_election,_2016"
+```
+
+Because Wikipedia (as of October 2016) uses **https**, we cannot just go ahead and run `readHTMLTable()` directly on this url. Instead, we need an extra step.
+
+
+```{r}
+x <- readLines(url)
+x <- readHTMLTable(x, stringsAsFactors=FALSE)
+
+length(x)
+
+for (i in 1:length(x)) {
+  cat("i : ", i, " | dim: ", dim(x[[i]]), "\n")
+}
+
+head(x[[32]])
+x <- x[[32]]
+```
+
+Cleaning up of this data frame:
+
+```{r}
+x <- x[, c(1:11)]
+head(x)
+
+colnames(x) <- c("state", "method", "clinton_ct", 
+                 "clinton_pct", "clinton_elec",
+                 "trump_ct", 
+                 "trump_pct", "trump_elec",
+                 "johnson_ct", 
+                 "johnson_pct", "johnson_elec")
+
+x <- x[-1,]
+head(x)
+```
+
+Let's convert the `_ct` columns into numbers.
+
+```{r}
+cols <- grep("_ct", colnames(x))
+cols
+
+for (i in cols) {
+  x[,i] <- gsub(",", "", x[,i])
+  x[,i] <- as.numeric(x[,i])
+}
+```
+
+`_pct` column cleaning:
+
+```{r}
+cols <- grep("_pct", colnames(x))
+cols
+
+for (i in cols) {
+  x[,i] <- gsub("%", "", x[,i])
+  x[,i] <- as.numeric(x[,i])
+}
+```
+
+`_elec` column cleaning:
+
+```{r}
+cols <- grep("_elec", colnames(x))
+cols
+
+for (i in cols) {
+  x[,i] <- as.numeric(x[,i])
+  x[is.na(x[,i]), i] <- 0
+}
+head(x)
+```
+
+
+Suppose we're also interested in merging in other bits of state-by-state information to help explain the outcome of the election. We could do this by searching up on Google something like
+
+> wikipedia list of states by X
+
+
+
+
+
+
+Educational attainment:
+
+```{r}
+url <- "https://en.wikipedia.org/wiki/List_of_U.S._states_by_educational_attainment"
+
+y <- readLines(url)
+y <- readHTMLTable(y, stringsAsFactors=FALSE)
+y <- y[[2]]
+```
+
+Cleaning up the percent signs:
+
+```{r}
+cols <- grep("%", colnames(y))
+cols
+
+for (i in cols) {
+  y[,i] <- gsub("%", "", y[,i])
+  y[,i] <- as.numeric(y[,i])
+}
+head(y)
+
+
+```
+
+Remove the ranks:
+
+```{r}
+cols <- grep("Rank", colnames(y))
+cols
+y <- y[, -cols]
+head(y)
+```
+
+Fix up the column names:
+
+```{r}
+colnames(y) <- c("state", "hs_pct", "ba_pct", "adv_pct")
+```
+
+
+Some quick plots:
+
+```{r}
+plot(ba_pct ~ hs_pct, data=y, type="n")
+text(y$hs_pct, y$ba_pct, y$state )
+```
+
+
+Merge this with our other dataset.
+
+```{r}
+z <- merge(x, y, by="state")
+dim(z)
+dim(y)
+dim(x)
+```
+
+
+Plot of election outcomes vs. education:
+
+```{r}
+z$diff <- z$clinton_pct - z$trump_pct
+hist(z$diff)
+
+plot(diff ~ hs_pct, data=z)
+plot(diff ~ ba_pct, data=z)
+
+z$state[z$ba_pct > 50]
+z$state[9]
+```
+

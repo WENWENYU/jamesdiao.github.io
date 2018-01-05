@@ -1,0 +1,265 @@
+---
+title: "ggplot"
+author: "STAT 230"
+date: "March 28, 2017"
+output:
+  html_document:
+    toc: yes
+    toc_float:
+      collapsed: no
+  pdf_document:
+    toc: yes
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, error=TRUE)
+```
+
+Ggplot2 is another way of doing graphics in R.  
+Honestly I am a beginner at ggplot too; old dog new tricks, you know.  
+For you who are starting out, ggplot is good for you and Susan and I think you will like it.
+It does have a slight learning curve and some idiosynchratic terminology,
+but then again you get to think beautiful aesthetic thoughts while analyzing data.
+
+Two useful resources for which you can find links on our Canvas site include:
+
+  * The major book about ggplot2: ggplot2_2nd-ed_Wickham.pdf
+  * RStudio's ggplot2-cheatsheet-2.1.pdf
+
+## The grammar of graphics
+We have reason to be proud.
+[Leland Wilkinson](https://en.wikipedia.org/wiki/Leland_Wilkinson), inventor of the grammar of graphics, is a Yale Ph.D. in Psych. In fact he dedicated his book (which introduced the subject) to his daughter and to John Hartigan (Statistics prof at Yale).
+
+Three key components of a graph: 
+
+  * Data
+  * "Aesthetic mappings" that give a correspondence between variables in the data and visual properties 
+  * "Layers" and "geoms" that show the data in various ways. Layers are usually made with a geom_... function.
+
+Aesthetic mappings? Wilkinson writes that the word aesthetics derives from a Greek word 
+$$\alpha\iota\sigma\theta\eta\sigma\iota\zeta,$$ which means _perception_.
+The additional meanings related to beauty and artistic criteria arose in the 18th century. 
+  
+Other aspects include "facets" -- multiple small plots -- more about this below.
+
+The ggplot2 library has a dataset `mpg`.
+Note this is a subset of a full data set that you can get find on [this page at www.fueleconomy.gov](http://www.fueleconomy.gov/feg/ws/index.shtml).
+If you like this kind of thing, it could be a dataset for a project.
+
+```{r}
+mpg # error
+library(ggplot2)
+mpg
+# tibbles have nice informative displays!
+```
+
+## Scatterplots
+These may be the most useful/used types of graphical displays, so let's start here.
+
+```{r}
+ggplot(data = mpg, mapping = aes(x=displ, y=hwy))
+# Plots usually start this way: specify data and some aesthetic mappings.
+# The line above sets up axes using x and y variables, but doesn't put anything there.
+# To add a layer of points we do this:
+ggplot(data = mpg, mapping = aes(x=displ, y=hwy)) + geom_point() 
+```
+
+Changing "theme":
+```{r}
+ggplot(data = mpg, mapping = aes(x=displ, y=hwy)) + geom_point() + theme_bw()
+ggplot(data = mpg, mapping = aes(x=displ, y=hwy)) + geom_point() + theme_classic()
+```
+
+Adding color to the points:
+```{r}
+ggplot(data = mpg, mapping = aes(x=displ, y=hwy, color=class)) + geom_point()
+ggplot(mpg, aes(displ, hwy, color=class)) + geom_point()
+#^^ The previous 2 plots are the same. Last one is nice and concise, taking advantage of the fact that we don't have to give argument names if we are using them in their default positions. 
+
+# Can also do it this way, putting the aes inside the geom_point:
+ggplot(data = mpg, mapping = aes(x=displ, y=hwy)) + geom_point(mapping = aes(color=class))
+```
+
+Compared to the base graphics, it's great that the legend is not inside the plot, and it was made with no pain!
+
+But wait, there are 234 rows and I don't think I see 234 points.
+We should jitter.
+
+```{r}
+ggplot(mpg, aes(displ, hwy, color=class)) + geom_jitter()
+ggplot(mpg, aes(displ, hwy, color=class)) + geom_jitter(width=0,height=0)
+ggplot(mpg, aes(displ, hwy, color=class)) + geom_jitter(width=0,height=1)
+ggplot(mpg, aes(displ, hwy, color=class)) + geom_jitter(width=.1,height=0)
+ggplot(mpg, aes(displ, hwy, color=class)) + geom_jitter(width=1,height=0)
+```
+
+## How does jittering work?
+```{r}
+reps <- 100
+d <- d0 <- data.frame(x=rep(c(0,0,1,1),reps),y=rep(c(0,1,0,1),reps))
+ggplot(d, aes(x,y)) + geom_point()
+ggplot(d, aes(x,y)) + geom_jitter()
+ggplot(d, aes(x,y)) + geom_jitter(height=0.1)
+ggplot(d, aes(x,y)) + geom_jitter(width=0.1)
+ggplot(d, aes(x,y)) + geom_jitter(width=0.1, height = 0.1)
+
+d <- rbind(d0, data.frame(x=.1,y=0))
+ggplot(d, aes(x,y)) + geom_point()
+ggplot(d, aes(x,y)) + geom_jitter()
+```
+
+
+## Facetting
+To make separate plots of subsets determined by values of a variable.
+
+```{r}
+p <- ggplot(mpg, aes(displ, hwy))
+p + facet_wrap(~class)
+p + facet_wrap(~class) + geom_point()
+# compare to using an aesthetic:
+p + geom_jitter(aes(color=class))
+
+# Can specify the number of columns:
+p + facet_wrap(~cyl, ncol = 3) + geom_point()
+```
+
+Scales free vs constrained: by default the scales on the axes are consistent with each other across the facets. But this can be controlled, and you can "free" the x and/or y scales:
+
+```{r}
+p + facet_wrap(~cyl) + geom_point()
+p + facet_wrap(~cyl, scales = "free") + geom_point()
+p + facet_wrap(~cyl, scales = "free_y") + geom_point()
+```
+
+## More Geoms
+Smoothing, including linear and also nonlinear regression using "loess" (for "locally weighted regression"): 
+```{r}
+p + geom_point() + geom_smooth()
+# Default is "loess" method. Smoothing is controlled by "span" parameter, the larger the smoother.
+p + geom_point() + geom_smooth(span=.2)
+p + geom_point() + geom_smooth(span=1)
+# If you don't want the confidence bands:
+p + geom_point() + geom_smooth(se=FALSE)
+# geom_smooth can do other kinds of regression, including linear:
+p + geom_point() + geom_smooth(method = "lm")
+p + geom_point() + geom_smooth(method = "lm", se=FALSE)
+# An example with facets:
+p + facet_wrap(~cyl) + geom_smooth(method = "lm") #oops no points!
+p + facet_wrap(~cyl) + geom_smooth(method = "lm") + geom_point()
+```
+
+## Boxplots
+```{r}
+ggplot(mpg, aes(drv,hwy)) + geom_boxplot()
+
+ggplot(mpg, aes(drv,hwy)) + geom_point()
+ggplot(mpg, aes(drv,hwy)) + geom_jitter(width = .1)
+
+ggplot(mpg, aes(drv,hwy)) + geom_violin()
+```
+
+Here's something you can do if you want; we didn't have time to see this in class.  We can re-ordering a factor, e.g. `class`, to make boxplots nicer.
+
+```{r}
+ggplot(mpg, aes(class,hwy)) + geom_boxplot()
+class1 <- reorder(mpg$class, mpg$hwy)
+class1
+ggplot(mpg, aes(class1,hwy)) + geom_boxplot()
+class2 <- reorder(mpg$class, mpg$hwy, FUN = median)
+class2
+ggplot(mpg, aes(class2,hwy)) + geom_boxplot()
+```
+
+## Histograms 
+
+Just use an "x" aesthetic, not x and y:
+```{r}
+ggplot(mpg, aes(hwy)) 
+ggplot(mpg, aes(hwy)) + geom_histogram()
+ggplot(mpg, aes(hwy)) + geom_histogram(binwidth = 5)
+ggplot(mpg, aes(hwy)) + geom_freqpoly()
+```
+
+Subsetting by drv:
+```{r}
+p <- ggplot(mpg, aes(x = hwy))
+p + geom_histogram()
+p + geom_histogram() + facet_wrap(~drv)
+p + geom_histogram() + facet_wrap(~drv, ncol = 1)
+p + geom_histogram(aes(fill=drv)) + facet_wrap(~drv, ncol = 1) 
+```
+
+A couple more things thrown in for fun (didn't get to see these in class):
+```{r}
+p + aes(color=drv) + geom_freqpoly(lwd=2)
+p + aes(color=drv) + geom_density(lwd=2)
+```
+
+## Titles and axis labels
+```{r}
+# See cheatsheet, p. 2, "Labels" section.
+ggplot(mpg, aes(displ, hwy)) + geom_point() + labs(x="displacement", y="highway mpg", title="Fuel efficiency decreases with engine size")
+```
+
+## Back to college data and first-generation percentages
+```{r}
+source(file = "http://www.stat.yale.edu/~jtc5/STAT230/data/170309-college-dump.r")
+colleges
+r
+```
+
+The plot we did last time:
+```{r}
+colors <- c("blue", "red", "black", "blue", "red", "black")
+types <- c(1,1,1,2,2,2)
+plot(firstgen ~ year, data=r, type="n", ylab="first-generation student proportion")
+for(i in 1:length(colleges)){
+  rows <- which(r$college == colleges[i])
+  lines(r$year[rows], r$firstgen[rows], type="b", lty=types[i], col=colors[i])
+}
+#
+# Looks ok up to here.  Let's add a legend:
+#
+legend("bottomright", legend=colleges, col=colors, lty=types, pch=19) # cex=0.65
+title(main="First-generation students at private and public schools")
+```
+
+Here is a way to make a similar plot using ggplot, again putting the legends outside the coordinate axes where they belong.
+```{r}
+# View(r)
+r$type <- rep(c("private","public"), each=30)
+
+ggplot(r, aes(x = year, y=firstgen, color=college)) + 
+  geom_point()
+ggplot(r, aes(x = year, y=firstgen, color=college, linetype=type)) + 
+  geom_point() + geom_line()
+```
+
+That looks quite good to me, and it's easy too!
+
+Oops, just noticed the years like 2007.5, which doesn't seem so nice.
+We can modify the x axis scale with scale_x_continuous: 
+```{r}
+ggplot(r, aes(x = year, y=firstgen, color=college, linetype=type)) + 
+  geom_point() + geom_line() + 
+  scale_x_continuous(breaks = 2005:2014)
+```
+
+That's nice. We don't need the grid lines between the "major" grid lines, so 
+here is a way to remove them:
+```{r}
+ggplot(r, aes(x = year, y=firstgen, color=college, linetype=type)) + 
+  geom_point() + geom_line() + 
+  scale_x_continuous(breaks = 2005:2014, minor_breaks = NULL)
+```
+
+Oh, and I forgot a title:
+```{r}
+ggplot(r, aes(x = year, y=firstgen, color=college, linetype=type)) + 
+  geom_point() + geom_line() + 
+  scale_x_continuous(breaks = 2005:2014, minor_breaks = NULL) +
+  labs(title="Closing the gap?",
+       y="propotion of first-generation students")
+```
+
+

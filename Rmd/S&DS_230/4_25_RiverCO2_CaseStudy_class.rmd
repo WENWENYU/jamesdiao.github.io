@@ -1,0 +1,139 @@
+---
+title: "The Carbon Footprint of Water"
+author: "STAT 230"
+date: "April 27, 2017"
+output:
+  html_document: default
+  pdf_document: default
+  word_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, warning=FALSE)
+library(knitr)
+library(ggplot2)
+library(GGally)
+library(dplyr)
+library(pander)
+```
+
+## The Data
+
+This dataset was collected by a researcher studying properties of rivers that are associated with the amount of CO2 emitted by rivers. We might conjecture that more turbulent rivers tend to emit more carbon dioxide, for example. 
+
+
+```{r}
+x <- read.csv("RiverCO2.csv", as.is=TRUE)
+kable(head(x), digits=2)
+```
+
+The response variable is `co2`, a quantitative measure of carbon dioxide emissions. This is a question we would explore using linear regression. First, we examine if any of the variables need to be cleaned up.
+
+```{r}
+kable(summary(x), digits=2)
+```
+
+What would you guess as the units of temperature?
+
+```{r, fig.width=4, fig.height=3}
+hist(x$temp, cex.lab=0.7, cex.axis=0.7)
+```
+
+From the summary, we also saw that `width` is a character variable. Let's see what the distinct values are:
+
+```{r}
+table(x$width)
+```
+
+It appears that `width` is encoded in 4 different categories. Let's convert this into a factor since that's how R prefers to work with categorical variables.
+
+```{r}
+x$width <- factor(x$width)
+boxplot(co2 ~ width, data=x)
+```
+
+This is an ok plot, well, it would be better if we had axis labels and a title. It would be even better if we could sort the boxes in increasing order of width:
+
+```{r}
+levels(x$width)
+x$width <- factor(x$width, levels=levels(x$width)[c(2, 1, 4, 3)])
+boxplot(co2 ~ width, data=x)
+```
+
+**Missing Values.** We saw earlier that there are a lot of missing values in the `temp` variable. We would need to think about what to do with them. For now, let's just toss out all of the rows that having a missing value anywhere:
+
+
+```{r}
+y <- na.omit(x)
+```
+
+Let's now look at a pairs plot:
+
+```{r, eval=FALSE}
+ggpairs(y)
+```
+
+```{r}
+ggpairs(y[,-3])
+```
+
+
+## Analysis
+
+```{r}
+m1 <- lm(co2 ~ ., data=y)
+summary(m1)
+```
+
+How do we feel about the model? The $R^2$ is fairly good. But there appears to be at least one large residual. In fact, it may be helpful to look at a plot of the residuals. We know that a linear regression model assumes normal errors. Perhaps this assumption is inappropriate here.
+
+```{r}
+hist(resid(m1))
+qqnorm(resid(m1))
+```
+
+
+Another diagnostic plot (which I hope we haven't forgotten):
+
+```{r}
+plot(resid(m1) ~ fitted(m1), pch=16)
+```
+
+What could be so bad about this model? (Esp. if we have such a high $R^2$? Well... the higher our predicted values are, the more uncertain/variable they seem to be.)
+
+```{r}
+plot(resid(m1) ~ y$co2, pch=16)
+```
+
+The standard diagnostic plots for linear regression, all on one plot area.
+
+```{r}
+par(mfrow=c(2,2))
+plot(m1)
+```
+
+
+
+The normal assumption is needed particularly if we want to be able to interpret things like confidence intervals and p-values. The fact that we can even compute a p-value for `slope` and `depth` is due to what we know about the behavior slopes when a particular variable is not associated with the response **under the assumption of normal errors**. 
+
+## Begin Thursday's work
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+## Code Appendix
+
+```{r, ref.label=knitr::all_labels(),echo=TRUE,eval=FALSE}
+
+```
