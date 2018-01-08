@@ -1,5 +1,5 @@
 ---
-title: "My Favorite Science Papers"
+title: "Favorite Science Papers"
 layout: post
 date: '2017-08-23'
 ---

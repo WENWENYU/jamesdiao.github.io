@@ -4,7 +4,7 @@ title: "Summer Research Options"
 date: 2017-10-17
 ---
 
-
+Some of the research options I considered applying to for the summer after my sophomore year (before I was fully committed to computational work). 
 
 <html> 
 <head>
