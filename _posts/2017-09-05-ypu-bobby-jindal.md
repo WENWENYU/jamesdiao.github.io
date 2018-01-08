@@ -4,8 +4,6 @@ title: "Resolved: Reject Single-Payer Healthcare"
 date: 2017-09-05
 ---
 
-![In Progress](/img/in-progress.png)
-
 <style>
 img {
     display: block;
@@ -38,10 +36,7 @@ Despite having a reasonable interest in politics, I never took the time to hear 
 
 <div class="center">
 Bobby Jindal, in the flesh.  
-</div>
-<br>
-<br>
-
+</div><br><br>
 
 The information seemed to be a slightly more flowery version of the "Early Life," "Education," and "Career" sections of [his Wikipedia page](https://en.wikipedia.org/wiki/Bobby_Jindal), which he totally did not write himself. But besides his very impressive resume, I knew that Jindal was a career Republican and briefly participated in the 2016 primaries. I was interested to see how he would engage with and try to persuade Yale students, who have earned quite a reputation for being aggressively liberal.  
 
@@ -51,7 +46,11 @@ Anyway, not having participated in a YPU debate before, I had no idea how it wou
 
 The first thing I'll say is that Jindal is a really impressive speaker. Quite apart from his policies (which I largely disagree with), his points were delivered neatly and intuitively. He kept a healthy balance of anecdote and evidence, and spoke to his public service experiences without letting them distract from his point. He also made some pretty interesting points.  
 
-First of all, Jindal introduced the topic in a remarkable way. He began by talking about his own son's journey through the health system, and the emotional and financial burdens that came with open heart surgery. He then claimed the largely liberal position that health care is a fundamental human right. In his words, this meant that "society should provide it to its members," and healthcare access should not be constrained by "economic reasons or budgetary reasons." With this as his foundation, Jindal made his case against single-payer healthcare, or more specifically, against Bernie Sanders's proposed plan of "Medicaid for all." There were four key points that he brought up: (1) unsustainability, (2) disruption, (3) government interference, and (4) empirical problems. I'll summarize each of them along with my own thoughts below. 
+First of all, Jindal introduced the topic in a remarkable way. He began by talking about his own son's journey through the health system, and the emotional and financial burdens that came with open heart surgery. He then claimed the largely liberal position that health care is a fundamental human right. In his words: 
+
+> I believe healthcare is a right. The issue is not whether or not to expand and improve healthcare, but what the instrument of reform will be. In my view, the government's role should be ensuring a robust marketplace that is competitive, transparent, accountable, effective, and accessible. 
+
+With this as his foundation, Jindal made his case against single-payer healthcare, or more specifically, against Bernie Sanders's proposed plan of "Medicaid for all." There were four key points that he brought up: (1) unsustainability, (2) disruption, (3) government interference, and (4) empirical problems. I'll summarize each of them along with my own thoughts below. 
 
 ### 1. Unsustainability
 
@@ -87,29 +86,23 @@ I found his arguments here very compelling. It seems intuitive that once healthc
 ### 4. Empirical Problems
 
 #### Jindal's Argument
-It's true that most other countries have single-payer systems, and that these countries have lower health costs. However, the single-payer system didn't make any real improvements; it simply kept spending low by rationing care. Jindal points to massive closures of hospitals and cuts to physician incomes to demonstrate decreased accessibility and quality. 
+Most other countries have single-payer systems and these countries do have lower health costs. However, the single-payer system didn't make any real improvements; it simply kept spending low by rationing care. The resulting cuts to physician incomes and hospital closures only decrease accessibility and quality. 
 
 #### My thoughts
-Jindal's first claim felt poorly substantiated. He dodged the empirical success of single-payer systems in other countries by attributing it to rationing. This ignores data [needs citation] showing that other countries have similar utilization rates and quality metrics across the board. Jindal is correct that access is not 100% universal in other countries either--that wait times are longer and sometimes care is inaccessible. However, the U.S. does the same thing--only people are triaged by ability to pay rather than need. 
+Jindal is correct that wait times can be quite long for non-urgent issues and that the most expensive medicines are often inaccessible. This is a problem that would almost certainly come with implementing a single-payer system. However, we should put these problems in context. We care about wait times and access to specific medications, but mostly insofar as they improve outcomes. And the [data](https://www.healthaffairs.org/doi/full/10.1377/hlthaff.22.3.89) shows that countries with single-payer systems have similar utilization rates and quality metrics across the board. Rationing is certainly not ideal, but it might be the only way to ensure that limited resources are available for those who need it--not just those who have the ability to pay.  
 
 ### 5. The Alternative
 
-#### Jindal's Argument
-1. Patient centered, choice and competition
-2. Labor union, different associations
-3. 100 million resources in high risk pools
-4. More transparency for price and quality info
+#### Jindal's Argument (to be perfectly honest, I missed some parts here)
+Most people would agree that the current health care system is broken. Luckily, we don't have to choose between bad and worse--we can improve quality with market-based policies. First, a focus on choice and competition would help keep healthcare patient-centered. Second, we should create voluntary purchasing pools through labor unions and other associations. Third, we should provide funding (around $100 million) for high-risk pools. Fourth, we should increase transparency through updated websites that provide price and quality information. 
 
 #### My thoughts
-Coming soon! 
+Unfortunately, Jindal did not go very deep into his plans. I understand though--it was near the end of his time, and he wanted to focus on ideological points rather than technical details. I have to say that I'm a little skeptical about voluntary purchasing pools--what stops the sickest people from opting in and the healthiest from opting out? These would then just turn into high-risk pools, which are either completely unsustainable or contain a series of catches (high premiums, high deductibles, exclusions for pre-existing conditions, annual or lifetime limits, etc.). Jindal's proposed 100 million dollar safety net sounds like a lot of money, but in the world of American healthcare, it's a pittance. The [Kaiser Family Foundation](https://www.kff.org/health-reform/issue-brief/high-risk-pools-for-uninsurable-individuals/) notes that net losses across 35 state high-risk pools added to over $1.2 billion in 2011. Jindal's last point is fairly uncontroversial--I would argue that the ACA's healthcare exchanges have already done this, but it's very possible that healthcare.gov has plenty of issues that I'm not aware of. 
 
 
 ## Concluding Thoughts
 
-I may not have represented Jindal's points quite fairly, but this was my understanding. It's also a bit unfair that I can cite sources more freely than he could on a stage.  
-
-I learned a lot more about the fundamental logic behind the other side, and I can understand how I could support the same position, given a different set of assumptions and values. 
-
+I hope that I represented Jindal's points fairly, but it's also easy to miss things in a speech. Either way, I learned a lot about the fundamental logic behind the conservative view on healthcare. It's a really complicated issue, and I see how I could come to support the other side, given a different set of assumptions and values. 
 
 
 ## Update (9/7/2017)
