@@ -1,0 +1,26 @@
+---
+title: "Amoeba Solution"
+author: "James Diao"
+date: "1/10/2018"
+output: html_document
+---
+
+
+#### Simple solution
+After 3 minutes, the 1 amoeba in the first jar will double to 2 amoeba, just like the initial second jar. Thus, the second jar is equivalent to the first jar, but fast-forwarded by 3 minutes. The first jar took 1 hour to fill up, and the second jar should fill up 3 minutes faster. The answer is **57 minutes**. 
+
+#### A more detailed explanation
+The number of amoeba in each jar follows the trend: 
+
+| Time (min)        | 0 | 3 | 6 | 9  | 12 |
+|-------------------|---|---|---|----|----|
+| # Amoeba in Jar 1 | 1 | 2 | 4 | 8  | 16 |
+| # Amoeba in Jar 2 | 2 | 4 | 8 | 16 | 32 |
+
+Algebraically, the number of amoeba at time t (in minutes) can be expressed as $2^{t/3}$ in jar 1 and $2^{t/3 + 1}$ in jar 2.  
+We are asked to find t such that the number of amoeba in jar 2 is equal to the number in jar 1 after an hour.  
+This gives us the equation $2^{t/3 + 1} = 2^{60/3}$, which is quite straightforward to solve.  
+$$2^{t/3 + 1} = 2^{60/3}$$
+$$t/3 + 1 = 60/3$$
+$$t + 3 = 60$$
+$$t = 57$$
