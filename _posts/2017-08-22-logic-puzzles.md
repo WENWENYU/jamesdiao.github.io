@@ -103,6 +103,10 @@ I really enjoy logic puzzles, and I thought I'd compile a list of my favorites b
 
 
 ### Unsorted
-[Prisoners and Hats](https://en.wikipedia.org/wiki/Hat_puzzle#Prisoners_and_hats_puzzle)
+1. [Prisoners and Hats](https://en.wikipedia.org/wiki/Hat_puzzle#Prisoners_and_hats_puzzle)
+2. [DataGenetics Blog](http://datagenetics.com/blog.html)
+3. [Quora](https://www.quora.com/What-are-the-best-brain-teasers?page_size=10#!n=72)
+4. Identifying the missing number
+5. [Missing Square](https://en.wikipedia.org/wiki/Missing_square_puzzle)
 
 
