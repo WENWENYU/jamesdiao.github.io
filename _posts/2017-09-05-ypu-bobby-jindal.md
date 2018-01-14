@@ -14,6 +14,7 @@ img {
 }
 </style>
 
+
 ## tl;dr
 Bobby Jindal gave a great talk at the YPU against single-payer healthcare. I disagree with most of his points, but I definitely learned more about the complexity of American healthcare and why reform can be challenging. 
 

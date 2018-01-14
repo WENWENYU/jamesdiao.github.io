@@ -13,18 +13,18 @@ date: 2018-01-05
 <tr class="odd">
 <td align="left"><b>Freshman</b></td>
 <td align="left">Fall</td>
-<td align="left"><small><a href="/PDF/Syllabi/CHEM124.pdf">CHEM 124</a> Organic Chem I</small></td>
-<td align="left"><small><a href="/PDF/Syllabi/CHEM222L.pdf">CHEM 222L</a> Organic Chem Lab I</small></td>
-<td align="left"><small><a href="/PDF/Syllabi/BIOL101.pdf">BIOL 101</a>/<a href="/PDF/Syllabi/BIOL102.pdf">102</a> Intro Biology (Molec/Cells)</small></td>
-<td align="left"><small><a href="/PDF/Syllabi/PLSC281.pdf">PLSC 281</a> Issues in Bioethics</small></td>
+<td align="left"><small><a href="/PDF/Syllabi/CHEM124.pdf">CHEM 124</a> Organic <br>Chem I</small></td>
+<td align="left"><small><a href="/PDF/Syllabi/CHEM222L.pdf">CHEM 222L</a> Organic <br>Chem Lab I</small></td>
+<td align="left"><small><a href="/PDF/Syllabi/BIOL101.pdf">BIOL 101</a>/<a href="/PDF/Syllabi/BIOL102.pdf">102</a> Biology I</small></td>
+<td align="left"><small><a href="/PDF/Syllabi/PLSC281.pdf">PLSC 281</a> Bioethics</small></td>
 <td align="left"><small><a href="/PDF/Syllabi/HLTH230.pdf">HLTH 230</a> Global Health</small></td>
 </tr>
 <tr class="even">
 <td align="left"></td>
 <td align="left">Spring</td>
-<td align="left"><small><a href="/PDF/Syllabi/CHEM125.pdf">CHEM 125</a> Organic Chem II</small></td>
-<td align="left"><small><a href="/PDF/Syllabi/CHEM223L.pdf">CHEM 223L</a> Organic Chem Lab II</small></td>
-<td align="left"><small><a href="/PDF/Syllabi/BIOL103.pdf">BIOL 103</a>/<a href="/PDF/Syllabi/BIOL104.pdf">104</a> Intro Biology (Genes/Evol)</small></td>
+<td align="left"><small><a href="/PDF/Syllabi/CHEM125.pdf">CHEM 125</a> Organic <br>Chem II</small></td>
+<td align="left"><small><a href="/PDF/Syllabi/CHEM223L.pdf">CHEM 223L</a> Organic <br>Chem Lab II</small></td>
+<td align="left"><small><a href="/PDF/Syllabi/BIOL103.pdf">BIOL 103</a>/<a href="/PDF/Syllabi/BIOL104.pdf">104</a> Biology II</small></td>
 <td align="left"><small><a href="/PDF/Syllabi/MATH120.pdf">MATH 120</a> Multivariable Calculus</small></td>
 <td align="left"><small><a href="/PDF/Syllabi/ENGL114.pdf">ENGL 114</a> Writing Seminar</small></td>
 </tr>
@@ -34,7 +34,7 @@ date: 2018-01-05
 <td align="left"><small><a href="/PDF/Syllabi/SPAN110.pdf">SPAN 110</a> Spanish I</small></td>
 <td align="left"><small><a href="/PDF/Syllabi/MBB300.pdf">MB&amp;B 300</a> Biochem I</small></td>
 <td align="left"><small><a href="/PDF/Syllabi/PHYS180.pdf">PHYS 180</a> Physics I (Mechanics)</small></td>
-<td align="left"><small><a href="/PDF/Syllabi/PHYS165L.pdf">PHYS 165L</a> Physics Lab I</small></td>
+<td align="left"><small><a href="/PDF/Syllabi/PHYS165L.pdf">PHYS 165L</a> Physics <br>Lab I</small></td>
 <td align="left"><small><a href="/PDF/Syllabi/SDS238.pdf">S&amp;DS 238</a> Probability &amp; Statistics</small></td>
 </tr>
 <tr class="even">
@@ -42,8 +42,8 @@ date: 2018-01-05
 <td align="left">Spring</td>
 <td align="left"><small><a href="/PDF/Syllabi/SPAN120.pdf">SPAN 120</a> Spanish II</small></td>
 <td align="left"><small><a href="/PDF/Syllabi/MBB301.pdf">MB&amp;B 301</a> Biochem II</small></td>
-<td align="left"><small><a href="/PDF/Syllabi/ERM217.pdf">ER&amp;M 217</a> Intro Latino/a Studies</small></td>
-<td align="left"><small><a href="/PDF/Syllabi/PHYS166L.pdf">PHYS 166L</a> Physics Lab II</small></td>
+<td align="left"><small><a href="/PDF/Syllabi/ERM217.pdf">ER&amp;M 217</a> Latino/a Studies</small></td>
+<td align="left"><small><a href="/PDF/Syllabi/PHYS166L.pdf">PHYS 166L</a> Physics <br>Lab II</small></td>
 <td align="left"><small></small></td>
 </tr>
 <tr class="odd">
@@ -53,16 +53,16 @@ date: 2018-01-05
 <td align="left"><small><a href="/PDF/Syllabi/MATH222.pdf">MATH 222</a> Linear Algebra</small></td>
 <td align="left"><small><a href="/PDF/Syllabi/CPSC453.pdf">CPSC 453</a> Machine Learning in Biology</small></td>
 <td align="left"><small><a href="/PDF/Syllabi/ENGL120.pdf">ENGL 120</a> Writing the Modern Essay</small></td>
-<td align="left"><small><a href="/PDF/Syllabi/MBB470.pdf">MB&amp;B 470</a> Research for Credit</small></td>
+<td align="left"><small><a href="/PDF/Syllabi/MBB470.pdf">MB&amp;B 470</a> Research <br>for Credit</small></td>
 </tr>
 <tr class="even">
 <td align="left"></td>
 <td align="left">Spring</td>
 <td align="left"><small><a href="/PDF/Syllabi/SDS242.pdf">S&amp;DS 242</a> Theory of Statistics</small></td>
-<td align="left"><small><a href="/PDF/Syllabi/SDS230.pdf">S&amp;DS 230</a> Intro Data Analysis</small></td>
+<td align="left"><small><a href="/PDF/Syllabi/SDS230.pdf">S&amp;DS 230</a> <br>Intro Data Analysis</small></td>
 <td align="left"><small><a href="/PDF/Syllabi/MBB452.pdf">MB&amp;B 452</a> Biological Data Science</small></td>
 <td align="left"><small><a href="/PDF/Syllabi/PHYS181.pdf">PHYS 181</a> Physics II (E&M)</small></td>
-<td align="left"><small><a href="/PDF/Syllabi/MBB470.pdf">MB&amp;B 471</a> Research for Credit</small></td>
+<td align="left"><small><a href="/PDF/Syllabi/MBB470.pdf">MB&amp;B 471</a> Research <br>for Credit</small></td>
 </tr>
 <tr class="odd">
 <td align="left"><b>Senior</b></td>
@@ -84,8 +84,8 @@ date: 2018-01-05
 <tr class="even">
 <td align="left"></td>
 <td align="left"></td>
-<td align="left"><small><a href="/PDF/Syllabi/CPSC200.html">CPSC 200</a> Intro to Information Systems</small></td>
-<td align="left"><small><a href="/PDF/Syllabi/SDS365.pdf">S&amp;DS 365</a> Data Mining and Machine Learning</small></td>
+<td align="left"><small><a href="/PDF/Syllabi/CPSC200.html">CPSC 200</a> Information Systems</small></td>
+<td align="left"><small><a href="/PDF/Syllabi/SDS365.pdf">S&amp;DS 365</a> <br>Data Mining and Machine Learning</small></td>
 <td align="left"><small></small></td>
 <td align="left"><small></small></td>
 <td align="left"><small></small></td>

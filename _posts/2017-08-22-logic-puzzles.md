@@ -98,15 +98,12 @@ I really enjoy logic puzzles, and I thought I'd compile a list of my favorites b
 <br>
 ![Coins Chess](/img/chess-coins.png)
 
-3. [Partial Credit](https://terrytao.wordpress.com/2016/06/01/how-to-assign-partial-credit-on-an-exam-of-true-false-questions/)<a name="PartialCredit"></a>
-> On a true-false test with n questions, every question must be answered with a subjective probability that it is correct. What reward functions f(p) can incentivize students to always report their true beliefs? Normalize f(p) such that f(1) = 1 and f(0.5) = 0. 
-
 
 ### Unsorted
 1. [Prisoners and Hats](https://en.wikipedia.org/wiki/Hat_puzzle#Prisoners_and_hats_puzzle)
 2. [DataGenetics Blog](http://datagenetics.com/blog.html)
 3. [Quora](https://www.quora.com/What-are-the-best-brain-teasers?page_size=10#!n=72)
-4. Identifying the missing number
-5. [Missing Square](https://en.wikipedia.org/wiki/Missing_square_puzzle)
+4. [Missing Square](https://en.wikipedia.org/wiki/Missing_square_puzzle)
+5. Identifying the missing number
 
 
