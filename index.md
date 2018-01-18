@@ -9,7 +9,7 @@ Welcome! My name is James, and I'm a student at Yale interested in computational
 <table class="wide">
 <tr>
   <td class="left">
-    <a href="/archives/2017/08/23.favorite-papers.md">
+    <a href="/archives/2017/08/23/favorite-papers">
         <img src="/img/questions.png" alt="36 Questions" title="36 Questions" style="width:230px;height:230px;">
     </a>
   </td>

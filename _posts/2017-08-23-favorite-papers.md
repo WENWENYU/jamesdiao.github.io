@@ -4,7 +4,7 @@ layout: post
 date: '2017-08-23'
 ---
 
-\[POST IN PROGRESS\]
+![In Progress](/img/in-progress.png)
 
 Here's a list of some of my favorite papers. I'll add more (and reviews!) when I have more time. 
 
@@ -19,9 +19,9 @@ Here's a list of some of my favorite papers. I'll add more (and reviews!) when I
 #### Image Analysis
 1. [Esteva et al. 2017](http://www.nature.com/nature/journal/v542/n7639/full/nature21056.html). Dermatologist-level classification of skin cancer with deep neural networks. <em>Nature</em>.    
 2. [Gulshan et al. 2016](http://jamanetwork.com/journals/jama/fullarticle/211038). Development and validation of a deep learning algorithm for detection of diabetic retinopathy in retinal fundus photographs. <em>JAMA</em>.
-3. [Rajpurkar et al. 2017](http://arxiv.org/pdf/1707.01836.pdf). Cardiologist-Level arrhythmia detection with convolutional neural networks. <em>arXiv</em>.  
+3. [Rajpurkar et al. 2017](http://arxiv.org/pdf/1707.01836.pdf). Cardiologist-level arrhythmia detection with convolutional neural networks. <em>arXiv</em>.  
 
-#### Multifactor Prediction 
+#### Electronic Health Records
 4. [Reis et al. 2009](http://www.bmj.com/content/339/bmj.b3677). Longitudinal histories as predictors of future diagnoses of domestic abuse: modeling study. <em>BMJ</em>. 
 
 

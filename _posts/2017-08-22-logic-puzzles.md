@@ -105,5 +105,3 @@ I really enjoy logic puzzles, and I thought I'd compile a list of my favorites b
 3. [Quora](https://www.quora.com/What-are-the-best-brain-teasers?page_size=10#!n=72)
 4. [Missing Square](https://en.wikipedia.org/wiki/Missing_square_puzzle)
 5. Identifying the missing number
-
-
