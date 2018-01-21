@@ -2,8 +2,10 @@
 layout: default
 ---
 
+<header class="post-header">
 <h1>{{ page.title }}</h1>
-<p class="meta">{{ page.date | date_to_string }}</p>
+<p class="meta">{{ page.date | date_to_string }} » {{page.author}} » {{page.location}} </p>
+</header>
 
 <div class="post">
   {{ content }}

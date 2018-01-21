@@ -2,13 +2,14 @@
 layout: post
 title: "Summer Research Options"
 date: 2017-10-17
+author: James Diao
+location: New Haven, CT
 ---
 
 Some of the research options I considered applying to for the summer after my sophomore year (before I was fully committed to computational work). 
 
 <html> 
 <head>
-<link rel="stylesheet" type="text/css" href="mbb_summer_research_2018.css"> 
 </head><body>
    <h3 class="sectionHead"> <a id="x1-10001"></a>Computational Programs</h3>
    <p class="noindent" >

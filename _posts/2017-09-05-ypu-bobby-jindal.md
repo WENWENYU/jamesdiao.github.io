@@ -2,6 +2,8 @@
 layout: post
 title: "Resolved: Reject Single-Payer Healthcare"
 date: 2017-09-05
+author: James Diao
+location: New Haven, CT
 ---
 
 <style>
@@ -106,10 +108,13 @@ Unfortunately, Jindal did not go very deep into his plans. I understand though--
 I hope that I represented Jindal's points fairly, but it's also easy to miss things in a speech. Either way, I learned a lot about the fundamental logic behind the conservative view on healthcare. It's a really complicated issue, and I see how I could come to support the other side, given a different set of assumptions and values. 
 
 
-## Update (9/7/2017)
+## Update 1 (09/07/2017)
 
 The Yale Daily News (YDN) published [a piece](https://yaledailynews.com/blog/2017/09/07/jindal-rejects-single-payer-health-care-at-ypu-debate/) on his speech! It definitely helped fill in some of the arguments that I didn't quite catch.  
 
+## Update 2 (01/19/2018)
+
+The YDN reported [infighting at the YPU](https://yaledailynews.com/blog/2018/01/19/jindal-visit-created-divisive-ypu-budget-deficit/) over unexpected costs of bringing Bobby Jindal. Looks like he likes living large, who'd have thought? 
 
 
 

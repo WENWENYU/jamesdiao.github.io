@@ -2,6 +2,8 @@
 layout: post
 title: "Logic Puzzles"
 date: 2017-08-22
+author: James Diao
+location: New Haven, CT
 ---
 
 I really enjoy logic puzzles, and I thought I'd compile a list of my favorites before I forget them all. Some of these require math, but most do not. When you're ready, click on the title for an answer and explanation. 
@@ -37,7 +39,7 @@ I really enjoy logic puzzles, and I thought I'd compile a list of my favorites b
 
 1. [Amoeba Jar](/html/amoeba-solution.html)<a name="AmoebaJar"></a>  
 > You've successfully engineered a new species of amoeba with a very impressive doubling time of 3 minutes (i.e., every 3 minutes, each amoeba will split into 2 new amoeba). You put a single amoeba in a jar, and it takes exactly one hour to fill the jar. You put two amoeba in a second jar. How long does it take to fill the second jar?  
-*Note: I actually heard this problem from my interviewer at Harvard Med; it's been super interesting to see how people approach it. So far, only 36% (9/25) of my friends (mostly STEM majors) have answered this correctly.*
+*Note: I actually heard this problem from my interviewer at Harvard Med; it's been super interesting to see how people approach it. So far, around 36% (9/25) of my friends (mostly STEM majors) have answered this correctly.*
 
 2. [Cake Cutting](https://mathematicslounge.wordpress.com/2014/09/06/splitting-a-cake-with-a-missing-piece/)<a name="CakeCutting"></a>  
 > Jeremy and Jane would like to split a cake, but their friend Bob has already cut out a piece for himself. Bob’s slice is a rectangle of arbitrary size and rotation. How can Jeremy and Jane divide the remaining cake into two equal portions using a single cut from their knife?  

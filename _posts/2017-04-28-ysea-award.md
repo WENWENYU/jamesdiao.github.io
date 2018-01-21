@@ -2,6 +2,8 @@
 layout: post
 title: "YSEA Award"
 date: 2017-04-28
+author: James Diao
+location: New Haven, CT
 ---
 
 Today, I was surprised to receive an award from the Yale Science and Engineering Association. The other names on the list are all familiar to me, and it was a pleasant surprise to be named among them. 

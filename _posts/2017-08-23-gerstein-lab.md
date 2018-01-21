@@ -2,6 +2,8 @@
 layout: post
 title: "Bioinformatics @ Gerstein Lab"
 date: 2017-08-23
+author: James Diao
+location: New Haven, CT
 ---
 
 <style TYPE="text/css">
