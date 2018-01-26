@@ -3,7 +3,7 @@ layout: default
 title: Home Page
 ---
 
-Welcome! My name is James, and I'm a student at Yale interested in computational and statistical approaches to biomedical problems. Read more about me <a href="/about">here</a>, or click on one of the pictures below to check out some featured pages. 
+Hi! My name is James, and I'm a student at Yale interested in computational and statistical approaches to biomedical problems. Read more about me <a href="/about">here</a>, or click on one of the pictures below to check out some featured pages. 
 <br><br>
 
 <table class="wide">
