@@ -18,14 +18,14 @@ Summary of the "AI in Medicine" conference talk at the Department of Biomedical 
 4. [EHR](https://en.wikipedia.org/wiki/Electronic_health_record): Electronic Health Record  
 5. [EPIC](https://en.wikipedia.org/wiki/Epic_Systems): a private implementation of EHR holding >50% of US patient records. Closed platform makes it hard and costly for outsiders to interface with clinical or billing software.  
 6. [VC](https://en.wikipedia.org/wiki/Venture_capital): Venture Capital. Provides financing to small/early-stage firms with high growth potential. The life sciences sector received around $10 billion dollars in 2015, accounting for 18% of all VC funding.  
-7. DBMI: Department of Biomedical Informatics, Harvard Medical School  
-8. Zak: Isaac S. Kohane, MD/PhD, Chair of DBMI (and my PI)  
-9. Maha: Maha Farhat, MD/MSc, Assistant Professor at DBMI  
-10. Gabe: Gabriel Brat, MD, MPH, Instructor in Surgery, HMS, co-founded Tissue Analytics, a smartphone imaging platform for wound documentation.  
-11. Andy: Andrew Beam, PhD, Instructor at DBMI, specializes in deep learning.  
+7. [DBMI](http://dbmi.hms.harvard.edu/): Department of Biomedical Informatics, Harvard Medical School  
+8. [Zak](http://dbmi.hms.harvard.edu/person/faculty/zak-kohane): Isaac S. Kohane, MD/PhD, Chair of DBMI (and my PI)  
+9. [Maha](http://dbmi.hms.harvard.edu/person/faculty/maha-farhat): Maha Farhat, MD/MSc, Assistant Professor at DBMI  
+10. [Gabe](https://www.linkedin.com/in/gbrat/): Gabriel Brat, MD, MPH, Instructor in Surgery, HMS, co-founded Tissue Analytics, a smartphone imaging platform for wound documentation.  
+11. [Andy](https://scholar.harvard.edu/beam): Andrew Beam, PhD, Instructor at DBMI, specializes in deep learning.  
 
 
-### Part I: Beware the hype
+### Part I: Beware the Hype
 
 Zak begins by describing his own PhD work, which revolved around AI and computational solutions to medical problems. There was a big hype cycle at that time (around 30 years ago), when his advisors told him things like:  
 1. Doctors will soon be obsolete  

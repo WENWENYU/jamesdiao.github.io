@@ -31,7 +31,6 @@ I really enjoy logic puzzles, and I thought I'd compile a list of my favorites b
 ### [Super Hard](#super-hard)
   1. [100 Prisoners](#100Prisoners)
   2. [Coins on a Chessboard](#CoinsAndChessboard)
-  3. [Partial Credit](#PartialCredit)
 
 <br>
 
@@ -106,4 +105,4 @@ I really enjoy logic puzzles, and I thought I'd compile a list of my favorites b
 2. [DataGenetics Blog](http://datagenetics.com/blog.html)
 3. [Quora](https://www.quora.com/What-are-the-best-brain-teasers?page_size=10#!n=72)
 4. [Missing Square](https://en.wikipedia.org/wiki/Missing_square_puzzle)
-5. Identifying the missing number
+5. Identifying the missing number from a list

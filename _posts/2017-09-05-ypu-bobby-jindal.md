@@ -43,13 +43,13 @@ Bobby Jindal, in the flesh.
 
 The information seemed to be a slightly more flowery version of the "Early Life," "Education," and "Career" sections of [his Wikipedia page](https://en.wikipedia.org/wiki/Bobby_Jindal), which he totally did not write himself. But besides his very impressive resume, I knew that Jindal was a career Republican and briefly participated in the 2016 primaries. I was interested to see how he would engage with and try to persuade Yale students, who have earned quite a reputation for being aggressively liberal.  
 
-Anyway, not having participated in a YPU debate before, I had no idea how it would play out. Luckily, I sat next to a friend and YPU veteran who informed me about Robert's Rules of Order and how things would break down. Essentially, each party had a representative who talked up the party and invited undifferentiated guests (like myself) to join them at their weekly debates and discussions. There were much stomping and gnashing of teeth (the YPU takes itself quite seriously). It was more than an hour before I actually got to hear Jindal speak. 
+Anyway, not having participated in a YPU debate before, I had no idea how it would play out. Luckily, I sat next to a friend and YPU veteran who informed me about Robert's Rules of Order and how things would break down. Essentially, each party had a representative who talked up the party and invited undifferentiated guests (like myself) to join them at their weekly debates and discussions. There was much stomping and gnashing of teeth (the YPU takes itself quite seriously). It was more than an hour before I actually got to hear Jindal speak. 
 
 ## Bobby Jindal's Talk
 
-The first thing I'll say is that Jindal is a really impressive speaker. Quite apart from his policies (which I largely disagree with), his points were delivered neatly and intuitively. He kept a healthy balance of anecdote and evidence, and spoke to his public service experiences without letting them distract from his point. He also made some pretty interesting points.  
+The first thing I'll say is that Jindal is a really impressive speaker. His points were delivered neatly and intuitively. He kept a healthy balance of anecdote and evidence, and spoke to his public service experiences without letting them distract from his points, which were all quite interesting.  
 
-First of all, Jindal introduced the topic in a remarkable way. He began by talking about his own son's journey through the health system, and the emotional and financial burdens that came with open heart surgery. He then claimed the largely liberal position that health care is a fundamental human right. In his words: 
+First of all, Jindal introduced the topic in a remarkable way. He began by talking about his own son's journey through the health system, and the emotional and financial burdens that came with open heart surgery. He then took the largely liberal position that health care is a fundamental human right. In his words (paraphrased): 
 
 > I believe healthcare is a right. The issue is not whether or not to expand and improve healthcare, but what the instrument of reform will be. In my view, the government's role should be ensuring a robust marketplace that is competitive, transparent, accountable, effective, and accessible. 
 
@@ -114,8 +114,17 @@ The Yale Daily News (YDN) published [a piece](https://yaledailynews.com/blog/201
 
 ## Update 2 (01/19/2018)
 
-The YDN reported [infighting at the YPU](https://yaledailynews.com/blog/2018/01/19/jindal-visit-created-divisive-ypu-budget-deficit/) over unexpected costs of bringing Bobby Jindal. Looks like he likes living large, who'd have thought? 
+The YDN reported [infighting at the YPU](https://yaledailynews.com/blog/2018/01/19/jindal-visit-created-divisive-ypu-budget-deficit/) over unexpected costs of bringing Bobby Jindal. 
+> Jindal’s costly visit to the YPU — compounded by the lack of a YAF grant to help pay for it — created a temporary $13,477 budget deficit, prompting finger-pointing within the organization’s executive board last semester.
 
+Looks like he likes living large, who'd have thought? 
+
+## Update 3 (01/22/2018)
+
+The YPU President [responds](/PDF/YPU_Response.pdf) to YDN! 
+> The recent Yale Daily News article about the Yale Political Union debate with Governor Bobby
+Jindal exhibits overt disregard for fact and the standards of journalism and seemingly endeavors
+to veil the bright progress achieved by the Yale Political Union during the autumn of 2017.
 
 
 

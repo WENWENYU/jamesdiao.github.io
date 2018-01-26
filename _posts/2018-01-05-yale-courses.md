@@ -80,19 +80,10 @@ location: New Haven, CT
 <td align="left">Spring</td>
 <td align="left"><small><a href="/PDF/Syllabi/MBB490.pdf">MB&amp;B 490</a> Senior Thesis</small></td>
 <td align="left"><small><a href="/PDF/Syllabi/MBB302.pdf">MB&amp;B 302</a> Biophysics</small></td>
-<td align="left"><small><a href="/PDF/Syllabi/MBB251L.pdf">MB&B 251L</a> Biochem Lab</small></td>
-<td align="left"><small><a href="/PDF/Syllabi/MUSI175.pdf">MUSI 175</a> Mathematics of Music</small></td>
-</tr>
-<tr class="even">
-<td align="left"><small></small></td>
-<td align="left"><small></small></td>
 <td align="left"><small><a href="/PDF/Syllabi/CPSC200.html">CPSC 200</a> Information Systems</small></td>
 <td align="left"><small><a href="/PDF/Syllabi/SDS365.pdf">S&amp;DS 365</a> <br>Data Mining & Machine Learning</small></td>
-<td align="left"><small></small></td>
-<td align="left"><small></small></td>
-<td align="left"><small></small></td>
+<td align="left"><small><a href="/PDF/Syllabi/MUSI175.pdf">MUSI 175</a> Mathematics of Music</small></td>
 </tr>
-
 
 </tbody>
 </table>
