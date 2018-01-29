@@ -1,12 +1,12 @@
 ---
 layout: post
 title: "Logic Puzzles"
-date: 2017-08-22
+date: 2017-08-28
 author: James Diao
 location: New Haven, CT
 ---
 
-I really enjoy logic puzzles, and I thought I'd compile a list of my favorites before I forget them all. Some of these require math, but most do not. When you're ready, click on the title for an answer and explanation. 
+I really enjoy logic puzzles, and I thought I'd compile a list of my favorites before I forget them all. Solutions range from recursion to binary encoding; none requires math. When you're ready, click on the title for an answer and explanation. (If you liked these, check out <a href="/archives/2017/08/28/probability-problems">my probability problems</a>!)
 
 ### Contents
 
@@ -14,23 +14,17 @@ I really enjoy logic puzzles, and I thought I'd compile a list of my favorites b
   1. [Amoeba Jar](#AmoebaJar)
   2. [Cake Cutting](#CakeCutting)
   3. [Predicting Coin Flips](#PredictingCoinFlips)
-  4. [St. Petersburg Lottery](#StPetersburgLottery)
-  5. [Coupon Collector](#CouponCollector)
-  6. [Two Envelopes](#TwoEnvelopes)
+  4. [Missing Square](#MissingSquare)
   
 ### [Medium](#medium)
   1. [King and Poison](#KingAndPoison)
   2. [100 Airplane Seats](#100AirplaneSeats)
   3. [Prisoners and Lightbulb](#PrisonersAndLightbulb)
-  4. [Amoebas Revisited](#AmoebasRevisited)
     
 ### [Hard](#hard)
   1. [100 Pirates](#100Pirates)
   2. [201 Islanders](#201Islanders)
-  
-### [Super Hard](#super-hard)
-  1. [100 Prisoners](#100Prisoners)
-  2. [Coins on a Chessboard](#CoinsAndChessboard)
+  3. [Coins on a Chessboard](#CoinsAndChessboard)
 
 <br>
 
@@ -47,15 +41,9 @@ I really enjoy logic puzzles, and I thought I'd compile a list of my favorites b
 3. [Predicting Coin Flips](https://www.futilitycloset.com/2015/10/01/cruel-and-unusual-3/)<a name="PredictingCoinFlips"></a>  
 > Two mathematicians have been arrested and will soon both be imprisoned in separate towers. Each morning, a guard at each tower will flip a coin and show the result to his prisoner. Each prisoner must then guess the result of the coin flip at the other tower. If at least one guess is correct, both prisoners are spared. But if both guesses are incorrect, both prisoners will be executed. The mathematicians are allowed to briefly confer before being locked up. What strategy can spare them indefinitely?  
 ![Prisoner Coin Img](/img/prisoner-coin.jpg)
-
-4. [St. Petersburg Lottery](https://en.wikipedia.org/wiki/St._Petersburg_paradox)<a name="StPetersburgLottery"></a>  
-> This casino game involves flips of a fair coin. The pot starts with 2 cents. The player will continue flipping the coin until it lands tails. Every time the coin lands heads, the pot doubles; otherwise, the player keeps the money in the pot and the game ends. Altogether, the player wins 2k dollars, where k is the number of tosses. What's a fair price for entering the game? (needs math) 
-
-5. [Coupon Collector](https://en.wikipedia.org/wiki/Coupon_collector%27s_problem)<a name="CouponCollector"></a>  
-> Given n coupons, how many coupons do you expect to draw with replacement before having drawn each coupon at least once? (needs math)  
-
-6. [Two Envelopes](https://en.wikipedia.org/wiki/Two_envelopes_problem)<a name="TwoEnvelopes"></a>  
-> You are given two envelopes with money; one contains twice as much as the other. You may pick one envelope and keep the money it contains. Having chosen an envelope, you are given the chance to switch. Your friend argues that it is always beneficial to switch: "the other envelope contains 2A with probability 1/2 and A/2 with probability 1/2, so the expected value of the other envelope is: (1/2)(2A) + (1/2)(A/2) = (5/4)A." What is wrong with this argument?  
+3. [Missing Square](https://en.wikipedia.org/wiki/Missing_square_puzzle)<a name="MissingSquare"></a>  
+> Both A and B are constructed from the same shapes, but B is magically missing a square. Where did it go? 
+![Missing Square](/img/missing-square.png)
 
 <br>
 
@@ -73,10 +61,6 @@ I really enjoy logic puzzles, and I thought I'd compile a list of my favorites b
 *How about if every single prisoner needs to declare and be certain?*  
 ![Prisoners Lightbulb Img](/img/prisoners-lightbulb.png)
 
-4. [Amoebas Revisited](https://stats.stackexchange.com/questions/4768/amoeba-interview-question)<a name="AmoebasRevisited"></a>
-> You place a single amoeba into a jar with infinite space and nutrients. After 3 minutes, that amoeba will divide into 1, 2, 3, or 0 (it dies before dividing) offspring with equal probability. What is the probability that the entire population eventually dies out? (needs math)
-<br>
-
 ### Hard
 
 1. [100 Pirates](https://en.wikipedia.org/wiki/Pirate_game)<a name="100Pirates"></a>   
@@ -85,16 +69,7 @@ I really enjoy logic puzzles, and I thought I'd compile a list of my favorites b
 2. [201 Islanders](https://xkcd.com/solution.html)<a name="201Islanders"></a>
 > There are 201 people on an island. 100 of them have blue eyes, 100 have brown eyes, and 1 has green eyes (the Guru). No one knows the color of their own eyes. Every night, a ferry stops at the island. Any islanders who have figured out the color of their own eyes will leave the island, and the rest stay. Everyone can see everyone else at all times and keeps a count of the number of people they see with each eye color (excluding themselves), but they cannot otherwise communicate. Once per day, the Guru tells them whether she sees at least one person with blue eyes. All islanders are perfect logicians. Everyone on the island knows all the rules in this paragraph. Who leaves the island, and on what night? 
 
-<br>
-
-### Super Hard
-
-1. [100 Prisoners](https://en.wikipedia.org/wiki/100_prisoners_problem)<a name="100Prisoners"></a>
-> The prison warden offers 100 death row prisoners, who are numbered from 1 to 100, a last chance. A room contains a cupboard with 100 drawers. The warden randomly puts one prisoner's number in each closed drawer. The prisoners enter the room, one after another. Each prisoner may open and look into 50/100 drawers, in any order. The drawers are closed again afterwards. If, during this search, every prisoner finds his number, all prisoners are pardoned. Otherwise, all prisoners die. The prisoners may discuss strategy before the game begins. What is the prisoners' best strategy?  
-<br>
-![100 Prisoners Img](/img/100-prisoners.png)
-
-2. [Coins on a Chessboard](http://datagenetics.com/blog/december12014/index.html)<a name="CoinsAndChessboard"></a>
+3. [Coins on a Chessboard](http://datagenetics.com/blog/december12014/index.html)<a name="CoinsAndChessboard"></a>
 > The jailer will take you into a private cell. In the cell will be a chessboard. The jailer will take 64 coins and place them, one-by-one, on each square on the board. He will place the coins on the board in any way he wants (in a pattern, at random, etc.). Once all the coins have been placed, the jailer will point to one of the squares on the board and say: "This square is the magic square." You must then choose exactly one coin to turn over--heads to tails, or tails to heads. You cannot opt out of this choice. You will then be led out of the room, and your friend will be led in. Your friend will look at the board of coins and guess the magic square. If he guesses correctly, you are both pardoned. If he guesses incorrectly, you are both executed. The jailer explains these rules to you and your friend and then gives you time to confer. What is the strategy that maximizes your chance of escape?  
 <br>
 ![Coins Chess](/img/chess-coins.png)
@@ -104,5 +79,3 @@ I really enjoy logic puzzles, and I thought I'd compile a list of my favorites b
 1. [Prisoners and Hats](https://en.wikipedia.org/wiki/Hat_puzzle#Prisoners_and_hats_puzzle)
 2. [DataGenetics Blog](http://datagenetics.com/blog.html)
 3. [Quora](https://www.quora.com/What-are-the-best-brain-teasers?page_size=10#!n=72)
-4. [Missing Square](https://en.wikipedia.org/wiki/Missing_square_puzzle)
-5. Identifying the missing number from a list

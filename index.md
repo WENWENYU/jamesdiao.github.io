@@ -9,7 +9,7 @@ Hi! My name is James, and I'm a student at Yale interested in computational and 
 <table class="wide">
 <tr>
   <td class="left">
-    <a href="/archives/2017/08/23/favorite-papers">
+    <a href="/archives/2017/08/28/probability-problems">
         <img src="/img/questions.png" alt="36 Questions" title="36 Questions" style="width:220px;height:220px;">
     </a>
   </td>
@@ -19,7 +19,7 @@ Hi! My name is James, and I'm a student at Yale interested in computational and 
     </a>
   </td>
   <td class="right">
-    <a href="/archives/2017/08/22/logic-puzzles">
+    <a href="/archives/2017/08/28/logic-puzzles">
         <img src="/img/puzzles.jpg" alt="Logic Problems" title="Logic Problems" style="width:220px;height:220px;">
     </a>
   </td>
