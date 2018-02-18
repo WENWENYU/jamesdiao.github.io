@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "Resolved: Reject Single-Payer Healthcare"
+title: "Resolved: Reject Single-Payer Healthcare (Bobby Jindal)"
 date: 2017-09-05
 author: James Diao
 location: New Haven, CT
@@ -23,17 +23,17 @@ Bobby Jindal gave a great talk at the YPU against single-payer healthcare. I dis
 
 ## Day 1 with the YPU
 
-On Tuesday, I attended the first 2017 meeting of the Yale Political Union (YPU). It was hosted in the beautiful Woolsey Hall, shown below. 
+On Tuesday, I attended the first 2017 meeting of the [Yale Political Union (YPU)](https://en.wikipedia.org/wiki/Yale_Political_Union). It was hosted in the beautiful Woolsey Hall, shown below. 
 
 <img src="/img/ypu-woolsey.jpg" alt="Woolsey" style="width: 700px;"/>
 
 Despite having a reasonable interest in politics, I never took the time to hear from many of the awesome speakers who come to Yale. As a senior, I'm really hoping to go to more. I was also especially interested in today's topic (health care policy) and Bobby Jindal's broad experience in this area. The YPU summarized it well with their introduction (edited for conciseness): 
 
 > About our Guest:  
-&emsp;&emsp;Bobby Jindal has a well-earned reputation as one of America’s most successful public sector executives and innovators in the health care and education sectors.  
-&emsp;&emsp;Despite being the nation’s youngest governor when he was elected in 2007, Jindal had been well-prepared to become the state’s Chief Executive Officer, with stints as the head of the state Department of Health and Hospitals, president of the University of Louisiana System, Assistant Secretary of the U.S. Department of Health and Human Services, and executive director of the National Bipartisan Commission on the Future of Medicare—all before his 30th birthday. Previously, Jindal advised senior management as an associate at McKinsey & Co., where he managed teams of clients and consultants in the private sector.  
-&emsp;&emsp;The son of Indian immigrants, Jindal was born and raised in Baton Rouge, Louisiana. He earned degrees in Biology and Public Policy from Brown University, where he graduated with honors. Accepted to both Yale Law School and Harvard Medical School, Jindal instead chose to study at New College, Oxford as a Rhodes Scholar, earning an M. Litt degree in Politics with an emphasis in Health Policy.  
-&emsp;&emsp;Jindal currently resides in Louisiana with his wife, Supriya, and three children.
+&emsp;&emsp;&emsp;&emsp; Bobby Jindal has a well-earned reputation as one of America’s most successful public sector executives and innovators in the health care and education sectors.  
+&emsp;&emsp;&emsp;&emsp; Despite being the nation’s youngest governor when he was elected in 2007, Jindal had been well-prepared to become the state’s Chief Executive Officer, with stints as the head of the state Department of Health and Hospitals, president of the University of Louisiana System, Assistant Secretary of the U.S. Department of Health and Human Services, and executive director of the National Bipartisan Commission on the Future of Medicare—all before his 30th birthday. Previously, Jindal advised senior management as an associate at McKinsey & Co., where he managed teams of clients and consultants in the private sector.  
+&emsp;&emsp;&emsp;&emsp; The son of Indian immigrants, Jindal was born and raised in Baton Rouge, Louisiana. He earned degrees in Biology and Public Policy from Brown University, where he graduated with honors. Accepted to both Yale Law School and Harvard Medical School, Jindal instead chose to study at New College, Oxford as a Rhodes Scholar, earning an M. Litt degree in Politics with an emphasis in Health Policy.  
+&emsp;&emsp;&emsp;&emsp; Jindal currently resides in Louisiana with his wife, Supriya, and three children.
 
 <img src="/img/ypu-jindal.jpg" alt="Jindal" style="width: 350px; "/>
 
@@ -53,7 +53,7 @@ First of all, Jindal introduced the topic in a remarkable way. He began by talki
 
 > I believe healthcare is a right. The issue is not whether or not to expand and improve healthcare, but what the instrument of reform will be. In my view, the government's role should be ensuring a robust marketplace that is competitive, transparent, accountable, effective, and accessible. 
 
-With this as his foundation, Jindal made his case against single-payer healthcare, or more specifically, against Bernie Sanders's proposed plan of "Medicaid for all." There were four key points that he brought up: (1) unsustainability, (2) disruption, (3) government interference, and (4) empirical problems. I'll summarize each of them along with my own thoughts below. 
+With this as his foundation, Jindal made his case against single-payer healthcare, or more specifically, against Bernie Sanders's proposed plan of "Medicaid for all." There were four key points that he brought up: (1) unsustainability, (2) disruption, (3) government interference, and (4) empirical problems. I summarize each of them along with my own thoughts below. 
 
 ### 1. Unsustainability
 
@@ -64,7 +64,7 @@ He hinges this on a few data points. The first is that the average Social Securi
 
 *Actually, the average beneficiary takes out around 34% more than they put in. I don't know if that counts as "far more," but the point still holds. 
 
-#### My thoughts
+#### My Thoughts
 On face, things make sense--healthcare costs are enormous and getting out of control. A single-payer system would unquestionably add to the problem. However, Jindal never addresses the standard liberal counterpart to increased government spending: increase taxes to pay for it. That's not to say that the problems are solved. We still need numbers for the dollar amount of tax increase--as well as deductibles and co-pays in the plan--to judge whether or it the price tag is worth it. However, evidence from other countries suggests that a single-payer system would actually help control costs (regardless of quality concerns). At the very least, this means that the trade-offs with other policy priorities are not as dire as he makes them out to be. Moreover, his argument seems to be less against any single-payer plan than the very idea of universal coverage. This doesn't mean it's a bad argument, but it does seem to contradict his earlier position that health care is a right. 
 
 
@@ -73,7 +73,7 @@ On face, things make sense--healthcare costs are enormous and getting out of con
 #### Jindal's Argument
 People like their healthcare. It's same way that people rag on Congress and the U.S. education system but tend to like their own representatives and schools. Any major healthcare reform will disrupt and upset those who are already happy with the care they have. Cue the "if you like your doctor, you can keep your doctor" spiel. 
 
-#### My thoughts
+#### My Thoughts
 Mr. Jindal is right, of course--most of the people who already like their coverage will see big changes, and these changes will probably make them unhappy. However, Jindal failed to point out how this would directly affect people's health or pocketbooks. Moreover, people often have preferences for cheap but very low-quality plans (i.e., covers almost nothing) that would be replaced by higher-quality coverage in a single-payer system. 
 
 
@@ -82,7 +82,7 @@ Mr. Jindal is right, of course--most of the people who already like their covera
 #### Jindal's Argument
 Government has a tendency to overcomplicate and overregulate. A single-payer system would create significant bureaucratic overhead that increases costs and distracts from patient care. Moreover, government is subject to all kinds of manipulations from lobbyists and corporate interests. There are no one-size-fit-all solutions, and individual health systems will suffer if the plan does not work for them. 
 
-#### My thoughts
+#### My Thoughts
 I found his arguments here very compelling. It seems intuitive that once healthcare is squarely in the political arena, it will only be subject to more lobbying and pork barreling. At the same time, I accept that different states have different demographics, costs, and utilization rates, and some things should be handled case-by-case. I admit that I don't know too much about implementation details and I can't make a fully informed response. However, my instincts tell me that (a) the status quo is already dominated by special interests; at least lobbying is one step removed, (b) regulation and price controls could help curb blatant overcharging, and (c) some generalized plan is necessary to standardize quality and ensure truly universal care. 
 
 
@@ -91,7 +91,7 @@ I found his arguments here very compelling. It seems intuitive that once healthc
 #### Jindal's Argument
 Most other countries have single-payer systems and these countries do have lower health costs. However, the single-payer system didn't make any real improvements; it simply kept spending low by rationing care. The resulting cuts to physician incomes and hospital closures only decrease accessibility and quality. 
 
-#### My thoughts
+#### My Thoughts
 Jindal is correct that wait times can be quite long for non-urgent issues and that the most expensive medicines are often inaccessible. This is a problem that would almost certainly come with implementing a single-payer system. However, we should put these problems in context. We care about wait times and access to specific medications, but mostly insofar as they improve outcomes. And the [data](https://www.healthaffairs.org/doi/full/10.1377/hlthaff.22.3.89) shows that countries with single-payer systems have similar utilization rates and quality metrics across the board. Rationing is certainly not ideal, but it might be the only way to ensure that limited resources are available for those who need it--not just those who have the ability to pay.  
 
 ### 5. The Alternative
@@ -99,7 +99,7 @@ Jindal is correct that wait times can be quite long for non-urgent issues and th
 #### Jindal's Argument (to be perfectly honest, I missed some parts here)
 Most people would agree that the current health care system is broken. Luckily, we don't have to choose between bad and worse--we can improve quality with market-based policies. First, a focus on choice and competition would help keep healthcare patient-centered. Second, we should create voluntary purchasing pools through labor unions and other associations. Third, we should provide funding (around $100 million) for high-risk pools. Fourth, we should increase transparency through updated websites that provide price and quality information. 
 
-#### My thoughts
+#### My Thoughts
 Unfortunately, Jindal did not go very deep into his plans. I understand though--it was near the end of his time, and he wanted to focus on ideological points rather than technical details. I have to say that I'm a little skeptical about voluntary purchasing pools--what stops the sickest people from opting in and the healthiest from opting out? These would then just turn into high-risk pools, which are either completely unsustainable or contain a series of catches (high premiums, high deductibles, exclusions for pre-existing conditions, annual or lifetime limits, etc.). Jindal's proposed 100 million dollar safety net sounds like a lot of money, but in the world of American healthcare, it's a pittance. The [Kaiser Family Foundation](https://www.kff.org/health-reform/issue-brief/high-risk-pools-for-uninsurable-individuals/) notes that net losses across 35 state high-risk pools added to over $1.2 billion in 2011. Jindal's last point is fairly uncontroversial--I would argue that the ACA's healthcare exchanges have already done this, but it's very possible that healthcare.gov has plenty of issues that I'm not aware of. 
 
 

@@ -32,7 +32,7 @@ I really enjoy logic puzzles, and I thought I'd compile a list of my favorites b
 
 1. [Amoeba Jar](/html/amoeba-solution.html)<a name="AmoebaJar"></a>  
 > You've successfully engineered a new species of amoeba with a very impressive doubling time of 3 minutes (i.e., every 3 minutes, each amoeba will split into 2 new amoeba). You put a single amoeba in a jar, and it takes exactly one hour to fill the jar. You put two amoeba in a second jar. How long does it take to fill the second jar?  
-*Note: I actually heard this problem from my interviewer at Harvard Med; it's been super interesting to see how people approach it. So far, around 36% (9/25) of my friends (mostly STEM majors) have answered this correctly.*
+*Note: I actually heard this problem from an interviewer and it's been super interesting to see how people approach it. So far, around 1/3 of my friends answered this correctly on their first try and 1/2 (18/36) eventually figured it out.*
 
 2. [Cake Cutting](https://mathematicslounge.wordpress.com/2014/09/06/splitting-a-cake-with-a-missing-piece/)<a name="CakeCutting"></a>  
 > Jeremy and Jane would like to split a cake, but their friend Bob has already cut out a piece for himself. Bob’s slice is a rectangle of arbitrary size and rotation. How can Jeremy and Jane divide the remaining cake into two equal portions using a single cut from their knife?  

@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "Branford College Tea: Joan Steitz"
+title: "Branford College Tea (Joan Steitz)"
 date: 2018-01-31
 author: James Diao
 location: New Haven, CT
@@ -61,6 +61,9 @@ We heard a lot about Professor Steitz's journey, much of which I had already kno
 
 ## Concluding Thoughts
 No mention of her husband woot. 
+
+## Update
+The Yale Daily News wrote [a piece](https://yaledailynews.com/blog/2018/02/01/steitz-reflects-women-in-science/) on this tea! 
 
 
 
