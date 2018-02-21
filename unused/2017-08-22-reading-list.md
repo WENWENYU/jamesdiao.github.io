@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "Book List"
+title: "Reading List"
 date: 2017-08-22
 author: James Diao
 location: Sugar Land, TX

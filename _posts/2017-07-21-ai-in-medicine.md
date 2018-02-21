@@ -1,12 +1,12 @@
 ---
 layout: post
-title: "AI in Medicine"
+title: "Discussion: AI in Medicine"
 date: 2017-07-21
 author: James Diao
 location: Boston, MA
 ---
 
-Summary of the "AI in Medicine" conference talk at the Department of Biomedical Informatics, Harvard Medical School. 
+Summary of the "AI in Medicine" discussion at the Department of Biomedical Informatics, Harvard Medical School. 
 
 ![Medical Robot](/img/robodoc.jpg){:height="200px" width="200px"}
 

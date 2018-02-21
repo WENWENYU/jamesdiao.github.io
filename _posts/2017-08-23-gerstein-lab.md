@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "Bioinformatics @ Gerstein Lab"
+title: "Bioinformatics with Gerstein Lab"
 date: 2017-08-23
 author: James Diao
 location: New Haven, CT
