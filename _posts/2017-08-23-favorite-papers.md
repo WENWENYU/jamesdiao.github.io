@@ -55,14 +55,14 @@ Here's a list of some of my favorite papers. I'll add more (and reviews!) when I
 2. [Dill et al. 2012](http://science.sciencemag.org/content/338/6110/1042.full). The Protein Folding Problem, 50 Years On. <em>Science</em>. 
 
 #### Sequencing
-4. [Kim et al. 2014](www.nature.com/articles/nature13302). A draft map of the human proteome. <em>Nature</em>. 
-5. [Wilhelm et al. 2014](www.nature.com/articles/nature13319). Mass-spectrometry-based draft of the human proteome. <em>Nature</em>. 
+4. [Kim et al. 2014](http://www.nature.com/articles/nature13302). A draft map of the human proteome. <em>Nature</em>. 
+5. [Wilhelm et al. 2014](http://www.nature.com/articles/nature13319). Mass-spectrometry-based draft of the human proteome. <em>Nature</em>. 
 
 
 ### Miscellaneous
 1. [Ioannidis 2005](http://journals.plos.org/plosmedicine/article?id=10.1371/journal.pmed.0020124). Why Most Published Research Findings Are False. <em>PLOS Medicine</em>.  
 2. [Doug Zounker](http://isotropic.org/papers/chicken.pdf). Chicken Chicken Chicken: Chicken Chicken. 
-3. [Perelson 2002](www.nature.com/nri/journal/v2/n1/full/nri700.html). Modelling viral and immune system dynamics. <em>Nature Reviews Immunology</em>. 
+3. [Perelson 2002](http://www.nature.com/nri/journal/v2/n1/full/nri700.html). Modelling viral and immune system dynamics. <em>Nature Reviews Immunology</em>. 
 
 
 
