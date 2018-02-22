@@ -26,8 +26,8 @@ Hi! My name is James, and I'm a student at Yale interested in computational and 
 </tr>
 <tr>
   <td class="left">
-    <a href="/archives/2017/08/22/reading-list">
-        <img src="/img/books.jpg" alt="Reading List" title="Reading List" style="width:220px;height:220px;">
+    <a href="/archives/2017/08/23/favorite-papers">
+        <img src="/img/books.jpg" alt="Favorite Papers" title="Favorite Papers" style="width:220px;height:220px;">
     </a>
   </td>
   <td class="center">
