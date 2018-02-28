@@ -14,15 +14,16 @@ This Spring, I applied to and joined the Yale Effective Altriusm Fellowship. I'l
 
 ### Contents
 
-1. [Introduction to Effective Altruism](#meet1)  
-2. [Which Social Interventions Work?](#meet2)
+1. [Introduction to Effective Altruism](#intro)  
+2. [Which Social Interventions Work?](#uct)
+3. [Effective Altruism and Systemic Change](#systemic)
 <br> 
 
 ___
 
 <br>
 
-## 1. Introduction to Effective Altriusm (2/7/2018) <a name="meet1"></a>
+## 1. Introduction to Effective Altriusm (2/7/2018) <a name="intro"></a>
 
 ### Topic
 > Effective altruism is premised on the idea of 'doing good better', but why does this matter, and how far can this be taken? For the very first dinner, we will focus on the fundamentals: Why is the EA movement appealing and are there some ideas that it takes too far?
@@ -56,7 +57,7 @@ ___
 (e.g., malaria prevention => improved health/education => lower fertility rate => ...) against the historic rise in the stock market (around 5% per year after inflation). There are many factors at play and it's really hard to say which is better. 
 
 
-## 2. Which Social Interventions Work? (2/15/2018) <a name="meet2"></a>
+## 2. Which Social Interventions Work? (2/15/2018) <a name="uct"></a>
 
 ### Topic
 > This week's speaker is Alexander Coppock, Assistant Professor of Political Science at Yale and resident fellow of the Institution for Social Policy Studies. He received his Ph.D. in political science from Columbia University (2016). His principal research interest lies in political persuasion and its implications for the malleability of public opinion in the context of elections. His interests extend beyond persuasion to the design and analysis of randomized experiments.
@@ -87,6 +88,16 @@ ___
     (2) increased subjective well-being and female empowerment measures. 
     - *Concerns*: (1) self-reporting on purchases are unreliable, (2) observer-expectant effect, (3) lack of increased spending on health and education. 
 - UCTs are not always optimal, but they are uniquely simple and scalable. This makes them the ideal benchmark against which new interventions should be evaluated. 
+
+## 3. Effective Altruism and Systemic Change <a name="systemic"></a>
+
+### Topic
+> Discussions about Effective Altruism often turn into discussions about systemic change. Are the two in tension? Or are they in fact mutually supportive? This week we'll take on this topic, discussing views on long term changes to society.
+
+### Readings
+- [Effective Altruists Love Systemic Change](https://80000hours.org/2015/07/effective-altruists-love-systemic-change/)
+- [Beware Systemic Change](http://slatestarcodex.com/2015/09/22/beware-systemic-change/)
+- [Why You Should Focus More on Talent Gaps, not Funding Gaps](https://80000hours.org/2015/11/why-you-should-focus-more-on-talent-gaps-not-funding-gaps/)
 
 
 

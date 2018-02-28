@@ -30,10 +30,10 @@ On Tuesday, I attended the first 2017 meeting of the [Yale Political Union (YPU)
 Despite having a reasonable interest in politics, I never took the time to hear from many of the awesome speakers who come to Yale. As a senior, I'm really hoping to go to more. I was also especially interested in today's topic (health care policy) and Bobby Jindal's broad experience in this area. The YPU summarized it well with their introduction (edited for conciseness): 
 
 > About our Guest:  
-&emsp;&emsp;&emsp;&emsp; Bobby Jindal has a well-earned reputation as one of America’s most successful public sector executives and innovators in the health care and education sectors.  
-&emsp;&emsp;&emsp;&emsp; Despite being the nation’s youngest governor when he was elected in 2007, Jindal had been well-prepared to become the state’s Chief Executive Officer, with stints as the head of the state Department of Health and Hospitals, president of the University of Louisiana System, Assistant Secretary of the U.S. Department of Health and Human Services, and executive director of the National Bipartisan Commission on the Future of Medicare—all before his 30th birthday. Previously, Jindal advised senior management as an associate at McKinsey & Co., where he managed teams of clients and consultants in the private sector.  
-&emsp;&emsp;&emsp;&emsp; The son of Indian immigrants, Jindal was born and raised in Baton Rouge, Louisiana. He earned degrees in Biology and Public Policy from Brown University, where he graduated with honors. Accepted to both Yale Law School and Harvard Medical School, Jindal instead chose to study at New College, Oxford as a Rhodes Scholar, earning an M. Litt degree in Politics with an emphasis in Health Policy.  
-&emsp;&emsp;&emsp;&emsp; Jindal currently resides in Louisiana with his wife, Supriya, and three children.
+&nbsp;&nbsp;&nbsp;&nbsp; Bobby Jindal has a well-earned reputation as one of America’s most successful public sector executives and innovators in the health care and education sectors.  
+&nbsp;&nbsp;&nbsp;&nbsp; Despite being the nation’s youngest governor when he was elected in 2007, Jindal had been well-prepared to become the state’s Chief Executive Officer, with stints as the head of the state Department of Health and Hospitals, president of the University of Louisiana System, Assistant Secretary of the U.S. Department of Health and Human Services, and executive director of the National Bipartisan Commission on the Future of Medicare—all before his 30th birthday. Previously, Jindal advised senior management as an associate at McKinsey & Co., where he managed teams of clients and consultants in the private sector.  
+&nbsp;&nbsp;&nbsp;&nbsp; The son of Indian immigrants, Jindal was born and raised in Baton Rouge, Louisiana. He earned degrees in Biology and Public Policy from Brown University, where he graduated with honors. Accepted to both Yale Law School and Harvard Medical School, Jindal instead chose to study at New College, Oxford as a Rhodes Scholar, earning an M. Litt degree in Politics with an emphasis in Health Policy.  
+&nbsp;&nbsp;&nbsp;&nbsp; Jindal currently resides in Louisiana with his wife, Supriya, and three children.
 
 <img src="/img/ypu-jindal.jpg" alt="Jindal" style="width: 350px; "/>
 
@@ -62,7 +62,7 @@ Essentially, Jindal points out that healthcare is very expensive (duh). But more
 
 He hinges this on a few data points. The first is that the average Social Security and Medicare beneficiary receives far* more in benefits than they pay for in taxes (Jindal cites [the Urban Institute](https://www.urban.org/sites/default/files/alfresco/publication-pdfs/412945-Social-Security-and-Medicare-Taxes-and-Benefits-over-a-Lifetime.PDF)). He also discusses the fiscal impact of ballooning nondiscretionary spending, especially with respect to his other main interest: education.  
 
-*Actually, the average beneficiary takes out around 34% more than they put in. I don't know if that counts as "far more," but the point still holds. 
+*Actually, it looks like [the average beneficiary takes out around 34% more than they put in](http://www.politifact.com/truth-o-meter/article/2013/feb/01/medicare-and-social-security-what-you-paid-what-yo/). I don't know if that counts as "far more," but his point still holds. 
 
 #### My Thoughts
 On face, things make sense--healthcare costs are enormous and getting out of control. A single-payer system would unquestionably add to the problem. However, Jindal never addresses the standard liberal counterpart to increased government spending: increase taxes to pay for it. That's not to say that the problems are solved. We still need numbers for the dollar amount of tax increase--as well as deductibles and co-pays in the plan--to judge whether or it the price tag is worth it. However, evidence from other countries suggests that a single-payer system would actually help control costs (regardless of quality concerns). At the very least, this means that the trade-offs with other policy priorities are not as dire as he makes them out to be. Moreover, his argument seems to be less against any single-payer plan than the very idea of universal coverage. This doesn't mean it's a bad argument, but it does seem to contradict his earlier position that health care is a right. 
@@ -92,15 +92,15 @@ I found his arguments here very compelling. It seems intuitive that once healthc
 Most other countries have single-payer systems and these countries do have lower health costs. However, the single-payer system didn't make any real improvements; it simply kept spending low by rationing care. The resulting cuts to physician incomes and hospital closures only decrease accessibility and quality. 
 
 #### My Thoughts
-Jindal is correct that wait times can be quite long for non-urgent issues and that the most expensive medicines are often inaccessible. This is a problem that would almost certainly come with implementing a single-payer system. However, we should put these problems in context. We care about wait times and access to specific medications, but mostly insofar as they improve outcomes. And the [data](https://www.healthaffairs.org/doi/full/10.1377/hlthaff.22.3.89) shows that countries with single-payer systems have similar utilization rates and quality metrics across the board. Rationing is certainly not ideal, but it might be the only way to ensure that limited resources are available for those who need it--not just those who have the ability to pay.  
+Jindal is correct that wait times can be quite long for non-urgent issues and that the most expensive medicines are often inaccessible. This is a problem that would almost certainly come with implementing a single-payer system. However, we should put these problems in context. We care about wait times and access to specific medications, but mostly insofar as they improve outcomes. And the data shows that countries with single-payer systems have [similar utilization rates and quality metrics across the board](https://www.healthaffairs.org/doi/full/10.1377/hlthaff.22.3.89). Rationing is certainly not ideal, but it might be the only way to ensure that limited resources are available for those who need it--not just those who have the ability to pay.  
 
 ### 5. The Alternative
 
-#### Jindal's Argument (to be perfectly honest, I missed some parts here)
+#### Jindal's Argument (I missed some parts here)
 Most people would agree that the current health care system is broken. Luckily, we don't have to choose between bad and worse--we can improve quality with market-based policies. First, a focus on choice and competition would help keep healthcare patient-centered. Second, we should create voluntary purchasing pools through labor unions and other associations. Third, we should provide funding (around $100 million) for high-risk pools. Fourth, we should increase transparency through updated websites that provide price and quality information. 
 
 #### My Thoughts
-Unfortunately, Jindal did not go very deep into his plans. I understand though--it was near the end of his time, and he wanted to focus on ideological points rather than technical details. I have to say that I'm a little skeptical about voluntary purchasing pools--what stops the sickest people from opting in and the healthiest from opting out? These would then just turn into high-risk pools, which are either completely unsustainable or contain a series of catches (high premiums, high deductibles, exclusions for pre-existing conditions, annual or lifetime limits, etc.). Jindal's proposed 100 million dollar safety net sounds like a lot of money, but in the world of American healthcare, it's a pittance. The [Kaiser Family Foundation](https://www.kff.org/health-reform/issue-brief/high-risk-pools-for-uninsurable-individuals/) notes that net losses across 35 state high-risk pools added to over $1.2 billion in 2011. Jindal's last point is fairly uncontroversial--I would argue that the ACA's healthcare exchanges have already done this, but it's very possible that healthcare.gov has plenty of issues that I'm not aware of. 
+Unfortunately, Jindal did not go very deep into his plans. I understand though--it was near the end of his time, and he wanted to focus on ideological points rather than technical details. I have to say that I'm a little skeptical about voluntary purchasing pools--what stops the sickest people from opting in and the healthiest from opting out? These would then just turn into high-risk pools, which are either completely unsustainable or contain a series of catches (high premiums, high deductibles, exclusions for pre-existing conditions, annual or lifetime limits, etc.). Jindal's proposed 100 million dollar safety net sounds like a lot of money, but in the world of American healthcare, it's a pittance. The Kaiser Family Foundation notes that [net losses across 35 state high-risk pools added to over $1.2 billion in 2011]((https://www.kff.org/health-reform/issue-brief/high-risk-pools-for-uninsurable-individuals/)). Jindal's last point is fairly uncontroversial--I would argue that the ACA's healthcare exchanges have already done this, but it's very possible that healthcare.gov has plenty of issues that I'm not aware of. 
 
 
 ## Concluding Thoughts
@@ -108,23 +108,19 @@ Unfortunately, Jindal did not go very deep into his plans. I understand though--
 I hope that I represented Jindal's points fairly, but it's also easy to miss things in a speech. Either way, I learned a lot about the fundamental logic behind the conservative view on healthcare. It's a really complicated issue, and I see how I could come to support the other side, given a different set of assumptions and values. 
 
 
-## Update 1 (09/07/2017)
+### Update 1 (09/07/2017)
 
 The Yale Daily News (YDN) published [a piece](https://yaledailynews.com/blog/2017/09/07/jindal-rejects-single-payer-health-care-at-ypu-debate/) on his speech! It definitely helped fill in some of the arguments that I didn't quite catch.  
 
-## Update 2 (01/19/2018)
+### Update 2 (01/19/2018)
 
-The YDN reported [infighting at the YPU](https://yaledailynews.com/blog/2018/01/19/jindal-visit-created-divisive-ypu-budget-deficit/) over unexpected costs of bringing Bobby Jindal. 
+The YDN later reports [infighting at the YPU](https://yaledailynews.com/blog/2018/01/19/jindal-visit-created-divisive-ypu-budget-deficit/) over unexpected costs of bringing Bobby Jindal. 
 > Jindal’s costly visit to the YPU — compounded by the lack of a YAF grant to help pay for it — created a temporary $13,477 budget deficit, prompting finger-pointing within the organization’s executive board last semester.
 
-Looks like he likes living large, who'd have thought? 
+### Update 3 (01/22/2018)
 
-## Update 3 (01/22/2018)
+YPU President Brian Cashin [challenges the YDN article](/PDF/YPU_Response.pdf). Apparently, the deficit was never unexpected or a problem, and the YPU endowment is richer than ever. 
 
-The YPU President [responds](/PDF/YPU_Response.pdf) to YDN! 
-> The recent Yale Daily News article about the Yale Political Union debate with Governor Bobby
-Jindal exhibits overt disregard for fact and the standards of journalism and seemingly endeavors
-to veil the bright progress achieved by the Yale Political Union during the autumn of 2017.
+> The recent Yale Daily News article about the YPU debate with Governor Bobby Jindal exhibits overt disregard for fact and the standards of journalism and seemingly endeavors to veil the bright progress achieved by the Yale Political Union during the autumn of 2017. 
 
-
-
+*(This is exactly the kind of self-aggrandizing language I meant earlier.)*  

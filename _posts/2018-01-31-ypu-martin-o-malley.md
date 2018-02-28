@@ -37,9 +37,9 @@ Ex-governor Martin O'Malley with me and my friends.
 
 As a governor and mayor, Martin O'Malley made several decisions influencing the status of undocumented immigrants in Baltimore and Maryland. Wikipedia provides a relevant and concise introduction of his background (edited and spliced for conciseness): 
 
-> &emsp;&emsp;&emsp;&emsp; Martin O'Malley is an American politician and attorney who served as the 61st Governor of Maryland from 2007-2015. He previously served as the Mayor of Baltimore, on the Baltimore City Council, as chair of the Democratic Governors Association, and as a visiting professor at Johns Hopkins's Carey Business School. O'Malley ran for the 2016 presidential election, but suspended his campaign after finishing third in the Iowa caucuses.  
-&emsp;&emsp;&emsp;&emsp; As governor, O'Malley signed a law making the children of undocumented immigrants eligible for in-state college tuition; a majority (58%) of state voters passed the law. During the 2014 crisis involving undocumented immigrant children from Central America crossing the border, O'Malley faced White House criticism for refusing to open a facility to house them.  
-&emsp;&emsp;&emsp;&emsp; O'Malley endorses a path to citizenship, deferred action programs, limiting detentions, and stricter border enforcement. 
+> &nbsp;&nbsp;&nbsp;&nbsp; Martin O'Malley is an American politician and attorney who served as the 61st Governor of Maryland from 2007-2015. He previously served as the Mayor of Baltimore, on the Baltimore City Council, as chair of the Democratic Governors Association, and as a visiting professor at Johns Hopkins's Carey Business School. O'Malley ran for the 2016 presidential election, but suspended his campaign after finishing third in the Iowa caucuses.  
+&nbsp;&nbsp;&nbsp;&nbsp; As governor, O'Malley signed a law making the children of undocumented immigrants eligible for in-state college tuition; a majority (58%) of state voters passed the law. During the 2014 crisis involving undocumented immigrant children from Central America crossing the border, O'Malley faced White House criticism for refusing to open a facility to house them.  
+&nbsp;&nbsp;&nbsp;&nbsp; O'Malley endorses a path to citizenship, deferred action programs, limiting detentions, and stricter border enforcement. 
 
 O'Malley's [presidential campaign website](https://martinomalley.com/policy/immigration/) provides a more detailed breakdown. 
 
@@ -66,7 +66,7 @@ The wretched refuse of your teeming shore.
 Send these, the homeless, tempest-tost to me,
 I lift my lamp beside the golden door!"
 
-He then threw out a short and unstructured litany of arguments about the spirit of American welcoming, the dignity of persons, the ethical wrong of creating stateless people, and the racism and fear that he believes to drive immigration hard-liners. 
+He then delivered a short and unstructured litany of arguments about the spirit of American welcoming, the dignity of persons, the ethical wrong of creating stateless people, and the racism and fear that he believes to drive immigration hard-liners. 
 
 #### My Thoughts
 I was surprised by how long O'Malley spent framing the resolution, "support sanctuary cities," within the broader context of immigration reform. The cynical side of me thinks that this is just so that he can lean on more practiced, off-topic arguments (it sounded a bit like a recycled campaign speech). Still, his approach did expand the breadth of topics I learned about.  
