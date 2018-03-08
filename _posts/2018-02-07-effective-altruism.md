@@ -17,6 +17,7 @@ This Spring, I applied to and joined the Yale Effective Altriusm Fellowship. I'l
 1. [Introduction to Effective Altruism](#intro)  
 2. [Which Social Interventions Work?](#uct)
 3. [Effective Altruism and Systemic Change](#systemic)
+4. [The Economics of Global Poverty](#poverty)
 <br> 
 
 ___
@@ -99,5 +100,18 @@ ___
 - [Beware Systemic Change](http://slatestarcodex.com/2015/09/22/beware-systemic-change/)
 - [Why You Should Focus More on Talent Gaps, not Funding Gaps](https://80000hours.org/2015/11/why-you-should-focus-more-on-talent-gaps-not-funding-gaps/)
 
+
+
+## 4. The Economics of Global Poverty <a name="poverty"></a>
+
+### Topic
+> While donating to charity, we often consider not only where our donations are going, but also the impact our donations are making. But how do we know that our donations are having their intended effect? This week we'll examine development economics and the current evidence in poverty alleviation.  
+This week's speaker is renowned development economist, Mark Rosenzweig, Frank Altschul Professor of International Economics and Director of the Economic Growth Center. His research has covered a wide range of topics, including marital and fertility decisions, risk coping mechanisms, labor markets, human capital decisions,  adoption of technologies, and  provision of local public goods. Rosenzweig received his B.A., M.A., and Ph.D. from Columbia University in 1969, 1971, and 1973, respectively.
+
+### Readings
+- [Explaining the U-Shaped Pattern of Farm Size and Productivity](http://www.nber.org/digest/dec17/dec17.pdf)
+- [Review of Poor Economics: A Radical Rethinking of the Way to Fight Global Poverty](https://pubs.aeaweb.org/doi/pdfplus/10.1257/jel.50.1.115)
+- [Social Experiments to Fight Poverty](https://www.ted.com/talks/esther_duflo_social_experiments_to_fight_poverty/transcript)
+- [The Finnish Experiment](https://99percentinvisible.org/episode/the-finnish-experiment/)
 
 
