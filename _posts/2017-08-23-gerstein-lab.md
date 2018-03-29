@@ -53,7 +53,7 @@ RNA molecules were once thought to exist only as stable molecules inside cells. 
 
 ## Project 1: Plotting Tool
 
-Visualization of structure for RNA-Seq data shows how samples are distributed and whether similar samples cluster together. Here, we aim to identify potential batch effects and correlations between the read values of different samples. I've embedded a small, sad version of the tool below (may take 5-10 seconds to load). Click [here](https://exrna-atlas.org/genboreeKB/projects/extracellular-rna-atlas-v2/exat/publicAnalysis/ERCC_DimensReduc_Tool/allData_EXCEPT_TPATE1_HEALTHYVSCANCER?dependencyPath=allData_EXCEPT_TPATE1_HEALTHYVSCANCER) for a larger view, or [here](https://exrna-atlas.org/genboreeKB/projects/extracellular-rna-atlas-v2/exat/publicAnalyses) to see all the different versions of the tool.  
+Visualization of structure for RNA-Seq data shows how samples are distributed and whether similar samples cluster together. Here, we aim to identify potential batch effects and correlations between the read values of different samples. I've embedded a small, sad version of the tool below (may take 5-10 seconds to load). Click [here](https://exrna-atlas.org/genboreeKB/projects/extracellular-rna-atlas-v2/exat/publicAnalysis/ERCC_DimensReduc_Tool/allData_EXCEPT_TPATE1_HEALTHYVSCANCER?dependencyPath=allData_EXCEPT_TPATE1_HEALTHYVSCANCER) for a larger view, or [here](http://exrna-atlas.org/exat/publicAnalyses) to see all the different versions of the tool.  
 
 <iframe src="https://exrna-atlas.org/genboreeKB/projects/extracellular-rna-atlas-v2/exat/publicAnalysis/ERCC_DimensReduc_Tool/allData_EXCEPT_TPATE1_HEALTHYVSCANCER?dependencyPath=allData_EXCEPT_TPATE1_HEALTHYVSCANCER" style="border: none; width: 700px; height: 670px"></iframe>
 
